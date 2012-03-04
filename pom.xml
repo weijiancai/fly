@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fly.base</groupId>
-    <artifactId>fly-base</artifactId>
+    <artifactId>fly-framework</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
 
-    <name>fly-base</name>
+    <name>fly-framework</name>
 
     <organization>
         <name>fly</name>
