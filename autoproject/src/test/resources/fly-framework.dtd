@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT fly (dbms*)>
+
+<!ELEMENT dbms (schema*)>
+<!ATTLIST dbms
+    driverClass        CDATA #IMPLIED
+    host               CDATA #IMPLIED
+    port               CDATA #IMPLIED
+    userName           CDATA #IMPLIED
+    password           CDATA #IMPLIED
+    type               (mysql | oracle) "mysql"
+>
+
+<!ELEMENT schema (table)>
+<!ATTLIST schema
+    name               CDATA #IMPLIED
+>
+
+<!ELEMENT table (column*, sql*)>
+<!ATTLIST table
+    name               CDATA #IMPLIED
+    comment            CDATA #IMPLIED
+>
+
+<!ELEMENT column ()>
+<!ATTLIST column
+    name               CDATA #IMPLIED
+    comment            CDATA #IMPLIED
+>
+
+<!ELEMENT sql (#PCDATA)>
+
+
+<fly>
+    <dbms>
+        <schema name="crm">
+            <table>
+                <column pk="" fk=""></column>
+            </table>
+        </schema>
+    </dbms>
+
+    <project dbms="">
+        <class table="">
+            <field col=""/>
+        </class>
+    </project>
+</fly>

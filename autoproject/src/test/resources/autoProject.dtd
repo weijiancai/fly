@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT autoproject (pom?, datasource, pos, daos, services)>
+<!ATTLIST autoproject
+    name        CDATA #IMPLIED
+    baseDir     CDATA #IMPLIED
+    basePackage CDATA #IMPLIED
+    useMaven (true | false) "true"
+>
+
+<!-- Maven坐标配置 -->
+<!ELEMENT pom (groupId, artifactId, version, packaging)>
+<!ELEMENT groupId    (#PCDATA)>
+<!ELEMENT artifactId (#PCDATA)>
+<!ELEMENT version    (#PCDATA)>
+<!ELEMENT packaging  (#PCDATA)>
+
+<!-- 数据源配置 -->
+<!ELEMENT datasource (driverClass, jdbcUrl, userName, password)>
+<!ATTLIST datasource
+    type (mysql | oracle) "mysql"
+>
+
+<!ELEMENT driverClass (#PCDATA)>
+<!ELEMENT jdbcUrl     (#PCDATA)>
+<!ELEMENT userName    (#PCDATA)>
+<!ELEMENT password    (#PCDATA)>
+
+<!-- 持久化对象PO配置 -->
+<!ELEMENT pos (po)>
+<!ATTLIST pos
+    package CDATA #IMPLIED
+>
+<!ELEMENT po (field)>
+<!ATTLIST po
+    name CDATA #REQUIRED
+    desc CDATA #REQUIRED
+>
+
+<!ELEMENT field (#PCDATA)>
+<!ATTLIST field
+    name    CDATA #REQUIRED
+    type    CDATA #REQUIRED
+    comment CDATA #IMPLIED
+>
+
+
+<!ELEMENT daos (dao)>
+<!ELEMENT dao (#PCDATA)>
+
+
+<!ELEMENT services (service)>
+<!ELEMENT service (#PCDATA)>
+
+<!ELEMENT controllers (controller)>
+<!ELEMENT controller (#PCDATA)>
+
+
+<!-- 模版 -->
+<!ELEMENT tpls (tpl)>
+<!ELEMENT tpl (#PCDATA)>
+

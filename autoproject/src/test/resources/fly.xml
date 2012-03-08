@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fly SYSTEM "fly-framework.dtd">
+
+<fly>
+    <dbms driverClass="com.mysql.jdbc.Driver" host="127.0.0.1" port="3306" userName="crm" password="123" type="mysql">
+        <schema name="crm">
+            <table name="cgdd" comment="采购订单">
+                <column name="id" comment="主键"/>
+            </table>
+        </schema>
+
+        <schema name="yuncrm">
+            <table>
+                <sql>
+                    <![CDATA[
+                        create table sys_dz_category
+                        (
+                        category_id          varbinary(32) not null comment '类别内码',
+                        category_name        varchar(64) not null comment '类别名称',
+                        is_valid             int(1) comment '是否有效',
+                        sort_num             int(11) comment '排序号',
+                        input_date           datetime comment '录入时间',
+                        primary key (category_id)
+                        );
+
+                        alter table sys_dz_category comment '字典类别';
+                    ]]>
+                </sql>
+                <column/>
+            </table>
+        </schema>
+    </dbms>
+</fly>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE autoproject SYSTEM "autoProject.dtd">
+        
+<autoproject name="crm" baseDir="D:\temp\crm">
+    <pom>
+        <groupId>com.flysoft</groupId>
+        <artifactId>crm</artifactId>
+        <version>0.1</version>
+        <packaging>war</packaging>
+    </pom>
+
+    <datasource>
+        <driverClass>com.mysql.jdbc.Driver</driverClass>
+        <jdbcUrl>jdbc:mysql://127.0.0.1:3306/crm?characterEncoding=utf8</jdbcUrl>
+        <userName>root</userName>
+        <password>7758521</password>
+    </datasource>
+
+    <pos package="com.flysoft.autoproject.po">
+        <po name="Person" desc="人员信息">
+            <field name="personId" type="int" comment="人员ID"/>
+        </po>
+    </pos>
+
+    <daos>
+        <dao/>
+    </daos>
+
+    <services>
+        <service/>
+    </services>
+</autoproject>
