@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.fly.base</groupId>
+    <groupId>com.fly.framework</groupId>
     <artifactId>fly-framework</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
@@ -29,6 +29,10 @@
 
     <modules>
         <module>db</module>
+        <module>autoproject</module>
+        <module>fly-sys</module>
+        <module>fxclient</module>
+        <module>common</module>
     </modules>
 
 

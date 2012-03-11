@@ -8,22 +8,11 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>fxclient</artifactId>
+    <artifactId>common</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
 
-    <name>fxclient</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>javafx</groupId>
-            <artifactId>javafxrt</artifactId>
-            <version>2.0</version>
-            <type>jar</type>
-            <scope>system</scope>
-            <systemPath>${env.JAVAFX_HOME}\lib\jfxrt.jar</systemPath>
-        </dependency>
-    </dependencies>
+    <name>common</name>
 
     <build>
         <plugins>

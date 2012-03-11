@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.fly.base</groupId>
+        <groupId>com.fly.framework</groupId>
         <artifactId>fly-framework</artifactId>
         <version>1.0</version>
     </parent>
