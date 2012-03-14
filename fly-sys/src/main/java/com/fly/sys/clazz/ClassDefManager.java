@@ -21,6 +21,7 @@ public class ClassDefManager {
         try {
             conn = ds.getConn();
 
+            String sql = "INSERT INTO sys_class_define () values()";
         } catch (Exception e) {
             if(null != conn) {
                 try {
