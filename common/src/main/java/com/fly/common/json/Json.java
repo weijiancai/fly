@@ -280,6 +280,8 @@ public class Json {
         // pstmt.setObject(obj)
 
         Stack<Character> stack = new Stack<Character>();
+        Stack<Map<String, Object>> mapStack = new Stack<Map<String, Object>>();
+        Stack<List<Map<String, Object>>> listStack = new Stack<List<Map<String, Object>>>();
         StringBuilder key = null, value = null;
         List<Map<String, Object>> list = null;
         String str;
@@ -288,9 +290,11 @@ public class Json {
             if(c == '[') {
                 stack.push(c);
                 list = new ArrayList<Map<String, Object>>();
+                listStack.push(list);
             } else if (c == '{') {
                 stack.push(c);
                 map = new HashMap<String, Object>();
+                mapStack.push(map);
                 key = new StringBuilder();
             } else if (c == ':') {
                 isValue = true;
@@ -327,7 +331,12 @@ public class Json {
                     } else  {
                         map.put(str, value.toString());
                     }
-                    list.add(map);
+                    if(list == null) {
+                        result.add(map);
+                    } else {
+                        list.add(map);
+                        mapStack.pop();
+                    }
                 } else {
                     throw new RuntimeException("JSON 语法不正确 没有正确匹配 }");
                 }
@@ -347,7 +356,11 @@ public class Json {
             }
         }
 
-        return list;
+        if (list != null) {
+            result.addAll(list);
+        }
+
+        return result;
     }
     
     public static Map<String, Object> toMap(String jsonStr) {
@@ -355,9 +368,84 @@ public class Json {
             return new HashMap<String, Object>();
         }
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        String str = jsonStr.substring(jsonStr.startsWith("{") ? 1 : 0, jsonStr.endsWith("}") ? jsonStr.length() - 1 : jsonStr.length());
+        Map<String, Object> result = new HashMap<String, Object>();
+        Stack<Character> stack = new Stack<Character>();
+        Stack<List<Map<String, Object>>> listStack = new Stack<List<Map<String, Object>>>();
+        Stack<Map<String, Object>> mapStack = new Stack<Map<String, Object>>();
+        Stack<StringBuilder> keyStack = new Stack<StringBuilder>();
+        List<Map<String, Object>> list = null;
+        Map<String, Object> map = null;
+        StringBuilder key = null, value = null;
+        boolean isValue = false;
+        
+        for(char c : jsonStr.toCharArray()) {
+            if(c == '[') {
+                isValue = false;
+                stack.push(c);
+                list = new ArrayList<Map<String, Object>>();
 
-        return map;
+                if(listStack.size() >= 1) {
+                    listStack.peek().add(mapStack.peek());
+                }
+                if(mapStack.size() >= 1) {
+                    mapStack.peek().put(keyStack.peek().toString(), list);
+                }
+
+                listStack.push(list);
+            } else if (c == '{') {
+                isValue = false;
+                stack.push(c);
+                map = new HashMap<String, Object>();
+
+                if(mapStack.size() >= 1) {
+                    mapStack.peek().put(keyStack.peek().toString(), map);
+                }
+
+                mapStack.push(map);
+                key = new StringBuilder();
+                keyStack.push(key);
+            } else if (c == ':') {
+                isValue = true;
+                value = new StringBuilder();
+            } else if (c == ',') {
+                isValue = false;
+                mapStack.peek().put(keyStack.peek().toString(), value.toString());
+                key = new StringBuilder();
+                keyStack.pop();
+                keyStack.push(key);
+            } else if (c == '}') {
+                isValue = false;
+                if(stack.peek() == '{') {
+                    stack.pop();
+                    if(mapStack.size() > 1) {
+                        mapStack.peek().put(keyStack.pop().toString(), value.toString());
+                    }
+                    map = mapStack.pop();
+                } else {
+                    throw new RuntimeException("JSON 语法不正确 没有正确匹配 }");
+                }
+            } else if (c == ']') {
+                isValue = false;
+                if(stack.peek() == '[') {
+                    stack.pop();
+                    if(listStack.size() > 1) {
+                        listStack.peek().add(mapStack.peek());
+                    }
+                    list = listStack.pop();
+                } else {
+                    throw new RuntimeException("JSON 语法不正确 没有正确匹配 ]");
+                }
+            } else {
+                if (!isValue) {
+                    key.append(c);
+                } else {
+                    value.append(c);
+                }
+            }
+        }
+
+        result.putAll(map);
+
+        return result;
     }
 }

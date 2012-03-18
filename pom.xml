@@ -31,7 +31,7 @@
         <module>db</module>
         <module>autoproject</module>
         <module>fly-sys</module>
-        <module>fxclient</module>
+        <module>fxsys</module>
         <module>common</module>
     </modules>
 
@@ -55,6 +55,18 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.1.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>0.1.18</version>
         </dependency>
     </dependencies>
 

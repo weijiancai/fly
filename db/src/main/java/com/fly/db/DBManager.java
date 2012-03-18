@@ -15,6 +15,10 @@ import java.util.Map;
 public class DBManager {
     private static Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
 
+    static {
+        loadDataSource();
+    }
+
     public static void loadDataSource() {
         // 从classpath读取数据源配置文件datasource.xml
         try {
@@ -23,7 +27,6 @@ public class DBManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public DBManager() {

@@ -2,7 +2,10 @@ package com.fly.db.util;
 
 import com.fly.db.DBManager;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -73,7 +76,7 @@ public class SqlFileLoader {
         DBManager manager = new DBManager();
         Connection conn = null;
         try {
-            conn = manager.getConn();
+            conn = DBManager.getDataSource("sys").getConn();
             Statement stmt = conn.createStatement();
             for (String sql : sqlStatements) {
                 System.out.println("Execute: 【" + sql + "】");

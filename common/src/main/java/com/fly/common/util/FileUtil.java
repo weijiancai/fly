@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
  */
 public class FileUtil {
     public static File getFileFromClassPath(String path) throws URISyntaxException {
+        System.out.println(FileUtil.class.getResource(path).toURI());
         return new File(FileUtil.class.getResource(path).toURI());
     }
 }

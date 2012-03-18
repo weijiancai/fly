@@ -23,6 +23,8 @@
     </dependencies>
 
     <build>
+        <outputDirectory>../fly-sys/target/classes</outputDirectory>
+        <testOutputDirectory>../fly-sys/target/test-classes</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

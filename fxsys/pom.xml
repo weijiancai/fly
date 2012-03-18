@@ -8,11 +8,11 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>fxclient</artifactId>
+    <artifactId>fxsys</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
 
-    <name>fxclient</name>
+    <name>fxsys</name>
 
     <dependencies>
         <dependency>
@@ -22,6 +22,12 @@
             <type>jar</type>
             <scope>system</scope>
             <systemPath>${env.JAVAFX_HOME}\lib\jfxrt.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fly.framework</groupId>
+            <artifactId>fly-sys</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
