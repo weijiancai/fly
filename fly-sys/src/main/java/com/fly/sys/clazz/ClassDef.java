@@ -15,8 +15,7 @@ public class ClassDef {
     private String author;
     private String desc;
     private String version;
-    private int colCount;
-    private int colWidth;
+    private List<ClassForm> formList;
     private List<Field> fieldList;
 
     public String getId() {
@@ -83,19 +82,28 @@ public class ClassDef {
         this.fieldList = fieldList;
     }
 
-    public int getColCount() {
-        return colCount;
+    public List<ClassForm> getFormList() {
+        return formList;
     }
 
-    public void setColCount(int colCount) {
-        this.colCount = colCount;
+    public void setFormList(List<ClassForm> formList) {
+        this.formList = formList;
     }
 
-    public int getColWidth() {
-        return colWidth;
-    }
-
-    public void setColWidth(int colWidth) {
-        this.colWidth = colWidth;
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("ClassDef");
+        sb.append("{id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", cname='").append(cname).append('\'');
+        sb.append(", superClass='").append(superClass).append('\'');
+        sb.append(", author='").append(author).append('\'');
+        sb.append(", desc='").append(desc).append('\'');
+        sb.append(", version='").append(version).append('\'');
+        sb.append(", formList=").append(formList);
+        sb.append(", fieldList=").append(fieldList);
+        sb.append('}');
+        return sb.toString();
     }
 }

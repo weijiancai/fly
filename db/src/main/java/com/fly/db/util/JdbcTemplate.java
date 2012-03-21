@@ -1,9 +1,8 @@
 package com.fly.db.util;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
+import com.fly.common.Callback;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,5 +39,21 @@ public class JdbcTemplate {
         rs.close();
 
         return list;
+    }
+
+    public void query(String sql, Callback<ResultSet> callback, Object... values) throws Exception {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        if (null != values && values.length > 0) {
+            int i = 1;
+            for (Object obj : values) {
+                pstmt.setObject(i++, obj);
+            }
+        }
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()) {
+            callback.call(rs);
+        }
+        rs.close();
+        pstmt.close();
     }
 }

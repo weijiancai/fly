@@ -18,25 +18,37 @@ import java.util.UUID;
 public class ClassDefTest {
     @Test
     public void testSaveClassDef() {
-        Map<String, Object> saveValueMap = new HashMap<String, Object>();
-        saveValueMap.put("id", UUID.randomUUID().toString().replaceAll("-", ""));
-        saveValueMap.put("name", "ClassDef"); // 类名
-        saveValueMap.put("cname", "类定义"); // 中文名
-        saveValueMap.put("author", "weijiancai"); // 作者
-        saveValueMap.put("`desc`", "类定义信息"); // 类描述
-        saveValueMap.put("version", "1.0");  // 版本
-        saveValueMap.put("col_Width", 50);
-        saveValueMap.put("col_Count", 2);
+        Map<String, Object> classMap = new HashMap<String, Object>();
+        String classDefId = UUID.randomUUID().toString().replaceAll("-", "");
+        classMap.put("id", classDefId);
+        classMap.put("name", "ClassDef"); // 类名
+        classMap.put("cname", "类定义"); // 中文名
+        classMap.put("author", "weijiancai"); // 作者
+        classMap.put("class_desc", "类定义信息"); // 类描述
+        classMap.put("version", "1.0");  // 版本
+
+        ClassDefManager.save(classMap, "sys_class_define");
+
+        Map<String, Object> formMap = new HashMap<String, Object>();
+        String formId = UUID.randomUUID().toString().replaceAll("-", "");
+        formMap.put("id", formId);
+        formMap.put("class_id", classDefId);
+        formMap.put("name", "default");
+        formMap.put("col_count", 3);
+        formMap.put("col_width", 50);
+        formMap.put("label_gap", 5);
+        formMap.put("field_gap", 10);
+        formMap.put("isDefault", 1);
+
+        ClassDefManager.save(formMap, "sys_class_form");
         
-        Map<String, Map<String, Object>> clazzMap = new HashMap<String, Map<String, Object>>();
-        clazzMap.put("ClassDef", saveValueMap);
+        /*Map<String, Map<String, Object>> clazzMap = new HashMap<String, Map<String, Object>>();
+        clazzMap.put("ClassDef", classMap);
         
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("classDef", "ClassDef");
-        params.put("save", Json.toJsonString(clazzMap));
-
-        ClassDefManager.saveClassDef(saveValueMap);
+        params.put("save", Json.toJsonString(clazzMap));*/
     }
 
     @Test

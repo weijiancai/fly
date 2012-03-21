@@ -1,3 +1,4 @@
 fly-sys模块
 1. 系统初始化
    a. 装载数据源，必须有默认数据源sys，此数据源是整个系统的基础。
+   b. 查询表sys_class_def是否有“ClassDef”的类定义信息，如果没有，则查询表sys_class_def插入默认信息
