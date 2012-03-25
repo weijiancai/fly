@@ -1,15 +1,29 @@
 package com.fly.fxsys;
 
 import com.alibaba.fastjson.JSON;
+import com.fly.sys.view.form.FormField;
+import com.fly.sys.view.form.FormView;
+import com.fly.sys.view.table.ColAttr;
+import com.fly.sys.view.table.TableView;
 import com.fly.sys.view.tree.EasyuiNode;
 import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.util.*;
 
@@ -41,10 +55,12 @@ public class FxSys extends Application {
         treeView.setShowRoot(true);
         treeView.setRoot(treeRoot);
         treeRoot.setExpanded(true);*/
+
+        final BorderPane borderPane = new BorderPane();
         
         // 请求导航菜单
         // 参数map
-        Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<String, String>();
         params.put("view", "tree");
         params.put("classDef", "Module");
         // 发送请求，接收数据
@@ -98,8 +114,102 @@ public class FxSys extends Application {
         treeView.setRoot(root);
         treeRoot.setExpanded(true);
 
-        BorderPane borderPane = new BorderPane();
+        // 请求Classdef 表格
+        Map<String, String> classDefTableMap = new HashMap<String, String>();
+        params.put("view", "table");
+        params.put("classDef", "ClassDef");
+        final TableView tableView = new TableView();
+        List<ColAttr> colAttrList = new ArrayList<ColAttr>();
+        colAttrList.add(new ColAttr("className", "类名", "label"));
+        colAttrList.add(new ColAttr("cName", "中文名", "label"));
+        colAttrList.add(new ColAttr("author", "作者", "label"));
+        colAttrList.add(new ColAttr("version", "版本", "label"));
+        colAttrList.add(new ColAttr("classDesc", "类描述", "label"));
+        colAttrList.add(new ColAttr("look", "查看", "hyperlink"));
+        
+        List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> firstRow = new HashMap<String, Object>();
+        firstRow.put("className", "ClassDef");
+        firstRow.put("cName", "类定义");
+        firstRow.put("author", "weijiancai");
+        firstRow.put("version", "1.0.0");
+        firstRow.put("classDesc", "类定义信息");
+        firstRow.put("look", "查看明细");
+        dataList.add(firstRow);
+        Map<String, Object> secondRow = new HashMap<String, Object>();
+        secondRow.put("className", "Module");
+        secondRow.put("cName", "模块");
+        secondRow.put("author", "weijiancai");
+        secondRow.put("version", "1.0.0");
+        secondRow.put("classDesc", "模块定义信息");
+        secondRow.put("look", "查看明细");
+        dataList.add(secondRow);
+        tableView.setColData(dataList);
+        tableView.setColAttr(colAttrList);
+        tableView.setColWidth(100);
+        tableView.setClassDef("ClassDef");
+
+        String jsonStr = JSON.toJSONString(tableView);
+        System.out.println(jsonStr);
+        TableView tv = JSON.parseObject(jsonStr, TableView.class);
+        final javafx.scene.control.TableView<Map<String, Object>> fxtv = new javafx.scene.control.TableView<Map<String, Object>>();
+        List<ColAttr> colList = tv.getColAttr();
+        for (final ColAttr colAttr : colList) {
+            if ("hyperlink".equals(colAttr.getDisplayStyle())) {
+                TableColumn<Map<String, Object>, Hyperlink> col = new TableColumn<Map<String, Object>, Hyperlink>(colAttr.getDisplayName());
+                col.setPrefWidth(tv.getColWidth());
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink>, ObservableValue<Hyperlink>>() {
+                    @Override
+                    public ObservableValue<Hyperlink> call(TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink> map) {
+                        Hyperlink hl = new Hyperlink(map.getValue().get(colAttr.getName()).toString());
+                        hl.setStyle("-fx-text-fill: #0000ff;-fx-underline:true;");
+                        hl.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent e) {
+                                Map<String, String> requestMap = new HashMap<String, String>();
+                                requestMap.put("view", "form");
+                                requestMap.put("classDef", tableView.getClassDef());
+
+                                FormView formView = getFormView();
+                                borderPane.setBottom(getGridPane());
+                            }
+                        });
+                        return new SimpleObjectProperty<Hyperlink>(hl);
+                    }
+                });
+                /*col.setCellFactory(new Callback<TableColumn<Map<String, Object>, String>, TableCell<Map<String, Object>, String>>() {
+                    @Override
+                    public TableCell<Map<String, Object>, String> call(TableColumn<Map<String, Object>, String> mapStringTableColumn) {
+                        return new HyperlinkCell();
+                    }
+                });*/
+                fxtv.getColumns().add(col);
+            } else {
+                TableColumn<Map<String, Object>, String> col = new TableColumn<Map<String, Object>, String>(colAttr.getDisplayName());
+                col.setPrefWidth(tv.getColWidth());
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map<String, Object>, String>, ObservableValue<String>>() {
+                    @Override
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<Map<String, Object>, String> map) {
+                        return new SimpleStringProperty(map.getValue().get(colAttr.getName()).toString());
+                    }
+                });
+                fxtv.getColumns().add(col);
+            }
+
+        }
+        fxtv.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    System.out.println(fxtv.getSelectionModel().getSelectedIndex());
+                }
+            }
+        });
+        fxtv.getItems().addAll(tv.getColData());
+
         borderPane.setLeft(treeView);
+        borderPane.setCenter(fxtv);
+        //borderPane.setBottom(new Hyperlink("超链接"));
         Scene scene = new Scene(borderPane, 1020, 700);
         stage.setScene(scene);
         stage.setTitle("FX SYS");
@@ -114,6 +224,72 @@ public class FxSys extends Application {
                 iteratorTree(local, n);
             }
         }
+    }
+
+    private FormView getFormView() {
+        FormView formView = new FormView();
+        formView.setClassDef("ClassDef");
+        formView.setColCount(3);
+        formView.setColWidth(150);
+        formView.setFieldGap(15);
+        formView.setLabelGap(5);
+        formView.setName("classForm");
+        List<FormField> fieldList = new ArrayList<FormField>();
+        fieldList.add(new FormField("className", "类名", "textField"));
+        fieldList.add(new FormField("cName", "中文名", "textField"));
+        fieldList.add(new FormField("author", "作者", "textField"));
+        fieldList.add(new FormField("ersion", "版本", "textField"));
+        fieldList.add(new FormField("classDesc", "类描述", "textField"));
+        formView.setFieldList(fieldList);
+
+        String jsonStr = JSON.toJSONString(formView);
+
+        FormView fv = JSON.parseObject(jsonStr, FormView.class);
+
+        return fv;
+    }
+
+    private GridPane getGridPane() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(0, 0, 0, 10));
+
+// Category in column 2, row 1
+        Text category = new Text("Sales:");
+        category.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
+        grid.add(category, 1, 0);
+
+// Title in column 3, row 1
+        Text chartTitle = new Text("Current Year");
+        chartTitle.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
+        grid.add(chartTitle, 2, 0);
+
+// Subtitle in columns 2-3, row 2
+        Text chartSubtitle = new Text("Goods and Services");
+        grid.add(chartSubtitle, 1, 1, 2, 1);
+
+// House icon in column 1, rows 1-2
+        //ImageView imageHouse = new ImageView(new Image(FxSys.class.getResourceAsStream("graphics/house.png")));
+        //grid.add(imageHouse, 0, 0, 1, 2);
+        grid.add(new TextField(), 0, 0, 1, 2);
+
+// Left label in column 1 (bottom), row 3
+        Text goodsPercent = new Text("Goods\n80%");
+        GridPane.setValignment(goodsPercent, VPos.BOTTOM);
+        grid.add(goodsPercent, 0, 2);
+
+// Chart in columns 2-3, row 3
+        //ImageView imageChart = new ImageView(new Image(FxSys.class.getResourceAsStream("graphics/piechart.png")));
+        //grid.add(imageChart, 1, 2, 2, 1);
+        grid.add(new Label("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), 1, 2, 2, 1);
+
+// Right label in column 4 (top), row 3
+        Text servicesPercent = new Text("Services\n20%");
+        GridPane.setValignment(servicesPercent, VPos.TOP);
+        grid.add(servicesPercent, 3, 2);
+
+        return grid;
     }
 
     public static void main(String[] args) {

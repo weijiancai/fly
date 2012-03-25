@@ -10,9 +10,13 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +30,7 @@ import java.util.Map;
  */
 public class XML {
     private Document doc;
+    private XPath xpath;
     
     public XML(File file) {
         try {
@@ -36,6 +41,9 @@ public class XML {
 
             // 初始化
             doc.normalize();
+            // 创建XPath对象
+            XPathFactory xPathFactory = XPathFactory.newInstance();
+            xpath = xPathFactory.newXPath();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -45,7 +53,7 @@ public class XML {
         }
     }
 
-    public <T> T toObject(String tagName, Class<T> clazz) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public <T> T toObject(String tagName, Class<T> clazz) throws Exception {
         List<T> list = toList(tagName, clazz);
         if (list != null && list.size() > 0) {
             return list.get(0);
@@ -54,10 +62,10 @@ public class XML {
         return null;
     }
 
-    public <T> Map<String, T> toMap(String tagName, String keyName, Class<T> clazz) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public <T> Map<String, T> toMap(String xpath, String keyName, Class<T> clazz) throws Exception {
         final Map<String, T> map = new HashMap<String, T>();
         
-        iteratorNode(tagName, clazz, keyName, new Callback<T>() {
+        iteratorNode(xpath, clazz, keyName, new Callback<T>() {
             @Override
             public void call(T t, Object... obj) {
                 String key = obj.length > 0 ? obj[0].toString() : null;
@@ -70,10 +78,10 @@ public class XML {
         return map;
     }
     
-    public <T> List<T> toList(String tagName, Class<T> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public <T> List<T> toList(String xpath, Class<T> clazz) throws Exception {
         final List<T> list = new ArrayList<T>();
 
-        iteratorNode(tagName, clazz, null, new Callback<T>() {
+        iteratorNode(xpath, clazz, null, new Callback<T>() {
             @Override
             public void call(T t, Object... obj) {
                 list.add(t);
@@ -83,22 +91,26 @@ public class XML {
         return list;
     }
 
-    private <T> void iteratorNode(String tagName, Class<T> clazz, String keyName, Callback<T> callback) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        // 得到节点集合
-        NodeList dataSources = doc.getElementsByTagName(tagName);
+    private <T> void iteratorNode(String xpathStr, Class<T> clazz, String keyName, Callback<T> callback) throws Exception {
+        XPathExpression expr = xpath.compile(xpathStr);
+        NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
         // 循环遍历节点
         Node node;
         T obj;
         String fieldName;
         String nodeValue;
         String key = null;
-        for (int i = 0; i < dataSources.getLength(); i++) {
-            node = dataSources.item(i);
+        Field field;
+        for (int i = 0; i < nodes.getLength(); i++) {
+            node = nodes.item(i);
             obj = clazz.newInstance();
 
             for (Method method : clazz.getDeclaredMethods()) {
                 if (method.getName().startsWith("set")) {
                     fieldName = firstCharToLower(method.getName().substring(3));
+                    if ("valid".equals(fieldName)) {
+                        fieldName = "isValid";
+                    }
                     // 读取节点属性值，如果没有此属性值，则读子节点值
                     nodeValue = getAttrValue(node, fieldName);
                     if (StringUtil.isEmpty(nodeValue)) {
@@ -108,7 +120,16 @@ public class XML {
                         key = nodeValue;
                     }
                     // 设置属性值
-                    method.invoke(obj, nodeValue);
+                    if (nodeValue != null) {
+                        field = clazz.getDeclaredField(fieldName);
+                        if (field.getType() == String.class) {
+                            method.invoke(obj, nodeValue);
+                        } else if (field.getType() == int.class || field.getType() == Integer.class) {
+                            method.invoke(obj, Integer.parseInt(nodeValue));
+                        } else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+                            method.invoke(obj, Boolean.valueOf(nodeValue));
+                        }
+                    }
                 }
             }
 
@@ -121,6 +142,9 @@ public class XML {
     }
 
     private static String getNodeValue(Node node, String tagName) {
+        if(((Element)node).getElementsByTagName(tagName).item(0) == null) {
+            return null;
+        }
         return ((Element)node).getElementsByTagName(tagName).item(0).getFirstChild().getNodeValue();
     }
 

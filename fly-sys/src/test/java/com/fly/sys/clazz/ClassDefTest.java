@@ -4,7 +4,6 @@ import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlOutputVisitor;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
-import com.fly.common.json.Json;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -27,7 +26,7 @@ public class ClassDefTest {
         classMap.put("class_desc", "类定义信息"); // 类描述
         classMap.put("version", "1.0");  // 版本
 
-        ClassDefManager.save(classMap, "sys_class_define");
+        //ClassDefManager.save(classMap, "sys_class_define");
 
         Map<String, Object> formMap = new HashMap<String, Object>();
         String formId = UUID.randomUUID().toString().replaceAll("-", "");
@@ -40,7 +39,7 @@ public class ClassDefTest {
         formMap.put("field_gap", 10);
         formMap.put("isDefault", 1);
 
-        ClassDefManager.save(formMap, "sys_class_form");
+        //ClassDefManager.save(formMap, "sys_class_form");
         
         /*Map<String, Map<String, Object>> clazzMap = new HashMap<String, Map<String, Object>>();
         clazzMap.put("ClassDef", classMap);

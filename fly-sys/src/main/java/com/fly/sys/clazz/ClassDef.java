@@ -1,13 +1,16 @@
 package com.fly.sys.clazz;
 
+import com.fly.sys.IPDB;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * 类定义信息
  *
  * @author weijiancai
  */
-public class ClassDef {
+public class ClassDef implements IPDB {
     private String id;
     private String name;
     private String cname;
@@ -105,5 +108,10 @@ public class ClassDef {
         sb.append(", fieldList=").append(fieldList);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public Map<String, Map<String, Object>> getPDBMap() {
+        return null;
     }
 }

@@ -1,14 +1,14 @@
 package com.fly.sys.clazz;
 
 import com.fly.common.Callback;
-import com.fly.common.json.Json;
-import com.fly.db.DBManager;
-import com.fly.db.util.DataSource;
-import com.fly.db.util.JdbcTemplate;
 import com.fly.sys.R;
+import com.fly.sys.db.DBManager;
+import com.fly.sys.db.DataSource;
+import com.fly.sys.db.JdbcTemplate;
+import com.fly.sys.db.meta.Column;
+import com.fly.sys.db.meta.Table;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -19,123 +19,46 @@ import java.util.*;
  * @author weijiancai
  */
 public class ClassDefManager {
+    public static String getUUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
 
     public static void saveClassDef(Map<String, Object> params) {
-        DataSource ds = DBManager.getDataSource(R.ds.SYS);
-        Connection conn = null;
-        try {
-            conn = ds.getConn();
-            conn.setAutoCommit(false);
-            StringBuilder sql = new StringBuilder("INSERT INTO sys_class_define (");
+        Map<String, Object> classMap = new HashMap<String, Object>();
+        String classDefId = UUID.randomUUID().toString().replaceAll("-", "");
+        classMap.put("id", classDefId);
+        classMap.put("name", "ClassDef"); // 类名
+        classMap.put("cname", "类定义"); // 中文名
+        classMap.put("author", "weijiancai"); // 作者
+        classMap.put("class_desc", "类定义信息"); // 类描述
+        classMap.put("version", "1.0");  // 版本
 
-            String[] strs;
-            Set<String> set;
-            Map<String, Set<String>> clazzMap = new HashMap<String, Set<String>>();
-            List<String> keyList = new ArrayList<String>();
-            /*for(String key : params.keySet()) {
-                strs = key.split(".");
-                if (clazzMap.containsKey(strs[0])) {
-                    clazzMap.get(strs[0]).add(strs[1]);
-                } else {
-                    set = new HashSet<String>();
-                    set.add(strs[0]);
-                    clazzMap.put(strs[0], set);
-                }
-            }*/
-            
-            String values = "";
-            int i = 0;
-            for(String key : params.keySet()) {
-                sql.append(key);
-                values += "?";
-                if(++i < params.size()) {
-                    sql.append(",");
-                    values += ",";
-                }
-                keyList.add(key);
-            }
-            sql.append(") VALUES (").append(values).append(")");
-            //StringBuilder sql = "INSERT INTO sys_class_define () values()";
-            System.out.println(sql);
-            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-            i = 1;
-            for (String key : keyList) {
-                pstmt.setObject(i++, params.get(key));
-            }
-            pstmt.executeUpdate();
-            pstmt.close();
-            conn.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if(null != conn) {
-                try {
-                    conn.rollback();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        } finally {
-            if(null != conn) {
-                try {
-                    conn.close();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public static void save(Map<String, Object> params, String table) {
-        DataSource ds = DBManager.getDataSource(R.ds.SYS);
-        Connection conn = null;
-        try {
-            conn = ds.getConn();
-            conn.setAutoCommit(false);
-            StringBuilder sql = new StringBuilder("INSERT INTO " + table + " (");
-
-            List<String> keyList = new ArrayList<String>();
-
-            String values = "";
-            int i = 0;
-            for(String key : params.keySet()) {
-                sql.append(key);
-                values += "?";
-                if(++i < params.size()) {
-                    sql.append(",");
-                    values += ",";
-                }
-                keyList.add(key);
-            }
-            sql.append(") VALUES (").append(values).append(")");
-            System.out.println(sql);
-            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
-            i = 1;
-            for (String key : keyList) {
-                pstmt.setObject(i++, params.get(key));
-            }
-            pstmt.executeUpdate();
-            pstmt.close();
-            conn.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if(null != conn) {
-                try {
-                    conn.rollback();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        } finally {
-            if(null != conn) {
-                try {
-                    conn.close();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        //save(classMap, "sys_class_define");
     }
     
+    // 数据库列转换为对象字段
+    public static void columnToField(String className, String... tableNames) {
+        // 更新已有字段信息
+        // 插入新字段信息
+        DataSource ds = DBManager.getDataSource(R.ds.SYS);
+        Table table;
+        List<Column> columnList;
+        Map<String, Object> params;
+        for (String tableName : tableNames) {
+            table = ds.getTable(tableName);
+            columnList = table.getColumnList();
+            params = new HashMap<String, Object>();
+            for (Column column : columnList) {
+                params.put("id", getUUID());
+            }
+        }
+    }
+
+    // 更新数据库表信息
+    public static void update(Map<String, Object> params, String table) {
+
+    }
+
     public static ClassDef getClassDef(final String className) {
         DataSource ds = DBManager.getDataSource(R.ds.SYS);
         Connection conn = null;
@@ -187,24 +110,6 @@ public class ClassDefManager {
 
             def.setFormList(formList);
 
-            /*PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, className);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                def = new ClassDef();
-                def.setId(rs.getString(R.classdef.id));
-                def.setName(className);
-                def.setCname(rs.getString(R.classdef.cname));
-                def.setAuthor(rs.getString(R.classdef.author));
-                def.setVersion(rs.getString(R.classdef.version));
-                def.setDesc(rs.getString(R.classdef.class_desc));
-                def.setSuperClass(rs.getString(R.classdef.super_class));
-                def.setColCount(rs.getInt(R.classdef.col_count));
-                def.setColWidth(rs.getInt(R.classdef.col_width));
-            }
-            rs.close();
-            pstmt.close();*/
             conn.commit();
         } catch (Exception e) {
             e.printStackTrace();

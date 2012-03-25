@@ -1,6 +1,7 @@
-package com.fly.db.util;
+package com.fly.sys.db;
 
 import com.fly.common.Callback;
+import com.fly.sys.IPDB;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -56,9 +57,52 @@ public class JdbcTemplate {
         rs.close();
         pstmt.close();
     }
-    
-    public void save(Object obj, String table) {
 
+    public void save(IPDB po) throws Exception {
+        Map<String, Map<String, Object>> map = po.getPDBMap();
+        for (String table : map.keySet()) {
+            save(map.get(table), table);
+        }
+    }
+
+    public void save(Map<String, Object> params, String table)  throws Exception {
+        try {
+            StringBuilder sql = new StringBuilder("INSERT INTO " + table + " (");
+
+            List<String> keyList = new ArrayList<String>();
+
+            String values = "";
+            int i = 0;
+            for(String key : params.keySet()) {
+                sql.append(key);
+                values += "?";
+                if(++i < params.size()) {
+                    sql.append(",");
+                    values += ",";
+                }
+                keyList.add(key);
+            }
+            sql.append(") VALUES (").append(values).append(")");
+            System.out.println(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+            i = 1;
+            for (String key : keyList) {
+                pstmt.setObject(i++, params.get(key));
+            }
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(null != conn) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            throw e;
+        }
     }
 
     public void close() {

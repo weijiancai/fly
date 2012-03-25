@@ -1,11 +1,10 @@
-package com.fly.db;
+package com.fly.sys.db;
 
 import com.fly.common.XML;
 import com.fly.common.util.FileUtil;
-import com.fly.db.meta.DbmsDef;
-import com.fly.db.meta.Schema;
-import com.fly.db.util.DataSource;
-import com.fly.db.util.JdbcTemplate;
+import com.fly.sys.db.meta.DbmsDef;
+import com.fly.sys.db.meta.Schema;
+import com.fly.sys.dict.Category;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -20,9 +19,13 @@ public class DBManager {
     private static XML xml;
     private static Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
     private static Map<String, DbmsDef> dbmsMap = new HashMap<String, DbmsDef>();
+    private static Map<String, Category> dictMap = new HashMap<String, Category>();
+    private static DbmsDef defaultDbms;
+    private static Schema defaultSchema;
 
     static {
         loadDataSource();
+        // 装载Dbms
     }
 
     public static void loadDataSource() {
@@ -31,6 +34,7 @@ public class DBManager {
             xml = new XML(FileUtil.getFileFromClassPath("/datasource.xml"));
             dataSourceMap = xml.toMap("//datasource", "name", DataSource.class);
             dbmsMap = xml.toMap("//dbms", "name", DbmsDef.class);
+            dictMap = xml.toMap("//categoryList", "name", Category.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,14 +70,38 @@ public class DBManager {
         }
     }
 
-    private static void initMysqlDBMS(DbmsDef dbms) {
-        Connection conn = dbms.getConn();
+    /**
+     * 初始化字典
+     */
+    private static void initDict() {
+        for (Category category : dictMap.values()) {
+            // 保存类别
+
+        }
+    }
+
+    private static void initMysqlDBMS(DbmsDef dbms) throws Exception {
+        Connection conn = null;
         JdbcTemplate template = new JdbcTemplate(conn);
         try {
-            template.save(dbms, "sys_dbms_define");
+            template.save(dbms);
 
+            conn.commit();
         } finally {
             template.close();
         }
+    }
+
+    private static void loadDbms() {
+        // 1. 从数据库中装载Dbms信息
+
+        // 2. 从配置文件中装载Dbms信息
+        // 3. 如果数据库中没有文件中的信息，则将文件中的信息导入到数据库
+    }
+
+    public static Connection getConn() {
+        // 获得默认的Dbms
+        // 获得默认的Schema
+        return null;
     }
 }

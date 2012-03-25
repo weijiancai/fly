@@ -27,21 +27,12 @@
     <dbmsList>
         <dbms name="localhost_mysql" type="mysql" host="127.0.0.1" port="3306" isValid="true" sortNum="10">
             <driverClass>com.mysql.jdbc.Driver</driverClass>
+            <url>jdbc:mysql://127.0.0.1:3306/sys?characterEncoding=utf8</url>
+            <userName>root</userName>
+            <password>7758521</password>
             <schemaList>
-                <schema name="sys" alias="sys" version="0.0.1" isValid="true" sortNum="10" isDefault="true">
-                    <url>jdbc:mysql://127.0.0.1:3306/sys?characterEncoding=utf8</url>
-                    <userName>root</userName>
-                    <password>7758521</password>
-                </schema>
+                <schema name="sys" alias="sys" version="0.0.1" isValid="true" sortNum="10"/>
             </schemaList>
         </dbms>
     </dbmsList>
-
-    <categoryList>
-        <category name="数据库类型" isValid="true" sortNum="10">
-            <codeList>
-                <code name="MySql" value="01" isValid="true" sortNum="10"/>
-            </codeList>
-        </category>
-    </categoryList>
 </root>

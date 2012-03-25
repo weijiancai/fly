@@ -1,9 +1,9 @@
-package com.fly.db.util;
+package com.fly.sys.db;
 
 import com.fly.common.Callback;
 import com.fly.common.util.StringUtil;
-import com.fly.db.meta.Column;
-import com.fly.db.meta.Table;
+import com.fly.sys.db.meta.Column;
+import com.fly.sys.db.meta.Table;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

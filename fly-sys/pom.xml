@@ -17,11 +17,6 @@
     <dependencies>
         <dependency>
             <groupId>com.fly.framework</groupId>
-            <artifactId>db</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fly.framework</groupId>
             <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>

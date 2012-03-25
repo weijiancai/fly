@@ -30,4 +30,11 @@ public final class R {
         public static final String col_count = "col_count";
         public static final String col_width = "col_width";
     }
+
+    /**
+     * 默认数据源
+     */
+    public static final class dbms {
+        public static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+    }
 }

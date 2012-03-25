@@ -1,4 +1,4 @@
-package com.fly.db.meta;
+package com.fly.sys.db.meta;
 
 import java.util.Date;
 import java.util.List;

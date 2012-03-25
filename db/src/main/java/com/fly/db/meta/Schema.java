@@ -1,28 +1,19 @@
 package com.fly.db.meta;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class Table {
+public class Schema {
     private String id;
-    private String schemaId;
+    private String dbmsId;
     private String name;
     private String alias;
-    private String comment;
-    private String displayName;
+    private String version;
     private boolean isValid;
     private Date inputDate;
     private int sortNum;
-
-    List<Column> columnList;
-
-    public Table(String name, String comment) {
-        this.name = name;
-        this.comment = comment;
-    }
 
     public String getId() {
         return id;
@@ -32,12 +23,12 @@ public class Table {
         this.id = id;
     }
 
-    public String getSchemaId() {
-        return schemaId;
+    public String getDbmsId() {
+        return dbmsId;
     }
 
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
+    public void setDbmsId(String dbmsId) {
+        this.dbmsId = dbmsId;
     }
 
     public String getName() {
@@ -56,20 +47,12 @@ public class Table {
         this.alias = alias;
     }
 
-    public String getComment() {
-        return comment;
+    public String getVersion() {
+        return version;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public boolean isValid() {
@@ -96,28 +79,18 @@ public class Table {
         this.sortNum = sortNum;
     }
 
-    public List<Column> getColumnList() {
-        return columnList;
-    }
-
-    public void setColumnList(List<Column> columnList) {
-        this.columnList = columnList;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("Table");
+        sb.append("Schema");
         sb.append("{id='").append(id).append('\'');
-        sb.append(", schemaId='").append(schemaId).append('\'');
+        sb.append(", dbmsId='").append(dbmsId).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", alias='").append(alias).append('\'');
-        sb.append(", comment='").append(comment).append('\'');
-        sb.append(", displayName='").append(displayName).append('\'');
+        sb.append(", version='").append(version).append('\'');
         sb.append(", isValid=").append(isValid);
         sb.append(", inputDate=").append(inputDate);
         sb.append(", sortNum=").append(sortNum);
-        sb.append(", columnList=").append(columnList);
         sb.append('}');
         return sb.toString();
     }
