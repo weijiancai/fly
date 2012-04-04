@@ -1,29 +1,27 @@
 package com.fly.fxsys;
 
 import com.alibaba.fastjson.JSON;
+import com.fly.fxsys.control.Form;
+import com.fly.fxsys.control.Table;
 import com.fly.sys.view.form.FormField;
 import com.fly.sys.view.form.FormView;
 import com.fly.sys.view.table.ColAttr;
 import com.fly.sys.view.table.TableView;
 import com.fly.sys.view.tree.EasyuiNode;
 import javafx.application.Application;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.util.*;
 
@@ -117,7 +115,7 @@ public class FxSys extends Application {
         // 请求Classdef 表格
         Map<String, String> classDefTableMap = new HashMap<String, String>();
         params.put("view", "table");
-        params.put("classDef", "ClassDef");
+        params.put("classDef", "ClassDefine");
         final TableView tableView = new TableView();
         List<ColAttr> colAttrList = new ArrayList<ColAttr>();
         colAttrList.add(new ColAttr("className", "类名", "label"));
@@ -129,7 +127,7 @@ public class FxSys extends Application {
         
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> firstRow = new HashMap<String, Object>();
-        firstRow.put("className", "ClassDef");
+        firstRow.put("className", "ClassDefine");
         firstRow.put("cName", "类定义");
         firstRow.put("author", "weijiancai");
         firstRow.put("version", "1.0.0");
@@ -147,12 +145,19 @@ public class FxSys extends Application {
         tableView.setColData(dataList);
         tableView.setColAttr(colAttrList);
         tableView.setColWidth(100);
-        tableView.setClassDef("ClassDef");
+        tableView.setClassDef("ClassDefine");
 
+        FormView formView = getFormView();
+        final Form form = new Form();
+        form.setFormView(formView);
+        borderPane.setBottom(form);
+        
         String jsonStr = JSON.toJSONString(tableView);
         System.out.println(jsonStr);
         TableView tv = JSON.parseObject(jsonStr, TableView.class);
-        final javafx.scene.control.TableView<Map<String, Object>> fxtv = new javafx.scene.control.TableView<Map<String, Object>>();
+        Table table = new Table();
+        table.setTableView(tv);
+        /*final javafx.scene.control.TableView<Map<String, Object>> fxtv = new javafx.scene.control.TableView<Map<String, Object>>();
         List<ColAttr> colList = tv.getColAttr();
         for (final ColAttr colAttr : colList) {
             if ("hyperlink".equals(colAttr.getDisplayStyle())) {
@@ -160,7 +165,7 @@ public class FxSys extends Application {
                 col.setPrefWidth(tv.getColWidth());
                 col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink>, ObservableValue<Hyperlink>>() {
                     @Override
-                    public ObservableValue<Hyperlink> call(TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink> map) {
+                    public ObservableValue<Hyperlink> call(final TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink> map) {
                         Hyperlink hl = new Hyperlink(map.getValue().get(colAttr.getName()).toString());
                         hl.setStyle("-fx-text-fill: #0000ff;-fx-underline:true;");
                         hl.setOnAction(new EventHandler<ActionEvent>() {
@@ -168,21 +173,23 @@ public class FxSys extends Application {
                             public void handle(ActionEvent e) {
                                 Map<String, String> requestMap = new HashMap<String, String>();
                                 requestMap.put("view", "form");
-                                requestMap.put("classDef", tableView.getClassDef());
+                                requestMap.put("classDef", tableView.getClassDefine());
 
-                                FormView formView = getFormView();
-                                borderPane.setBottom(getGridPane());
+                                *//*FormView formView = getFormView();
+                                Form form = new Form();
+                                form.setFormView(formView, map.getValue());*//*
+                                form.setData(map.getValue());
                             }
                         });
                         return new SimpleObjectProperty<Hyperlink>(hl);
                     }
                 });
-                /*col.setCellFactory(new Callback<TableColumn<Map<String, Object>, String>, TableCell<Map<String, Object>, String>>() {
+                *//*col.setCellFactory(new Callback<TableColumn<Map<String, Object>, String>, TableCell<Map<String, Object>, String>>() {
                     @Override
                     public TableCell<Map<String, Object>, String> call(TableColumn<Map<String, Object>, String> mapStringTableColumn) {
                         return new HyperlinkCell();
                     }
-                });*/
+                });*//*
                 fxtv.getColumns().add(col);
             } else {
                 TableColumn<Map<String, Object>, String> col = new TableColumn<Map<String, Object>, String>(colAttr.getDisplayName());
@@ -195,7 +202,6 @@ public class FxSys extends Application {
                 });
                 fxtv.getColumns().add(col);
             }
-
         }
         fxtv.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -205,10 +211,11 @@ public class FxSys extends Application {
                 }
             }
         });
-        fxtv.getItems().addAll(tv.getColData());
+        fxtv.getItems().addAll(tv.getColData());*/
+
 
         borderPane.setLeft(treeView);
-        borderPane.setCenter(fxtv);
+        borderPane.setCenter(table);
         //borderPane.setBottom(new Hyperlink("超链接"));
         Scene scene = new Scene(borderPane, 1020, 700);
         stage.setScene(scene);
@@ -228,7 +235,7 @@ public class FxSys extends Application {
 
     private FormView getFormView() {
         FormView formView = new FormView();
-        formView.setClassDef("ClassDef");
+        formView.setClassDef("ClassDefine");
         formView.setColCount(3);
         formView.setColWidth(150);
         formView.setFieldGap(15);
@@ -238,7 +245,7 @@ public class FxSys extends Application {
         fieldList.add(new FormField("className", "类名", "textField"));
         fieldList.add(new FormField("cName", "中文名", "textField"));
         fieldList.add(new FormField("author", "作者", "textField"));
-        fieldList.add(new FormField("ersion", "版本", "textField"));
+        fieldList.add(new FormField("version", "版本", "textField"));
         fieldList.add(new FormField("classDesc", "类描述", "textField"));
         formView.setFieldList(fieldList);
 
@@ -255,7 +262,7 @@ public class FxSys extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(0, 0, 0, 10));
 
-// Category in column 2, row 1
+// DictCategory in column 2, row 1
         Text category = new Text("Sales:");
         category.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
         grid.add(category, 1, 0);

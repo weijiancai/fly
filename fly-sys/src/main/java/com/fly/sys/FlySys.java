@@ -12,7 +12,7 @@ public class FlySys {
      */
     public void init() throws Exception {
         // 系统未初始化
-        if (!SysInfo.isInit) {
+        if (!SysInfo.isDbmsInit()) {
             // 1. 初始化DBMS
             DBManager.initDBMS();
             // 2. 导入ClassDef类信息

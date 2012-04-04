@@ -1,7 +1,8 @@
 package com.fly.sys.clazz;
 
-import com.fly.sys.IPDB;
+import com.fly.sys.db.meta.DbmsTable;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  *
  * @author weijiancai
  */
-public class ClassDef implements IPDB {
+public class ClassDefine {
     private String id;
     private String name;
     private String cname;
@@ -18,8 +19,16 @@ public class ClassDef implements IPDB {
     private String author;
     private String desc;
     private String version;
+    private Date inputDate;
+    private boolean isValid;
+    private int sortNum;
+
     private List<ClassForm> formList;
-    private List<Field> fieldList;
+    private List<ClassField> fieldList;
+    private List<DbmsTable> tableList;
+
+    private Map<String, ClassField> fieldMap;
+    private Map<String, ClassForm> formMap;
 
     public String getId() {
         return id;
@@ -77,11 +86,11 @@ public class ClassDef implements IPDB {
         this.version = version;
     }
 
-    public List<Field> getFieldList() {
+    public List<ClassField> getFieldList() {
         return fieldList;
     }
 
-    public void setFieldList(List<Field> fieldList) {
+    public void setFieldList(List<ClassField> fieldList) {
         this.fieldList = fieldList;
     }
 
@@ -93,10 +102,58 @@ public class ClassDef implements IPDB {
         this.formList = formList;
     }
 
+    public Map<String, ClassField> getFieldMap() {
+        return fieldMap;
+    }
+
+    public void setFieldMap(Map<String, ClassField> fieldMap) {
+        this.fieldMap = fieldMap;
+    }
+
+    public Map<String, ClassForm> getFormMap() {
+        return formMap;
+    }
+
+    public void setFormMap(Map<String, ClassForm> formMap) {
+        this.formMap = formMap;
+    }
+
+    public Date getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(Date inputDate) {
+        this.inputDate = inputDate;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
+
+    public int getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(int sortNum) {
+        this.sortNum = sortNum;
+    }
+
+    public List<DbmsTable> getTableList() {
+        return tableList;
+    }
+
+    public void setTableList(List<DbmsTable> tableList) {
+        this.tableList = tableList;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("ClassDef");
+        sb.append("ClassDefine");
         sb.append("{id='").append(id).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", cname='").append(cname).append('\'');
@@ -108,10 +165,5 @@ public class ClassDef implements IPDB {
         sb.append(", fieldList=").append(fieldList);
         sb.append('}');
         return sb.toString();
-    }
-
-    @Override
-    public Map<String, Map<String, Object>> getPDBMap() {
-        return null;
     }
 }

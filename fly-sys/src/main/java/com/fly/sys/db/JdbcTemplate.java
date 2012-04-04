@@ -42,6 +42,27 @@ public class JdbcTemplate {
         return list;
     }
 
+    public Map<String, Object> queryForMap(String sql, Object... values) throws Exception {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        if (null != values && values.length > 0) {
+            int i = 1;
+            for (Object obj : values) {
+                pstmt.setObject(i++, obj);
+            }
+        }
+        ResultSet rs = pstmt.executeQuery();
+        Map<String, Object> map = new HashMap<String, Object>();
+        while (rs.next()) {
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                map.put(rs.getMetaData().getColumnLabel(i), rs.getObject(i));
+            }
+        }
+        rs.close();
+        pstmt.close();
+
+        return map;
+    }
+
     public void query(String sql, Callback<ResultSet> callback, Object... values) throws Exception {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         if (null != values && values.length > 0) {
@@ -56,6 +77,27 @@ public class JdbcTemplate {
         }
         rs.close();
         pstmt.close();
+    }
+
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... values) throws Exception {
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        if (null != values && values.length > 0) {
+            int i = 1;
+            for (Object obj : values) {
+                pstmt.setObject(i++, obj);
+            }
+        }
+        ResultSet rs = pstmt.executeQuery();
+        List<T> list = new ArrayList<T>();
+        T t;
+        while (rs.next()) {
+            t = rowMapper.mapRow(rs);
+            list.add(t);
+        }
+        rs.close();
+        pstmt.close();
+
+        return list;
     }
 
     public void save(IPDB po) throws Exception {
@@ -105,6 +147,42 @@ public class JdbcTemplate {
         }
     }
 
+    public void delete(Map<String, Object> params, String table)  throws Exception {
+        try {
+            StringBuilder sql = new StringBuilder("DELETE FROM " + table + " WHERE ");
+
+            List<String> keyList = new ArrayList<String>();
+
+            int i = 0;
+            for(String key : params.keySet()) {
+                sql.append(key).append("=?");
+                if(++i < params.size()) {
+                    sql.append(",");
+                }
+                keyList.add(key);
+            }
+            System.out.println(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+            i = 1;
+            for (String key : keyList) {
+                pstmt.setObject(i++, params.get(key));
+            }
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(null != conn) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            throw e;
+        }
+    }
+
     public void close() {
         if(null != conn) {
             try {
@@ -112,6 +190,57 @@ public class JdbcTemplate {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void clearTable(String sys_dbms_define) throws SQLException {
+        String sql = "DELETE FROM " + sys_dbms_define;
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.executeUpdate();
+    }
+
+    public void update(Map<String, Object> valueMap, Map<String, Object> conditionMap, String tableName) throws Exception {
+        try {
+            StringBuilder sql = new StringBuilder("UPDATE " + tableName + " SET ");
+
+            List<String> keyList = new ArrayList<String>();
+            List<String> conditionKeyList = new ArrayList<String>();
+
+            int i = 0;
+            for(String key : valueMap.keySet()) {
+                sql.append(key).append("=?");
+                if(++i < valueMap.size()) {
+                    sql.append(",");
+                }
+                keyList.add(key);
+            }
+            sql.append(" WHERE 1=1 ");
+            for (String key : conditionMap.keySet()) {
+                sql.append("AND ").append(key).append("=?");
+                conditionKeyList.add(key);
+            }
+            System.out.println(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+            i = 1;
+            for (String key : keyList) {
+                pstmt.setObject(i++, valueMap.get(key));
+            }
+            for (String key : conditionKeyList) {
+                pstmt.setObject(i++, conditionMap.get(key));
+            }
+            pstmt.executeUpdate();
+            pstmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(null != conn) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            throw e;
         }
     }
 }

@@ -1,23 +1,19 @@
 package com.fly.sys.dict;
 
-import com.fly.sys.db.PO;
-import com.fly.sys.util.UUIDUtil;
-
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author weijiancai
  */
-public class Code implements PO {
+public class DictCode {
     private String id;
     private String name;
     private String value;
-    private String categoryId;
     private boolean isValid;
     private int sortNum;
     private Date inputDate;
+
+    private DictCategory category;
 
     public String getId() {
         return id;
@@ -41,14 +37,6 @@ public class Code implements PO {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
     }
 
     public boolean isValid() {
@@ -75,32 +63,25 @@ public class Code implements PO {
         this.inputDate = inputDate;
     }
 
+    public DictCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(DictCategory category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("Code");
+        sb.append("DictCode");
         sb.append("{id='").append(id).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", value='").append(value).append('\'');
-        sb.append(", categoryId='").append(categoryId).append('\'');
         sb.append(", isValid=").append(isValid);
         sb.append(", sortNum=").append(sortNum);
         sb.append(", inputDate=").append(inputDate);
         sb.append('}');
         return sb.toString();
-    }
-
-    @Override
-    public Map<String, Object> getPoMap() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", UUIDUtil.getUUID());
-        map.put("name", getName());
-        map.put("value", getValue());
-        map.put("category_id", getCategoryId());
-        map.put("is_valid", isValid() ? "T" : "F");
-        map.put("sort_num", getSortNum());
-        map.put("input_date", getInputDate());
-
-        return map;
     }
 }

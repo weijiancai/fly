@@ -68,9 +68,11 @@ public class XML {
         iteratorNode(xpath, clazz, keyName, new Callback<T>() {
             @Override
             public void call(T t, Object... obj) {
-                String key = obj.length > 0 ? obj[0].toString() : null;
-                if (StringUtil.isNotEmpty(key)) {
-                    map.put(key, t);
+                if (null != obj && obj[0] != null) {
+                    String key = obj.length > 0 ? obj[0].toString() : null;
+                    if (StringUtil.isNotEmpty(key)) {
+                        map.put(key, t);
+                    }
                 }
             }
         });

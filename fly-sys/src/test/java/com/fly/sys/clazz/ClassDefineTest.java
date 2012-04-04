@@ -14,13 +14,13 @@ import java.util.UUID;
 /**
  * @author weijiancai
  */
-public class ClassDefTest {
+public class ClassDefineTest {
     @Test
     public void testSaveClassDef() {
         Map<String, Object> classMap = new HashMap<String, Object>();
         String classDefId = UUID.randomUUID().toString().replaceAll("-", "");
         classMap.put("id", classDefId);
-        classMap.put("name", "ClassDef"); // 类名
+        classMap.put("name", "ClassDefine"); // 类名
         classMap.put("cname", "类定义"); // 中文名
         classMap.put("author", "weijiancai"); // 作者
         classMap.put("class_desc", "类定义信息"); // 类描述
@@ -42,11 +42,11 @@ public class ClassDefTest {
         //ClassDefManager.save(formMap, "sys_class_form");
         
         /*Map<String, Map<String, Object>> clazzMap = new HashMap<String, Map<String, Object>>();
-        clazzMap.put("ClassDef", classMap);
+        clazzMap.put("ClassDefine", classMap);
         
 
         Map<String, String> params = new HashMap<String, String>();
-        params.put("classDef", "ClassDef");
+        params.put("classDef", "ClassDefine");
         params.put("save", Json.toJsonString(clazzMap));*/
     }
 

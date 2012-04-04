@@ -1,21 +1,19 @@
 package com.fly.sys.dict;
 
-import com.fly.sys.db.PO;
-import com.fly.sys.util.UUIDUtil;
-
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class Category implements PO {
+public class DictCategory {
     private String id;
     private String name;
     private boolean isValid;
     private int sortNum;
     private Date inputDate;
+
+    private List<DictCode> codeList;
 
     public String getId() {
         return id;
@@ -57,10 +55,18 @@ public class Category implements PO {
         this.inputDate = inputDate;
     }
 
+    public List<DictCode> getCodeList() {
+        return codeList;
+    }
+
+    public void setCodeList(List<DictCode> codeList) {
+        this.codeList = codeList;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append("Category");
+        sb.append("DictCategory");
         sb.append("{id='").append(id).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", isValid=").append(isValid);
@@ -68,17 +74,5 @@ public class Category implements PO {
         sb.append(", inputDate=").append(inputDate);
         sb.append('}');
         return sb.toString();
-    }
-
-    @Override
-    public Map<String, Object> getPoMap() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("id", UUIDUtil.getUUID());
-        map.put("name", getName());
-        map.put("is_valid", isValid() ? "T" : "F");
-        map.put("sort_num", getSortNum());
-        map.put("input_date", getInputDate());
-
-        return map;
     }
 }

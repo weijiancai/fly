@@ -82,7 +82,7 @@ public class DataSource {
                         column.setDataType(rs.getString("data_type"));
                         column.setDefaultValue(rs.getString("column_default"));
                         column.setMaxLength(rs.getInt("character_maximum_length"));
-                        column.setNull("YES".equalsIgnoreCase(rs.getString("is_null")));
+                        column.setNull("YES".equalsIgnoreCase(rs.getString("is_nullable")));
                         columnList.add(column);
                     } catch (Exception e) {
                         e.printStackTrace();

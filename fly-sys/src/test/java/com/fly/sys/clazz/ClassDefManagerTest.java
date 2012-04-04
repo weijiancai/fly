@@ -8,7 +8,7 @@ import org.junit.Test;
 public class ClassDefManagerTest {
     @Test
     public void testGetClassDef() throws Exception {
-        ClassDef def = ClassDefManager.getClassDef("ClassDef");
+        ClassDefine def = ClassDefManager.getClassDef("ClassDefine");
         System.out.println(def);
     }
 }

@@ -5,13 +5,10 @@ import java.util.Date;
 /**
  * @author weijiancai
  */
-public class ClassForm {
+public class ClassTable {
     private String id;
     private String name;
-    private int colCount;
     private int colWidth;
-    private int labelGap;
-    private int fieldGap;
     private boolean isValid;
     private Date inputDate;
     private int sortNum;
@@ -34,36 +31,12 @@ public class ClassForm {
         this.name = name;
     }
 
-    public int getColCount() {
-        return colCount;
-    }
-
-    public void setColCount(int colCount) {
-        this.colCount = colCount;
-    }
-
     public int getColWidth() {
         return colWidth;
     }
 
     public void setColWidth(int colWidth) {
         this.colWidth = colWidth;
-    }
-
-    public int getLabelGap() {
-        return labelGap;
-    }
-
-    public void setLabelGap(int labelGap) {
-        this.labelGap = labelGap;
-    }
-
-    public int getFieldGap() {
-        return fieldGap;
-    }
-
-    public void setFieldGap(int fieldGap) {
-        this.fieldGap = fieldGap;
     }
 
     public boolean isValid() {
@@ -96,19 +69,5 @@ public class ClassForm {
 
     public void setClassDefine(ClassDefine classDefine) {
         this.classDefine = classDefine;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("ClassForm");
-        sb.append("{id='").append(id).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", colCount=").append(colCount);
-        sb.append(", colWidth=").append(colWidth);
-        sb.append(", labelGap=").append(labelGap);
-        sb.append(", fieldGap=").append(fieldGap);
-        sb.append('}');
-        return sb.toString();
     }
 }

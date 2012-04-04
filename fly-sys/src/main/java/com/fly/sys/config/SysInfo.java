@@ -18,7 +18,8 @@ public class SysInfo {
     private static File infoFile;
     private static final String INFO_FILE_PATH = "/info.xml";
 
-    public static boolean isInit = false;
+    private static boolean isDbmsInit = false;
+    private static boolean isClassDefInit = false;
 
     public static void store() {
         try {
@@ -28,19 +29,40 @@ public class SysInfo {
         }
     }
 
+    public static boolean isDbmsInit() {
+        return isDbmsInit;
+    }
+
+    public static void setDbmsInit(boolean dbmsInit) {
+        isDbmsInit = dbmsInit;
+        infoProp.setProperty("isDbmsInit", dbmsInit + "");
+    }
+
+    public static boolean isClassDefInit() {
+        return isClassDefInit;
+    }
+
+    public static void setClassDefInit(boolean classDefInit) {
+        isClassDefInit = classDefInit;
+        infoProp.setProperty("isClassDefInit", classDefInit + "");
+    }
+
     static {
         // 从类路径中装载系统信息
         try {
             infoFile = FileUtil.getFileFromClassPath(INFO_FILE_PATH);
             if (null == infoFile) {
                 infoFile = new File(new File(SysInfo.class.getResource("/").toURI()), INFO_FILE_PATH);
-                infoProp.setProperty("isInit", "false");
+                infoProp.setProperty("isDbmsInit", "false");
+                infoProp.setProperty("isClassDefInit", "false");
                 store();
             } else {
                 infoProp.loadFromXML(new FileInputStream(infoFile));
 
-                String sIsInit = infoProp.getProperty("isInit");
-                isInit = "true".equalsIgnoreCase(sIsInit);
+                String sIsDbmsInit = infoProp.getProperty("isDbmsInit");
+                isDbmsInit = "true".equalsIgnoreCase(sIsDbmsInit);
+                String sIsClassDefInit = infoProp.getProperty("isClassDefInit");
+                isClassDefInit = "true".equalsIgnoreCase(sIsClassDefInit);
             }
         } catch (Exception e) {
             e.printStackTrace();

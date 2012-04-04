@@ -8,6 +8,6 @@ import org.junit.Test;
 public class SysInfoTest {
     @Test
     public void testSysInfo() {
-        System.out.println(SysInfo.isInit);
+        System.out.println(SysInfo.isDbmsInit());
     }
 }
