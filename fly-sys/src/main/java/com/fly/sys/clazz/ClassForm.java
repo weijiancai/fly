@@ -1,6 +1,7 @@
 package com.fly.sys.clazz;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author weijiancai
@@ -17,6 +18,7 @@ public class ClassForm {
     private int sortNum;
 
     private ClassDefine classDefine;
+    private List<FormField> fieldList;
 
     public String getId() {
         return id;
@@ -96,6 +98,14 @@ public class ClassForm {
 
     public void setClassDefine(ClassDefine classDefine) {
         this.classDefine = classDefine;
+    }
+
+    public List<FormField> getFieldList() {
+        return fieldList;
+    }
+
+    public void setFieldList(List<FormField> fieldList) {
+        this.fieldList = fieldList;
     }
 
     @Override

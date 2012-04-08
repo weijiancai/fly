@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<system>
+    <modules>
+        <module name="sys_manager" displayName="系统管理" sortNum="10"/>
+        <module name="dbms_manager" displayName="数据库管理" superModule="sys_manager" sortNum="10"/>
+        <module name="dbms_define" displayName="数据库定义" superModule="dbms_manager" sortNum="10" class="DbmsDefine"/>
+        <module name="dbms_schema" displayName="Schema定义" superModule="dbms_manager" sortNum="20" class="DbmsSchema"/>
+        <module name="dbms_table" displayName="数据库表" superModule="dbms_manager" sortNum="30" class="DbmsTable"/>
+        <module name="dbms_column" displayName="数据库列" superModule="dbms_manager" sortNum="40" class="DbmsColumn"/>
+    </modules>
+
+    <project name="FLY-SYS" projectDesc="飞翔系统" packageName="com.fly.sys" sortNum="10" >
+        <modules>
+            <module name="sys_manager"/>
+            <module name="dbms_manager"/>
+            <module name="dbms_define"/>
+            <module name="dbms_schema"/>
+            <module name="dbms_table"/>
+            <module name="dbms_column"/>
+        </modules>
+    </project>
+</system>

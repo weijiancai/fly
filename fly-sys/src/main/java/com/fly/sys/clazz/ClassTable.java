@@ -9,6 +9,7 @@ public class ClassTable {
     private String id;
     private String name;
     private int colWidth;
+    private String sql;
     private boolean isValid;
     private Date inputDate;
     private int sortNum;
@@ -37,6 +38,14 @@ public class ClassTable {
 
     public void setColWidth(int colWidth) {
         this.colWidth = colWidth;
+    }
+
+    public String getSql() {
+        return sql;
+    }
+
+    public void setSql(String sql) {
+        this.sql = sql;
     }
 
     public boolean isValid() {

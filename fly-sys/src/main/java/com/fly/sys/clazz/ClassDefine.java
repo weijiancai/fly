@@ -25,7 +25,8 @@ public class ClassDefine {
 
     private List<ClassForm> formList;
     private List<ClassField> fieldList;
-    private List<DbmsTable> tableList;
+    private List<DbmsTable> dbmsTableList;
+    private List<ClassTable> classTableList;
 
     private Map<String, ClassField> fieldMap;
     private Map<String, ClassForm> formMap;
@@ -142,12 +143,20 @@ public class ClassDefine {
         this.sortNum = sortNum;
     }
 
-    public List<DbmsTable> getTableList() {
-        return tableList;
+    public List<DbmsTable> getDbmsTableList() {
+        return dbmsTableList;
     }
 
-    public void setTableList(List<DbmsTable> tableList) {
-        this.tableList = tableList;
+    public void setDbmsTableList(List<DbmsTable> dbmsTableList) {
+        this.dbmsTableList = dbmsTableList;
+    }
+
+    public List<ClassTable> getClassTableList() {
+        return classTableList;
+    }
+
+    public void setClassTableList(List<ClassTable> classTableList) {
+        this.classTableList = classTableList;
     }
 
     @Override

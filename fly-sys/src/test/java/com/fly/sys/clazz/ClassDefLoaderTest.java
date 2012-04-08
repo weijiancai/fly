@@ -23,7 +23,7 @@ public class ClassDefLoaderTest {
         classDef.setVersion("");
 
 
-        ClassDefLoader.initClassDefFromTable("sys_dbms_define");
+        //ClassDefLoader.initClassDefFromTable("sys_dbms_define");
         ClassDefine result = ClassDefManager.getClassDef("DbmsDefine");
         assertThat(result.getName(), IsEqual.equalTo(classDef.getName()));
         assertThat(result.getCname(), IsEqual.equalTo(classDef.getCname()));

@@ -15,6 +15,15 @@ import java.util.Map;
 public class JdbcTemplate {
     private Connection conn;
 
+    public JdbcTemplate() {
+        try {
+            conn = DBManager.getConn();
+            conn.setAutoCommit(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public JdbcTemplate(Connection conn) {
         this.conn = conn;
     }
@@ -186,6 +195,7 @@ public class JdbcTemplate {
     public void close() {
         if(null != conn) {
             try {
+                conn.commit();
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();

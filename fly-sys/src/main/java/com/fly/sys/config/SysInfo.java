@@ -20,6 +20,8 @@ public class SysInfo {
 
     private static boolean isDbmsInit = false;
     private static boolean isClassDefInit = false;
+    private static boolean isProjectDefInit = false;
+    private static boolean isModuleDefInit = false;
 
     public static void store() {
         try {
@@ -47,6 +49,24 @@ public class SysInfo {
         infoProp.setProperty("isClassDefInit", classDefInit + "");
     }
 
+    public static boolean isProjectDefInit() {
+        return isProjectDefInit;
+    }
+
+    public static void setProjectDefInit(boolean projectDefInit) {
+        isProjectDefInit = projectDefInit;
+        infoProp.setProperty("isProjectDefInit", projectDefInit + "");
+    }
+
+    public static boolean isModuleDefInit() {
+        return isModuleDefInit;
+    }
+
+    public static void setModuleDefInit(boolean moduleDefInit) {
+        isModuleDefInit = moduleDefInit;
+        infoProp.setProperty("isModuleDefInit", moduleDefInit + "");
+    }
+
     static {
         // 从类路径中装载系统信息
         try {
@@ -55,6 +75,8 @@ public class SysInfo {
                 infoFile = new File(new File(SysInfo.class.getResource("/").toURI()), INFO_FILE_PATH);
                 infoProp.setProperty("isDbmsInit", "false");
                 infoProp.setProperty("isClassDefInit", "false");
+                infoProp.setProperty("isProjectDefInit", "false");
+                infoProp.setProperty("isModuleDefInit", "false");
                 store();
             } else {
                 infoProp.loadFromXML(new FileInputStream(infoFile));
@@ -63,6 +85,8 @@ public class SysInfo {
                 isDbmsInit = "true".equalsIgnoreCase(sIsDbmsInit);
                 String sIsClassDefInit = infoProp.getProperty("isClassDefInit");
                 isClassDefInit = "true".equalsIgnoreCase(sIsClassDefInit);
+                isProjectDefInit = "true".equalsIgnoreCase(infoProp.getProperty("isProjectDefInit"));
+                isModuleDefInit = "true".equalsIgnoreCase(infoProp.getProperty("isModuleDefInit"));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -20,6 +20,7 @@ public class DbmsPDBFactory {
             @Override
             public Map<String, Map<String, Object>> getPDBMap() {
                 dbmsDefine.setId(UUIDUtil.getUUID());
+                dbmsDefine.setInputDate(new Date());
 
                 Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
 
@@ -31,7 +32,7 @@ public class DbmsPDBFactory {
                 map.put("port", dbmsDefine.getPort());
                 map.put("driver_class", dbmsDefine.getDriverClass());
                 map.put("is_valid", dbmsDefine.isValid() ? "T" : "F");
-                map.put("input_date", new Date());
+                map.put("input_date", dbmsDefine.getInputDate());
                 map.put("sort_num", dbmsDefine.getSortNum());
 
                 result.put("sys_dbms_define", map);
