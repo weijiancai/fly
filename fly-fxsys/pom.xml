@@ -2,78 +2,43 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.fly.framework</groupId>
-    <artifactId>fly-framework</artifactId>
-    <packaging>pom</packaging>
+    <parent>
+        <groupId>com.fly.framework</groupId>
+        <artifactId>fly-framework</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>fly-fxsys</artifactId>
+    <packaging>jar</packaging>
     <version>1.0</version>
 
-    <name>fly-framework</name>
-
-    <organization>
-        <name>fly</name>
-    </organization>
-
-    <developers>
-        <developer>
-            <id>wjc</id>
-            <name>weijiancai</name>
-            <email>weijiancai@126.com</email>
-        </developer>
-
-        <developer>
-            <id>lins</id>
-            <name>linweihao</name>
-            <email>707079809@qq.com</email>
-        </developer>
-    </developers>
-
-    <modules>
-        <module>db</module>
-        <module>autoproject</module>
-        <module>fly-sys</module>
-        <module>fxsys</module>
-        <module>common</module>
-        <module>fly-fxsys</module>
-    </modules>
-
+    <name>fly-fxsys</name>
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
+            <groupId>javafx</groupId>
+            <artifactId>javafxrt</artifactId>
+            <version>2.0</version>
+            <type>jar</type>
+            <scope>system</scope>
+            <systemPath>${env.JAVAFX_HOME}\lib\jfxrt.jar</systemPath>
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.18</version>
-            <scope>test</scope>
+            <groupId>com.fly.framework</groupId>
+            <artifactId>fly-sys</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.1.17</version>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>0.1.18</version>
-        </dependency>-->
     </dependencies>
 
     <build>
-        <finalName>crm</finalName>
-
+        <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -108,8 +73,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>
