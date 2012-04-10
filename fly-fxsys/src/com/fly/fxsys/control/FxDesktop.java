@@ -1,46 +1,16 @@
 package com.fly.fxsys.control;
 
-import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.StackPaneBuilder;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextBuilder;
+import javafx.stage.Stage;
 
 /**
  * @author weijiancai
  */
 public class FxDesktop extends StackPane {
-    public FxDesktop() {
-        //this.setStyle("-fx-background-color: #ff0000");
-        TextArea tx = new TextArea();
-        tx.setText("fjwiefjwiefji");
-        //tx.setManaged(false);
-        //tx.setLayoutX(50);
-        //tx.setLayoutY(70);
-        tx.setMinSize(500,400);
-        //tx.autosize();
+    private Stage stage;
 
-        StackPane sp = StackPaneBuilder.create().layoutX(50).layoutY(70).minWidth(300).minHeight(200)
-                .style("-fx-background-color:#110000").managed(true).children(new Label("fjwiefwjfiwjefiwjfiewe")).build();
-        //sp.requestLayout();
-//        sp.autosize();
-        Text addedTextRef = TextBuilder.create()
-                .layoutX(50)
-                .layoutY(80)
-                .textOrigin(VPos.TOP)
-                .fill(Color.BLUE)
-                .font(Font.font("Sans Serif", FontWeight.BOLD, 16))
-                .text("fjwiefjwiefjwiefjwiefjwiefjwiefeewfwe")
-                .managed(true)
-                .build();
-
-        this.getChildren().addAll(new Button("Test"));
+    public FxDesktop(Stage stage) {
+        this.stage = stage;
     }
 
     public void showDialog(Dialog dialog) {
