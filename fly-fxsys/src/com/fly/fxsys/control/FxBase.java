@@ -1,9 +1,9 @@
 package com.fly.fxsys.control;
 
 import com.fly.fxsys.R;
+import com.fly.fxsys.config.SysInfo;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import netscape.javascript.JSObject;
@@ -18,7 +18,7 @@ public class FxBase extends Application {
     protected Stage stage;
     protected Scene scene;
     protected WindowResizeButton windowResizeButton;
-    protected BorderPane root;
+    protected static FxDesktop root;
 
     public FxBase() {
         try {
@@ -27,31 +27,22 @@ public class FxBase extends Application {
         } catch (Exception e) {
             isApplet = false;
         }
-
+        SysInfo.isApplet = isApplet;
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
+        root = new FxDesktop(stage);
+
         if (!isApplet) {
             stage.initStyle(StageStyle.UNDECORATED);
-            // create window resize button
-            windowResizeButton = new WindowResizeButton(stage, 1020,700);
-            // create root
-            root = new BorderPane() {
-                @Override protected void layoutChildren() {
-                    super.layoutChildren();
-                    windowResizeButton.autosize();
-                    windowResizeButton.setLayoutX(getWidth() - windowResizeButton.getLayoutBounds().getWidth());
-                    windowResizeButton.setLayoutY(getHeight() - windowResizeButton.getLayoutBounds().getHeight());
-                }
-            };
             root.getStyleClass().add("application");
         } else {
-            root = new BorderPane();
             root.getStyleClass().add("applet");
         }
+
 
         scene = new Scene(root, 1020, 700);
         setSkin(R.skin.DEFAULT);
@@ -69,5 +60,9 @@ public class FxBase extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static FxDesktop getDesktop() {
+        return root;
     }
 }

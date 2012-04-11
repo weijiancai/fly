@@ -1,15 +1,22 @@
 package com.fly.fxsys.control;
 
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import com.fly.fxsys.config.SysInfo;
+import javafx.event.EventHandler;
+import javafx.scene.control.ToolBar;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 
 /**
  * @author weijiancai
  */
-public class Dialog extends StackPane {
+public class Dialog extends BorderPane {
     private FxDesktop desktop;
     private boolean isModal;
     private Pane modalPane;
+
+    private TopBar topBar;
+
+
 
     public Dialog(FxDesktop desktop, String color, boolean modal) {
         this.desktop = desktop;
@@ -36,6 +43,9 @@ public class Dialog extends StackPane {
             modalPane = new Pane();
             modalPane.setStyle("-fx-background-color:#cccccc");
         }
+
+        topBar = new TopBar(this);
+        this.setTop(topBar);
     }
 
     public void show() {
@@ -69,5 +79,49 @@ public class Dialog extends StackPane {
 
     public void setModalPane(Pane modalPane) {
         this.modalPane = modalPane;
+    }
+
+    class TopBar extends ToolBar {
+        private double mouseDragOffsetX = 0;
+        private double mouseDragOffsetY = 0;
+
+        public TopBar(final Dialog dialog) {
+            this.setId("banner");
+            if (!SysInfo.isApplet) {
+                // add close min max
+                final WindowButtons windowButtons = new WindowButtons(dialog);
+                Region region = new Region();
+                HBox.setHgrow(region, Priority.ALWAYS);
+                this.getItems().addAll(region, windowButtons);
+                // add window header double clicking
+                this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override public void handle(MouseEvent event) {
+                        if (event.getClickCount() == 2) {
+                            windowButtons.toogleMaximized();
+                        }
+                    }
+                });
+                // add window dragging
+                this.setOnMousePressed(new EventHandler<MouseEvent>() {
+                    @Override public void handle(MouseEvent event) {
+                        mouseDragOffsetX = event.getSceneX();
+                        mouseDragOffsetY = event.getSceneY();
+                    }
+                });
+                this.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                    @Override public void handle(MouseEvent event) {
+                        if(!windowButtons.isMaximized()) {
+                            dialog.layoutXProperty().unbind();
+                            dialog.layoutYProperty().unbind();
+                            System.out.println("screenX = " + event.getSceneX() + " screenY = " + event.getSceneY());
+                            System.out.println("mouseDX = " + mouseDragOffsetX + " mouseDY = " + mouseDragOffsetY);
+                            System.out.println("x = " + (event.getScreenX() - mouseDragOffsetX) + " y = " + (event.getScreenY() - mouseDragOffsetY));
+                            dialog.setLayoutX(event.getScreenX() - mouseDragOffsetX);
+                            dialog.setLayoutY(event.getScreenY() - mouseDragOffsetY);
+                        }
+                    }
+                });
+            }
+        }
     }
 }
