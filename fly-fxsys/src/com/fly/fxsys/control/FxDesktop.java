@@ -1,5 +1,6 @@
 package com.fly.fxsys.control;
 
+import com.fly.fxsys.config.SysInfo;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -11,6 +12,11 @@ public class FxDesktop extends StackPane {
 
     public FxDesktop(Stage stage) {
         this.stage = stage;
+
+        if (!SysInfo.isApplet) {
+            // 设置ResizeButton
+            this.getChildren().add(new WindowResizeButton(this, stage.getWidth(), stage.getHeight()));
+        }
     }
 
     public void showDialog(Dialog dialog) {

@@ -1,9 +1,5 @@
 package com.fly.sys.clazz;
 
-import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
-import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlOutputVisitor;
-import com.alibaba.druid.sql.parser.SQLStatementParser;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -49,7 +45,7 @@ public class ClassDefineTest {
         params.put("classDef", "ClassDefine");
         params.put("save", Json.toJsonString(clazzMap));*/
     }
-
+/*
     @Test
     public void test_demo_0() throws Exception {
         String sql = "SELECT UUID();";
@@ -68,5 +64,5 @@ public class ClassDefineTest {
         }
 
         System.out.println(out.toString());
-    }
+    }*/
 }

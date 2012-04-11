@@ -72,7 +72,7 @@ public class Main extends Application {
                 };
 
         TableColumn active = new TableColumn();
-        //active.setCellValueFactory(new PropertyValueFactory<Person,Boolean>("active"));
+        active.setCellValueFactory(new PropertyValueFactory<Person,Boolean>("active"));
         active.setCellFactory(booleanCellFactory);
 
         tableView.getColumns().addAll(active, firstNameCol, lastNameCol, emailCol);
