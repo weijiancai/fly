@@ -15,7 +15,7 @@ public class FxBase extends Application {
     protected boolean isApplet;
     protected JSObject browser;
 
-    protected Stage stage;
+    protected static Stage _stage;
     protected Scene scene;
     protected WindowResizeButton windowResizeButton;
     protected static FxDesktop root;
@@ -32,7 +32,7 @@ public class FxBase extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.stage = stage;
+        _stage = stage;
 
         root = new FxDesktop(stage);
 
@@ -64,5 +64,9 @@ public class FxBase extends Application {
 
     public static FxDesktop getDesktop() {
         return root;
+    }
+
+    public static Stage getStage() {
+        return _stage;
     }
 }
