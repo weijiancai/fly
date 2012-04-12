@@ -1,29 +1,34 @@
 package com.fly.fxsys.control;
 
-import com.fly.fxsys.config.SysInfo;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
  * @author weijiancai
  */
-public class FxDesktop extends StackPane {
+public class FxDesktop extends BorderPane {
     private Stage stage;
 
-    public FxDesktop(Stage stage) {
+    private Banner banner;
+    private Workbench workbench;
+
+    public FxDesktop(final Stage stage) {
         this.stage = stage;
 
-        if (!SysInfo.isApplet) {
-            // 设置ResizeButton
-            this.getChildren().add(new WindowResizeButton(this, stage.getWidth(), stage.getHeight()));
-        }
+        banner = new Banner(stage);
+        this.setTop(banner);
+        workbench = new Workbench();
+        this.setCenter(workbench);
     }
 
     public void showDialog(Dialog dialog) {
-        if (dialog.isModal()) {
-            this.getChildren().add(dialog.getModalPane());
+        if (workbench.getChildren().contains(dialog)) {
+            return;
         }
-        this.getChildren().add(dialog);
+        if (dialog.isModal()) {
+            workbench.getChildren().add(dialog.getModalPane());
+        }
+        workbench.getChildren().add(dialog);
         dialog.autosize();
         System.out.println(dialog.getPrefWidth());
         System.out.println(dialog.getPrefHeight());
@@ -33,6 +38,6 @@ public class FxDesktop extends StackPane {
     }
 
     public void closeDialog(Dialog dialog) {
-        this.getChildren().removeAll(dialog.getModalPane(), dialog);
+        workbench.getChildren().removeAll(dialog.getModalPane(), dialog);
     }
 }
