@@ -2,7 +2,7 @@ package com.fly.sys.db;
 
 import com.fly.common.Callback;
 import com.fly.common.XML;
-import com.fly.common.util.FileUtil;
+import com.fly.common.util.UFile;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.meta.*;
 import com.fly.sys.dict.DictCategory;
@@ -122,6 +122,7 @@ public class DBManager {
 
         DatabaseMetaData metaData = conn.getMetaData();
         // 清空表sys_dbms_define
+        template.clearTable("sys_r_class_table");
         template.clearTable("sys_dbms_define");
 
         // 插入表sys_dbms_define
@@ -271,7 +272,7 @@ public class DBManager {
     public static void loadDataSource() {
         // 从classpath读取数据源配置文件datasource.xml
         try {
-            xml = new XML(FileUtil.getFileFromClassPath("/datasource.xml"));
+            xml = new XML(UFile.getFileFromClassPath("/datasource.xml"));
             dataSourceMap = xml.toMap("//datasource", "name", DataSource.class);
             dbmsMap = xml.toMap("//dbms", "name", DbmsDef.class);
             dictMap = xml.toMap("//categoryList", "name", DictCategory.class);

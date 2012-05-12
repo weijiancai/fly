@@ -11,7 +11,7 @@ public class ClassManager {
     }
 
     public static ClassDefine getClassDefine(String className) {
-        return ClassDefLoader.loadClassDef(className);
+        return ClassDefLoader.loadClassDef(className.toLowerCase());
     }
 
     public static ClassDefine getClassDefineById(String classId) {

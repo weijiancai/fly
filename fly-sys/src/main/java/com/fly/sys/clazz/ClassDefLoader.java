@@ -43,7 +43,7 @@ public class ClassDefLoader {
                 String sql = "SELECT * FROM sys_class_define";
                 List<ClassDefine> classList = template.query(sql, ClassRowMapperFactory.getClassDefine());
                 for (ClassDefine clazz : classList) {
-                    cache.put(clazz.getName(), clazz);
+                    cache.put(clazz.getName().toLowerCase(), clazz);
                     classIdMap.put(clazz.getId(), clazz);
                     // 查询类字段
                     sql = "SELECT * FROM sys_class_field WHERE class_id=?";
@@ -190,7 +190,7 @@ public class ClassDefLoader {
         template.save(ClassPDBFactory.getRClassTable(clazz.getId(), table.getId()));
 
         // 存入缓存
-        cache.put(clazz.getName(), clazz);
+        cache.put(clazz.getName().toLowerCase(), clazz);
         classIdMap.put(clazz.getId(), clazz);
     }
 
@@ -201,7 +201,7 @@ public class ClassDefLoader {
      * @return 返回类定义信息
      */
     public static ClassDefine loadClassDef(String className) {
-        return cache.get(className);
+        return cache.get(className.toLowerCase());
     }
 
     /**

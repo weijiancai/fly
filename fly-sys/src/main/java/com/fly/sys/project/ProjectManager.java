@@ -1,7 +1,7 @@
 package com.fly.sys.project;
 
 import com.fly.common.util.DomUtil;
-import com.fly.common.util.FileUtil;
+import com.fly.common.util.UFile;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.module.ModuleDefine;
@@ -38,8 +38,8 @@ public class ProjectManager {
             // 请空表sys_project_define
             template.clearTable("sys_project_define");
 
-            List<Map<String, String>> projectList = DomUtil.toList(FileUtil.getFileFromClassPath("/system.xml"), "/system/project");
-            List<Map<String, String>> moduleList = DomUtil.toList(FileUtil.getFileFromClassPath("/system.xml"), "/system/project/modules/module");
+            List<Map<String, String>> projectList = DomUtil.toList(UFile.getFileFromClassPath("/system.xml"), "/system/project");
+            List<Map<String, String>> moduleList = DomUtil.toList(UFile.getFileFromClassPath("/system.xml"), "/system/project/modules/module");
             // 插入项目
             for (Map<String, String> map : projectList) {
                 ProjectDefine projectDefine = new ProjectDefine();

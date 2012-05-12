@@ -31,6 +31,16 @@ import java.util.*;
 public class FxSys extends Application {
     @Override
     public void start(Stage stage) throws Exception {
+        /*URL url = new URL("http://localhost:8080/ProductDefine.class");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.connect();
+        String contentType = conn.getContentType();
+        System.out.println(contentType);
+        System.out.println(conn.getContent());*/
+        HttpConnection conn = new HttpConnection("http://localhost:8080/ProjectDefine.class");
+        System.out.println(conn.getContentStr());
+
+
         // 树形结构
         final TreeItem<String> treeRoot = new TreeItem<String>("Root node");
         treeRoot.getChildren().addAll(Arrays.asList(
@@ -55,7 +65,7 @@ public class FxSys extends Application {
         treeRoot.setExpanded(true);*/
 
         final BorderPane borderPane = new BorderPane();
-        
+
         // 请求导航菜单
         // 参数map
         final Map<String, String> params = new HashMap<String, String>();
@@ -96,14 +106,14 @@ public class FxSys extends Application {
                 "        \"text\":\"C#\"  \n" +
                 "    }]  \n" +
                 "}]  ";
-        System.out.println(data);
+//        System.out.println(data);
         // 解析数据
         List<EasyuiNode> list = JSON.parseArray(data, EasyuiNode.class);
-        System.out.println(list);
+//        System.out.println(list);
 
         TreeItem<Object> root = new TreeItem<Object>("Root node");
         //TreeItem<Object> item;
-        for(EasyuiNode node : list) {
+        for (EasyuiNode node : list) {
             iteratorTree(root, node);
         }
 
@@ -124,7 +134,7 @@ public class FxSys extends Application {
         colAttrList.add(new ColAttr("version", "版本", "label"));
         colAttrList.add(new ColAttr("classDesc", "类描述", "label"));
         colAttrList.add(new ColAttr("look", "查看", "hyperlink"));
-        
+
         List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
         Map<String, Object> firstRow = new HashMap<String, Object>();
         firstRow.put("className", "ClassDefine");
@@ -151,9 +161,9 @@ public class FxSys extends Application {
         final Form form = new Form();
         form.setFormView(formView);
         borderPane.setBottom(form);
-        
+
         String jsonStr = JSON.toJSONString(tableView);
-        System.out.println(jsonStr);
+//        System.out.println(jsonStr);
         TableView tv = JSON.parseObject(jsonStr, TableView.class);
         Table table = new Table();
         table.setTableView(tv);

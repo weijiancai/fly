@@ -1,8 +1,8 @@
 package com.fly.sys.module;
 
 import com.fly.common.util.DomUtil;
-import com.fly.common.util.FileUtil;
 import com.fly.common.util.StringUtil;
+import com.fly.common.util.UFile;
 import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.JdbcTemplate;
@@ -39,7 +39,7 @@ public class ModuleManager {
                 moduleNameMap.put(module.getName(), module);
             }
         } else {
-            List<Map<String, String>> list = DomUtil.toList(FileUtil.getFileFromClassPath("/system.xml"), "/system/modules/module");
+            List<Map<String, String>> list = DomUtil.toList(UFile.getFileFromClassPath("/system.xml"), "/system/modules/module");
             // 插入模块
             template.clearTable("sys_module_define");
 

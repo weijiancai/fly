@@ -1,7 +1,7 @@
 package com.fly.db;
 
 import com.fly.common.XML;
-import com.fly.common.util.FileUtil;
+import com.fly.common.util.UFile;
 import com.fly.db.meta.DbmsDef;
 import com.fly.db.meta.Schema;
 import com.fly.db.util.DataSource;
@@ -28,7 +28,7 @@ public class DBManager {
     public static void loadDataSource() {
         // 从classpath读取数据源配置文件datasource.xml
         try {
-            xml = new XML(FileUtil.getFileFromClassPath("/datasource.xml"));
+            xml = new XML(UFile.getFileFromClassPath("/datasource.xml"));
             dataSourceMap = xml.toMap("//datasource", "name", DataSource.class);
             dbmsMap = xml.toMap("//dbms", "name", DbmsDef.class);
         } catch (Exception e) {
