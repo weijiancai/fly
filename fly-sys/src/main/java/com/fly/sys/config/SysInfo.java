@@ -1,6 +1,6 @@
 package com.fly.sys.config;
 
-import com.fly.common.util.FileUtil;
+import com.fly.common.util.UFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,9 +70,9 @@ public class SysInfo {
     static {
         // 从类路径中装载系统信息
         try {
-            infoFile = FileUtil.getFileFromClassPath(INFO_FILE_PATH);
+            infoFile = UFile.getFileFromClassPath(INFO_FILE_PATH);
             if (null == infoFile) {
-                infoFile = new File(new File(SysInfo.class.getResource("/").toURI()), INFO_FILE_PATH);
+                infoFile = new File(new File(UFile.getURI("/")), INFO_FILE_PATH);
                 infoProp.setProperty("isDbmsInit", "false");
                 infoProp.setProperty("isClassDefInit", "false");
                 infoProp.setProperty("isProjectDefInit", "false");

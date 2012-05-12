@@ -4,6 +4,25 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
+    <filter>
+        <filter-name>SystemFilter</filter-name>
+        <filter-class>com.fly.sys.web.SystemFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SystemFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>ClassLoaderServlet</servlet-name>
+        <servlet-class>com.fly.sys.web.ClassLoaderServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClassLoaderServlet</servlet-name>
+        <url-pattern>*.class</url-pattern>
+    </servlet-mapping>
 
     <mime-mapping>
         <extension>jnlp</extension>
@@ -11,6 +30,6 @@
     </mime-mapping>
 
     <welcome-file-list>
-        <welcome-file>FXMLAdoptionForm.html</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 </web-app>

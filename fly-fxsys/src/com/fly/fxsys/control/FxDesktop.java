@@ -7,14 +7,10 @@ import javafx.stage.Stage;
  * @author weijiancai
  */
 public class FxDesktop extends BorderPane {
-    private Stage stage;
-
     private Banner banner;
     private Workbench workbench;
 
     public FxDesktop(final Stage stage) {
-        this.stage = stage;
-
         banner = new Banner(stage);
         this.setTop(banner);
         workbench = new Workbench();
@@ -25,13 +21,12 @@ public class FxDesktop extends BorderPane {
         if (workbench.getChildren().contains(dialog)) {
             return;
         }
+        dialog.setDesktop(this);
         if (dialog.isModal()) {
             workbench.getChildren().add(dialog.getModalPane());
         }
         workbench.getChildren().add(dialog);
         dialog.autosize();
-        System.out.println(dialog.getPrefWidth());
-        System.out.println(dialog.getPrefHeight());
 
         dialog.layoutXProperty().bind(this.widthProperty().add(-dialog.getWidth()).divide(2));
         dialog.layoutYProperty().bind(this.heightProperty().add(-dialog.getHeight()).divide(2));
@@ -39,5 +34,13 @@ public class FxDesktop extends BorderPane {
 
     public void closeDialog(Dialog dialog) {
         workbench.getChildren().removeAll(dialog.getModalPane(), dialog);
+    }
+
+    public Banner getBanner() {
+        return banner;
+    }
+
+    public void setBanner(Banner banner) {
+        this.banner = banner;
     }
 }

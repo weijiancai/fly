@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="fly-fxsys" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <description>Builds, tests, and runs the project fly-fxsys.</description>
+    <property file="project.properties"/>
+    <property environment="env"/>
+    <property name="javafx.sdk.path" value="${env.JAVAFX_HOME}"/>
+
+    <target name="default" depends="genkey">
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+                 uri="javafx:com.sun.javafx.tools.ant"
+                 classpath="${javafx.sdk.path}/tools/ant-javafx.jar"/>
+
+        <fx:application id="fly_fxsys"
+                        name="fly fxsys"
+                        mainClass="com.fly.fxsys.control.FxBase"/>
+
+
+        <!--<fx:csstobin outdir="build/classes">
+            <fileset dir="build/classes" includes="**/*.css"/>
+        </fx:csstobin>-->
+
+        <fx:resources id="appRes">
+            <fx:fileset dir="dist" requiredFor="preloader"
+                        includes="mypreloader.jar"/>
+            <fx:fileset dir="dist" includes="fly-fxsys.jar"/>
+            <fx:fileset dir="dist" includes="mysql-connector-java-5.1.18.jar"/>
+        </fx:resources>
+
+        <fx:jar destfile="dist/fly-fxsys.jar">
+            <fx:application refid="fly_fxsys"/>
+
+            <fx:resources refid="appRes"/>
+
+            <manifest>
+                <attribute name="Implementation-Vendor"
+                           value="${application.vendor}"/>
+                <attribute name="Implementation-Title"
+                           value="${application.title}"/>
+                <attribute name="Implementation-Version" value="1.0"/>
+            </manifest>
+
+            <fileset dir="${build.classes.dir}"/>
+        </fx:jar>
+
+        <fx:signjar keyStore="${basedir}/build/yhsms.keystore" destdir="dist"
+                    alias="yhsms" storePass="yhdtpass2012!" keyPass="yhdtpass2012!">
+            <fileset dir='dist'>
+                <include name="*.jar"/>
+            </fileset>
+            <fileset dir="lib">
+                <include name="*.jar"/>
+            </fileset>
+        </fx:signjar>
+
+        <fx:deploy width="1024" height="768"
+                   outdir="../fly-sys/src/main/webapp" embedJNLP="true"
+                   outfile="${application.title}">
+
+            <fx:application refId="fly_fxsys"/>
+
+            <fx:resources refid="appRes"/>
+
+            <fx:info title="Sample app: fly-fxsys"
+                     vendor="weijiancai"/>
+
+            <fx:permissions elevated="true"/>
+        </fx:deploy>
+
+        <!--<copy todir="../fly-sys/src/main/webapp">
+            <fileset dir="dist">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>-->
+    </target>
+
+    <target name="genkey">
+        <echo message="genkey..." />
+
+        <delete file="${basedir}/build/yhsms.keystore" />
+        <!--delete file="${basedir}/build/${certification}" /-->
+<!--
+        <genkey alias="${alias}" storepass="${storepass}" keystore="${basedir}/build/${keystore}" validity="3650" verbose="true">
+            <dname>
+                <param name="CN" value="${dname.CN}" />
+                <param name="OU" value="${dname.OU}" />
+                <param name="O" value="${dname.O}" />
+                <param name="L" value="${dname.L}" />
+                <param name="ST" value="${dname.ST}" />
+                <param name="C" value="${dname.C}" />
+            </dname>
+        </genkey>-->
+
+        <genkey alias="yhsms" storepass="yhdtpass2012!" keystore="${basedir}/build/yhsms.keystore" validity="3650"
+                verbose="true"
+                dname="CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US"
+                />
+
+        <!--exec executable="keytool">
+            <arg line="-export" />
+            <arg line="-keystore ${keystore}" />
+            <arg line="-storepass ${storepass}" />
+            <arg line="-alias ${alias}" />
+            <arg line="-file ${basedir}/build/${certification}" />
+        </exec-->
+        <echo message="genkey...done." />
+    </target>
+
+    <!--<fx:application id="fly-fxsys"
+                    name="fly fxsys"
+                    mainClass="com.fly.fxsys.FxSys"/>
+
+    <fx:resources id="appRes">
+        <fx:fileset dir="dist" requiredFor="preloader"
+                    includes="mypreloader.jar"/>
+        <fx:fileset dir="dist" includes="myapplet.jar"/>
+    </fx:resources>
+
+    <fx:jar destfile="dist/myapplet.jar">
+        <fx:application refid="sampleApp"/>
+
+        <fx:resources refid="appRes"/>
+
+        <manifest>
+            <attribute name="Implementation-Vendor"
+                       value="${application.vendor}"/>
+            <attribute name="Implementation-Title"
+                       value="${application.title}"/>
+            <attribute name="Implementation-Version" value="1.0"/>
+        </manifest>
+
+        <fileset dir="${build.classes.dir}"/>
+    </fx:jar>
+
+    <fx:signjar keyStore="${basedir}/sample.jks" destdir="dist"
+                alias="javafx" storePass="****" keyPass="****">
+        <fileset dir='dist/*.jar'/>
+    </fx:signjar>
+
+    <fx:deploy width="${applet.width}" height="${applet.height}"
+               outdir="${basedir}/${dist.dir}" embedJNLP="true"
+               outfile="${application.title}">
+
+        <fx:application refId="sampleApp"/>
+
+        <fx:resources refid="appRes"/>
+
+        <fx:info title="Sample app: ${application.title}"
+                 vendor="${application.vendor}"/>
+
+        <fx:permissions elevate="true"/>
+    </fx:deploy>-->
+
+    <!--<fx:jar destfile="dist-web/ColorfulCircles.jar">
+        <fx:application mainClass="colorfulcircles.ColorfulCircles"/>
+        <fileset dir="build/classes/">
+            <include name="**"/>
+        </fileset>
+    </fx:jar>
+
+    <fx:deploy width="800" height="600"
+               outdir="dist-web" outfile="ColorfulCircles">
+        <fx:info title="Colorful Circles"/>
+        <fx:application name="Colorful Circles example"
+                        mainClass="colorfulcircles.ColorfulCircles"/>
+        <fx:resources>
+            <fx:fileset dir="dist-web" includes="ColorfulCircles.jar"/>
+        </fx:resources>
+    </fx:deploy>-->
+</project>

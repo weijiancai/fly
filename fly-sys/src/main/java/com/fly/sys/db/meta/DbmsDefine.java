@@ -1,5 +1,6 @@
 package com.fly.sys.db.meta;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class DbmsDefine {
     }
 
     public List<DbmsSchema> getSchemaList() {
-        return schemaList;
+        return schemaList == null ? new ArrayList<DbmsSchema>() : schemaList;
     }
 
     public void setSchemaList(List<DbmsSchema> schemaList) {
