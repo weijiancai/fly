@@ -14,7 +14,7 @@ public class UFile {
     }
 
     public static File getFileFromClassPath(String path, boolean autoCreate) throws Exception {
-        URL url = UFile.class.getClassLoader().getResource(path);
+        URL url = getURL(path);
         if (url == null) {
             if (autoCreate) {
                 File file = new File(new File(getURI("/")), path);
@@ -29,15 +29,29 @@ public class UFile {
                 return null;
             }
         }
+
         return new File(getURI(path));
     }
 
     public static URI getURI(String path) throws URISyntaxException {
-        URL url = UFile.class.getClassLoader().getResource(path);
+        URL url = getURL(path);
         if (null != url) {
             return url.toURI();
         }
 
         return null;
     }
+
+    public static URL getURL(String path) throws URISyntaxException {
+            URL url = UFile.class.getClassLoader().getResource(path);
+            if (url == null) {
+                url = UFile.class.getResource(path);
+            }
+
+            if (null != url) {
+                return url;
+            }
+
+            return null;
+        }
 }

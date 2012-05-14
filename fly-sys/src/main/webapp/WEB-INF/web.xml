@@ -19,9 +19,19 @@
         <servlet-class>com.fly.sys.web.ClassLoaderServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>ProjectServlet</servlet-name>
+        <servlet-class>com.fly.sys.web.ProjectServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ClassLoaderServlet</servlet-name>
         <url-pattern>*.class</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ProjectServlet</servlet-name>
+        <url-pattern>/project</url-pattern>
     </servlet-mapping>
 
     <mime-mapping>

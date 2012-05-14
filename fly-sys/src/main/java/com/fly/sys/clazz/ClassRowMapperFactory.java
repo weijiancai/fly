@@ -109,7 +109,7 @@ public class ClassRowMapperFactory {
                 table.setId(rs.getString("id"));
                 table.setName(rs.getString("name"));
                 table.setColWidth(rs.getInt("col_width"));
-                table.setSql(rs.getString("sql"));
+                table.setSql(rs.getString("sql_text"));
                 table.setValid("T".equals(rs.getString("is_valid")));
                 table.setInputDate(rs.getDate("input_date"));
                 table.setSortNum(rs.getInt("sort_num"));

@@ -16,6 +16,7 @@ public class ModuleDefine {
     private String displayName;
     private String superModuleId;
     private String classId;
+    private int level;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
@@ -81,9 +82,9 @@ public class ModuleDefine {
     }
 
     public ModuleDefine getSuperModule() {
-        if (superModule == null) {
+        /*if (superModule == null) {
             superModule = ModuleManager.getModuleById(superModuleId);
-        }
+        }*/
         return superModule;
     }
 
@@ -100,9 +101,9 @@ public class ModuleDefine {
     }
 
     public ClassDefine getClassDefine() {
-        if (classDefine == null) {
+        /*if (classDefine == null) {
             classDefine = ClassManager.getClassDefineById(classId);
-        }
+        }*/
         return classDefine;
     }
 
@@ -116,6 +117,14 @@ public class ModuleDefine {
 
     public void setClassId(String classId) {
         this.classId = classId;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.project.ProjectPDBFactory;
 import com.fly.sys.project.ProjectRowMapperFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,23 +18,23 @@ import java.util.Map;
  * @author weijiancai
  */
 public class ModuleManager {
-    private static Map<String, ModuleDefine> moduleIdMap = new HashMap<String, ModuleDefine>();
-    private static Map<String, ModuleDefine> moduleNameMap = new HashMap<String, ModuleDefine>();
+    public static Map<String, ModuleDefine> moduleIdMap = new HashMap<String, ModuleDefine>();
+    public static Map<String, ModuleDefine> moduleNameMap = new HashMap<String, ModuleDefine>();
 
-    static {
+    /*static {
         try {
             init();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    private static void init() throws Exception {
+    public static void init() throws Exception {
         JdbcTemplate template = new JdbcTemplate();
 
         if (SysInfo.isModuleDefInit()) {
             String sql = "SELECT * FROM sys_module_define";
-            List<ModuleDefine> moduleList = template.query(sql, ProjectRowMapperFactory.getProjectModule());
+            List<ModuleDefine> moduleList = template.query(sql, ProjectRowMapperFactory.getModuleDefine());
             for (ModuleDefine module : moduleList) {
                 moduleIdMap.put(module.getId(), module);
                 moduleNameMap.put(module.getName(), module);
@@ -48,6 +49,7 @@ public class ModuleManager {
                 module = new ModuleDefine();
                 module.setName(map.get("name"));
                 module.setDisplayName(map.get("displayName"));
+                module.setLevel(Integer.parseInt(map.get("level")));
                 module.setSortNum(Integer.parseInt(map.get("sortNum")));
                 module.setValid(true);
                 module.setClassDefine(ClassManager.getClassDefine(map.get("class")));
@@ -87,4 +89,16 @@ public class ModuleManager {
     public static ModuleDefine getModuleByName(String moduleName) {
         return moduleNameMap.get(moduleName);
     }
+
+    public static List<ModuleDefine> getChildrenModule(String superModuleId) {
+            List<ModuleDefine> list = new ArrayList<ModuleDefine>();
+
+            for (ModuleDefine module : moduleIdMap.values()) {
+                if (superModuleId.equals(module.getSuperModuleId())) {
+                    list.add(module);
+                }
+            }
+
+            return list;
+        }
 }

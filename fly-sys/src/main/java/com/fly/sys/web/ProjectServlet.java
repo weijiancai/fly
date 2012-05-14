@@ -1,9 +1,8 @@
 package com.fly.sys.web;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.fly.sys.clazz.ClassDefine;
-import com.fly.sys.clazz.ClassManager;
+import com.fly.sys.project.ProjectDefine;
+import com.fly.sys.project.ProjectManager;
 import com.fly.sys.util.UString;
 
 import javax.servlet.ServletException;
@@ -14,18 +13,13 @@ import java.io.IOException;
 
 /**
  * @author weijiancai
+ * @since 1.0.0
  */
-public class ClassLoaderServlet extends HttpServlet {
+public class ProjectServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String classDefName = UString.substringBefore(request.getRequestURI().substring(1), ".class");
-        ClassDefine classDefine;
-        if ("ProjectModule".equalsIgnoreCase(classDefName)) {
-            classDefine = ClassManager.getClassDefine(classDefName);
-        } else {
-            classDefine = ClassManager.getClassDefine(classDefName);
-        }
+        ProjectDefine projectDefine = ProjectManager.getProjectByUrl(UString.substringBefore(request.getRequestURL().toString(), request.getRequestURI()));
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(JSON.toJSONString(classDefine));
+        response.getWriter().write(JSON.toJSONString(projectDefine));
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

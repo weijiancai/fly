@@ -1,5 +1,7 @@
 package com.fly.fxsys.control;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -15,6 +17,16 @@ public class FxDesktop extends BorderPane {
         this.setTop(banner);
         workbench = new Workbench();
         this.setCenter(workbench);
+
+        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                System.out.println("ScreenX = " + e.getScreenX());
+                System.out.println("ScreenY = " + e.getScreenY());
+                System.out.println("SceneX = " + e.getSceneX());
+                System.out.println("SceneY = " + e.getSceneY());
+            }
+        });
     }
 
     public void showDialog(Dialog dialog) {

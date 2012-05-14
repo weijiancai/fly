@@ -26,13 +26,13 @@ public class ClassDefLoader {
     public static Map<String, ClassDefine> classIdMap = new HashMap<String, ClassDefine>();
     private static int classSortNum = 10;
 
-    static {
+    /*static {
         try {
             init();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static void init() throws Exception {
         Connection conn = DBManager.getConn();

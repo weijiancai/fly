@@ -1,5 +1,7 @@
 package com.fly.sys.clazz;
 
+import com.fly.sys.util.UString;
+
 /**
  * 类管理器
  *
@@ -11,6 +13,10 @@ public class ClassManager {
     }
 
     public static ClassDefine getClassDefine(String className) {
+        if (UString.isEmpty(className)) {
+            return null;
+        }
+
         return ClassDefLoader.loadClassDef(className.toLowerCase());
     }
 

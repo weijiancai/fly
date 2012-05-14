@@ -1,5 +1,10 @@
 package com.fly.sys.web;
 
+import com.fly.sys.clazz.ClassDefLoader;
+import com.fly.sys.db.DBManager;
+import com.fly.sys.module.ModuleManager;
+import com.fly.sys.project.ProjectManager;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -17,6 +22,13 @@ public class SystemFilter implements javax.servlet.Filter {
     }
 
     public void init(FilterConfig config) throws javax.servlet.ServletException {
-
+        try {
+            DBManager.init();
+            ClassDefLoader.init();
+            ModuleManager.init();
+            ProjectManager.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

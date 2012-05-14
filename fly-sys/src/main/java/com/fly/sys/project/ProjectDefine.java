@@ -1,6 +1,9 @@
 package com.fly.sys.project;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author weijiancai
@@ -10,9 +13,12 @@ public class ProjectDefine {
     private String name;
     private String projectDesc;
     private String packageName;
+    private String projectUrl;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
+
+    private List<ProjectModule> moduleList;
 
     public String getId() {
         return id;
@@ -70,18 +76,24 @@ public class ProjectDefine {
         this.sortNum = sortNum;
     }
 
+    public String getProjectUrl() {
+        return projectUrl;
+    }
+
+    public void setProjectUrl(String projectUrl) {
+        this.projectUrl = projectUrl;
+    }
+
+    public List<ProjectModule> getModuleList() {
+        return moduleList;
+    }
+
+    public void setModuleList(List<ProjectModule> moduleList) {
+        this.moduleList = moduleList;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("ProjectDefine");
-        sb.append("{id='").append(id).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", projectDesc='").append(projectDesc).append('\'');
-        sb.append(", packageName='").append(packageName).append('\'');
-        sb.append(", inputDate=").append(inputDate);
-        sb.append(", isValid=").append(isValid);
-        sb.append(", sortNum=").append(sortNum);
-        sb.append('}');
-        return sb.toString();
+        return JSON.toJSONString(this, true);
     }
 }

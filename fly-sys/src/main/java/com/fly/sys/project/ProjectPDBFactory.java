@@ -29,6 +29,7 @@ public class ProjectPDBFactory {
                 map.put("is_valid", projectDefine.isValid() ? "T" : "F");
                 map.put("input_date", projectDefine.getInputDate());
                 map.put("sort_num", projectDefine.getSortNum());
+                map.put("project_url", projectDefine.getProjectUrl());
 
                 result.put("sys_project_define", map);
 
@@ -50,6 +51,7 @@ public class ProjectPDBFactory {
                 map.put("id", module.getId());
                 map.put("name", module.getName());
                 map.put("display_name", module.getDisplayName());
+                map.put("level", module.getLevel());
                 if (module.getSuperModule() != null) {
                     map.put("super_module_id", module.getSuperModule().getId());
                 }
@@ -74,6 +76,7 @@ public class ProjectPDBFactory {
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("project_id", module.getProject().getId());
+                map.put("level", module.getLevel());
                 map.put("display_name", module.getDisplayName() == null ? module.getModule().getDisplayName() : module.getDisplayName());
                 map.put("module_id", module.getModule().getId());
                 if (module.getSuperModuleId() != null) {

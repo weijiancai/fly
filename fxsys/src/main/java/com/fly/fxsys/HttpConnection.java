@@ -20,7 +20,9 @@ public class HttpConnection {
     public String getContentStr() throws IOException {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
         conn.connect();
+
         System.out.println(conn.getContentType());
         System.out.println(conn.getResponseCode());
         System.out.println(conn.getResponseMessage());

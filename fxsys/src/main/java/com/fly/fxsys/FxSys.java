@@ -1,8 +1,11 @@
 package com.fly.fxsys;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.fly.fxsys.control.Form;
 import com.fly.fxsys.control.Table;
+import com.fly.sys.project.ProjectDefine;
 import com.fly.sys.view.form.FormField;
 import com.fly.sys.view.form.FormView;
 import com.fly.sys.view.table.ColAttr;
@@ -37,13 +40,30 @@ public class FxSys extends Application {
         String contentType = conn.getContentType();
         System.out.println(contentType);
         System.out.println(conn.getContent());*/
-        HttpConnection conn = new HttpConnection("http://localhost:8080/ProjectDefine.class");
-        System.out.println(conn.getContentStr());
-
+        HttpConnection conn = new HttpConnection("http://localhost:8080/project");
+        /*ProjectDefine projectDefine = JSON.parseObject(conn.getContentStr(), ProjectDefine.class);
+        System.out.println(projectDefine);*/
+        JSONObject obj = JSON.parseObject(conn.getContentStr());
+        System.out.println(obj);
 
         // 树形结构
         final TreeItem<String> treeRoot = new TreeItem<String>("Root node");
-        treeRoot.getChildren().addAll(Arrays.asList(
+
+        JSONArray array = obj.getJSONArray("moduleList");
+        TreeItem<String> treeItem;
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject o = array.getJSONObject(i);
+            Object superModel = o.get("superModuleId");
+            if (superModel == null) {
+                treeItem = new TreeItem<String>(o.get("displayName").toString());
+                treeRoot.getChildren().add(treeItem);
+                iteratorTree(treeItem, o, array);
+            }
+        }
+
+
+
+        /*treeRoot.getChildren().addAll(Arrays.asList(
                 new TreeItem<String>("Child Node 1"),
                 new TreeItem<String>("Child Node 2"),
                 new TreeItem<String>("Child Node 3")));
@@ -57,12 +77,12 @@ public class FxSys extends Application {
                 new TreeItem<String>("Child Node 9"),
                 new TreeItem<String>("Child Node 10"),
                 new TreeItem<String>("Child Node 11"),
-                new TreeItem<String>("Child Node 12")));
+                new TreeItem<String>("Child Node 12")));*/
 
-        /*final TreeView<String> treeView = new TreeView<String>();
-        treeView.setShowRoot(true);
+        final TreeView<String> treeView = new TreeView<String>();
+        treeView.setShowRoot(false);
         treeView.setRoot(treeRoot);
-        treeRoot.setExpanded(true);*/
+        treeRoot.setExpanded(true);
 
         final BorderPane borderPane = new BorderPane();
 
@@ -117,10 +137,10 @@ public class FxSys extends Application {
             iteratorTree(root, node);
         }
 
-        final TreeView<Object> treeView = new TreeView<Object>();
+        /*final TreeView<Object> treeView = new TreeView<Object>();
         treeView.setShowRoot(true);
         treeView.setRoot(root);
-        treeRoot.setExpanded(true);
+        treeRoot.setExpanded(true);*/
 
         // 请求Classdef 表格
         Map<String, String> classDefTableMap = new HashMap<String, String>();
@@ -239,6 +259,17 @@ public class FxSys extends Application {
         if(node.getChildren() != null) {
             for (EasyuiNode n : node.getChildren()) {
                 iteratorTree(local, n);
+            }
+        }
+    }
+
+    private void iteratorTree(TreeItem<String> item, JSONObject node, JSONArray array) {
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            if (node.get("moduleId").equals(obj.get("superModuleId"))) {
+                TreeItem<String> local = new TreeItem<String>(obj.getString("displayName"));
+                item.getChildren().add(local);
+                iteratorTree(local, obj, array);
             }
         }
     }

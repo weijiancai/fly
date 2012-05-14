@@ -7,6 +7,7 @@ import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.module.ModuleDefine;
 import com.fly.sys.module.ModuleManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,16 +17,18 @@ import java.util.Map;
  */
 public class ProjectManager {
     public static Map<String, ProjectDefine> projectMap = new HashMap<String, ProjectDefine>();
+    public static Map<String, ProjectDefine> projectUrlMap = new HashMap<String, ProjectDefine>();
+    public static Map<String, List<ProjectModule>> projectModuleMap = new HashMap<String, List<ProjectModule>>();
 
-    static {
+    /*static {
         try {
             init();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    private static void init() throws Exception {
+    public static void init() throws Exception {
         JdbcTemplate template = new JdbcTemplate();
 
         if (SysInfo.isProjectDefInit()) { // ProjectDef 已经初始化
@@ -33,6 +36,13 @@ public class ProjectManager {
             List<ProjectDefine> projectList = template.query(sql, ProjectRowMapperFactory.getProjectDefine());
             for (ProjectDefine project : projectList) {
                 projectMap.put(project.getName(), project);
+                projectUrlMap.put(project.getProjectUrl(), project);
+                // 查询项目模块
+                sql = String.format("SELECT * FROM sys_project_module WHERE project_id='%s'", project.getId());
+                List<ProjectModule> list = template.query(sql, ProjectRowMapperFactory.getProjectModule());
+                project.setModuleList(list);
+                projectModuleMap.put(project.getId(), list);
+
             }
         } else {
             // 请空表sys_project_define
@@ -46,6 +56,7 @@ public class ProjectManager {
                 projectDefine.setName(map.get("name"));
                 projectDefine.setProjectDesc(map.get("projectDesc"));
                 projectDefine.setPackageName(map.get("packageName"));
+                projectDefine.setProjectUrl(map.get("projectUrl"));
                 try {
                     projectDefine.setSortNum(Integer.parseInt(map.get("sortNum")));
                 } catch (Exception e) {
@@ -55,26 +66,38 @@ public class ProjectManager {
                 // 插入表sys_project_define
                 template.save(ProjectPDBFactory.getProjectDefine(projectDefine));
                 projectMap.put(projectDefine.getName(), projectDefine);
+                projectUrlMap.put(projectDefine.getProjectUrl(), projectDefine);
 
                 // 插入项目模块
-                String moduleName;
-                ModuleDefine moduleDefine;
+                String moduleName, superModuleName, level;
+                ModuleDefine moduleDefine, superModule;
+                List<ProjectModule> list = new ArrayList<ProjectModule>();
                 for (Map<String, String> aMap : moduleList) {
                     moduleName = aMap.get("name");
+                    superModuleName = aMap.get("superModule");
+                    level = aMap.get("level");
                     moduleDefine = ModuleManager.getModuleByName(moduleName);
+                    superModule = ModuleManager.getModuleByName(superModuleName);
                     if (moduleDefine != null) {
                         ProjectModule projectModule = new ProjectModule();
                         projectModule.setDisplayName(moduleDefine.getDisplayName());
                         projectModule.setSortNum(moduleDefine.getSortNum());
                         projectModule.setModule(moduleDefine);
+                        projectModule.setModuleId(moduleDefine.getId());
                         projectModule.setProject(projectDefine);
-                        projectModule.setSuperModule(moduleDefine.getSuperModule());
+                        projectModule.setSuperModule(superModule);
+                        if (superModule != null) {
+                            projectModule.setSuperModuleId(superModule.getId());
+                        }
                         projectModule.setValid(true);
+                        projectModule.setLevel(Integer.parseInt(level));
                         // 保存
                         template.save(ProjectPDBFactory.getProjectModule(projectModule));
+                        list.add(projectModule);
                     }
-
                 }
+                projectDefine.setModuleList(list);
+                projectModuleMap.put(projectDefine.getId(), list);
             }
         }
 
@@ -83,5 +106,21 @@ public class ProjectManager {
 
     public static ProjectDefine getProject(String projectName) {
         return projectMap.get(projectName);
+    }
+
+    public static ProjectDefine getProjectByUrl(String url) {
+        return projectUrlMap.get(url);
+    }
+
+    public static List<ProjectModule> getChildrenModule(String projectId, String superModuleId) {
+        List<ProjectModule> list = new ArrayList<ProjectModule>();
+
+        for (ProjectModule module : projectModuleMap.get(projectId)) {
+            if (superModuleId.equals(module.getSuperModuleId())) {
+                list.add(module);
+            }
+        }
+
+        return list;
     }
 }
