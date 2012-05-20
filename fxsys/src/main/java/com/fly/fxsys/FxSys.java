@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fly.fxsys.control.Form;
 import com.fly.fxsys.control.Table;
-import com.fly.sys.project.ProjectDefine;
 import com.fly.sys.view.form.FormField;
 import com.fly.sys.view.form.FormView;
 import com.fly.sys.view.table.ColAttr;
@@ -26,7 +25,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author weijiancai
@@ -44,7 +46,7 @@ public class FxSys extends Application {
         /*ProjectDefine projectDefine = JSON.parseObject(conn.getContentStr(), ProjectDefine.class);
         System.out.println(projectDefine);*/
         JSONObject obj = JSON.parseObject(conn.getContentStr());
-        System.out.println(obj);
+//        System.out.println(obj);
 
         // 树形结构
         final TreeItem<String> treeRoot = new TreeItem<String>("Root node");
