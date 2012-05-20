@@ -1,7 +1,5 @@
 package com.fly.fxsys.control;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -11,22 +9,15 @@ import javafx.stage.Stage;
 public class FxDesktop extends BorderPane {
     private Banner banner;
     private Workbench workbench;
+    private ModuleMenu moduleMenu;
 
     public FxDesktop(final Stage stage) {
         banner = new Banner(stage);
         this.setTop(banner);
+        moduleMenu = new ModuleMenu(this);
+        this.setLeft(moduleMenu);
         workbench = new Workbench();
         this.setCenter(workbench);
-
-        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                System.out.println("ScreenX = " + e.getScreenX());
-                System.out.println("ScreenY = " + e.getScreenY());
-                System.out.println("SceneX = " + e.getSceneX());
-                System.out.println("SceneY = " + e.getSceneY());
-            }
-        });
     }
 
     public void showDialog(Dialog dialog) {
@@ -54,5 +45,21 @@ public class FxDesktop extends BorderPane {
 
     public void setBanner(Banner banner) {
         this.banner = banner;
+    }
+
+    public ModuleMenu getModuleMenu() {
+        return moduleMenu;
+    }
+
+    public void setModuleMenu(ModuleMenu moduleMenu) {
+        this.moduleMenu = moduleMenu;
+    }
+
+    public Workbench getWorkbench() {
+        return workbench;
+    }
+
+    public void setWorkbench(Workbench workbench) {
+        this.workbench = workbench;
     }
 }

@@ -1,12 +1,17 @@
 package com.fly.fxsys.control;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fly.fxsys.R;
 import com.fly.fxsys.config.SysInfo;
+import com.fly.fxsys.util.HttpConnection;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import netscape.javascript.JSObject;
+
+import java.io.IOException;
 
 /**
  * @author weijiancai
@@ -18,7 +23,9 @@ public class FxBase extends Application {
     protected static Stage _stage;
     protected Scene scene;
     protected WindowResizeButton windowResizeButton;
-    protected static FxDesktop root;
+    protected static FxDesktop desktop;
+
+    public static final String URL = "http://localhost:8080";
 
     public FxBase() {
         try {
@@ -34,21 +41,29 @@ public class FxBase extends Application {
     public void start(Stage stage) throws Exception {
         _stage = stage;
 
-        root = new FxDesktop(stage);
+        desktop = new FxDesktop(stage);
 
         if (!isApplet) {
             stage.initStyle(StageStyle.UNDECORATED);
-            root.getStyleClass().add("application");
+            desktop.getStyleClass().add("application");
         } else {
-            root.getStyleClass().add("applet");
+            desktop.getStyleClass().add("applet");
         }
 
+        // 初始化项目
+        initProject();
 
-        scene = new Scene(root, 1020, 700);
+        scene = new Scene(desktop, 1020, 700);
         setSkin(R.skin.DEFAULT);
         // show stage
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void initProject() throws IOException {
+        HttpConnection conn = new HttpConnection(URL + "/project");
+        JSONObject obj = JSON.parseObject(conn.getContentStr());
+        desktop.getModuleMenu().initMenu(obj);
     }
 
     public void setSkin(String skin) {
@@ -63,7 +78,7 @@ public class FxBase extends Application {
     }
 
     public static FxDesktop getDesktop() {
-        return root;
+        return desktop;
     }
 
     public static Stage getStage() {

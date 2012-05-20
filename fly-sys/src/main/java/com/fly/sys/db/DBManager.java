@@ -249,8 +249,8 @@ public class DBManager {
         }
 
         sortNum = 10;
-        SysInfo.setDbmsInit(true);
-        SysInfo.store();
+//        SysInfo.setDbmsInit(true);
+//        SysInfo.store();
     }
 
     private static void loadSysDbms() {

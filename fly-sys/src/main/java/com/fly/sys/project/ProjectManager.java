@@ -42,7 +42,6 @@ public class ProjectManager {
                 List<ProjectModule> list = template.query(sql, ProjectRowMapperFactory.getProjectModule());
                 project.setModuleList(list);
                 projectModuleMap.put(project.getId(), list);
-
             }
         } else {
             // 请空表sys_project_define
@@ -75,7 +74,6 @@ public class ProjectManager {
                 for (Map<String, String> aMap : moduleList) {
                     moduleName = aMap.get("name");
                     superModuleName = aMap.get("superModule");
-                    level = aMap.get("level");
                     moduleDefine = ModuleManager.getModuleByName(moduleName);
                     superModule = ModuleManager.getModuleByName(superModuleName);
                     if (moduleDefine != null) {
@@ -90,7 +88,6 @@ public class ProjectManager {
                             projectModule.setSuperModuleId(superModule.getId());
                         }
                         projectModule.setValid(true);
-                        projectModule.setLevel(Integer.parseInt(level));
                         // 保存
                         template.save(ProjectPDBFactory.getProjectModule(projectModule));
                         list.add(projectModule);

@@ -1,10 +1,7 @@
 package com.fly.sys.project;
 
 import com.fly.sys.module.ModuleDefine;
-import com.fly.sys.module.ModuleManager;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +13,6 @@ public class ProjectModule {
     private String displayName;
     private String moduleId;
     private String superModuleId;
-    private int level;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
@@ -98,13 +94,6 @@ public class ProjectModule {
         this.module = module;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
 
     public List<ProjectModule> getChildren() {
         /*if (children == null) {

@@ -51,7 +51,6 @@ public class ProjectPDBFactory {
                 map.put("id", module.getId());
                 map.put("name", module.getName());
                 map.put("display_name", module.getDisplayName());
-                map.put("level", module.getLevel());
                 if (module.getSuperModule() != null) {
                     map.put("super_module_id", module.getSuperModule().getId());
                 }
@@ -76,7 +75,6 @@ public class ProjectPDBFactory {
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("project_id", module.getProject().getId());
-                map.put("level", module.getLevel());
                 map.put("display_name", module.getDisplayName() == null ? module.getModule().getDisplayName() : module.getDisplayName());
                 map.put("module_id", module.getModule().getId());
                 if (module.getSuperModuleId() != null) {
@@ -91,6 +89,33 @@ public class ProjectPDBFactory {
                 map.put("sort_num", module.getSortNum());
 
                 result.put("sys_project_module", map);
+
+                return result;
+            }
+        };
+    }
+
+    public static IPDB getModuleTpl(final ModuleDefine module) {
+        return new IPDB() {
+            @Override
+            public Map<String, Map<String, Object>> getPDBMap() {
+                module.setId(UUIDUtil.getUUID());
+                module.setInputDate(new Date());
+
+                Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("id", module.getId());
+                map.put("name", module.getName());
+                map.put("display_name", module.getDisplayName());
+                if (module.getSuperModule() != null) {
+                    map.put("super_module_id", module.getSuperModule().getId());
+                }
+                map.put("is_valid", module.isValid() ? "T" : "F");
+                map.put("input_date", module.getInputDate());
+                map.put("sort_num", module.getSortNum());
+
+                result.put("sys_module_define", map);
 
                 return result;
             }

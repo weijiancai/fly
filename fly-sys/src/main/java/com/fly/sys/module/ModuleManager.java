@@ -49,7 +49,6 @@ public class ModuleManager {
                 module = new ModuleDefine();
                 module.setName(map.get("name"));
                 module.setDisplayName(map.get("displayName"));
-                module.setLevel(Integer.parseInt(map.get("level")));
                 module.setSortNum(Integer.parseInt(map.get("sortNum")));
                 module.setValid(true);
                 module.setClassDefine(ClassManager.getClassDefine(map.get("class")));
@@ -57,6 +56,8 @@ public class ModuleManager {
                 template.save(ProjectPDBFactory.getModule(module));
                 moduleIdMap.put(module.getId(), module);
                 moduleNameMap.put(module.getName(), module);
+
+
             }
 
             // 更新父模块

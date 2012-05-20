@@ -59,8 +59,8 @@ public class FxSys extends Application {
             }
         });
 
-//        StackPane root = new StackPane();
-//        root.getChildren().add(btn);
+//        StackPane desktop = new StackPane();
+//        desktop.getChildren().add(btn);
         final FxDesktop root = new FxDesktop(stage);
         final Dialog dialog = new Dialog(false);
 
