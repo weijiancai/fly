@@ -76,8 +76,8 @@ public class ModuleManager {
                 }
             }
 
-            SysInfo.setModuleDefInit(true);
-            SysInfo.store();
+//            SysInfo.setModuleDefInit(true);
+//            SysInfo.store();
         }
 
         template.close();

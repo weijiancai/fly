@@ -1,12 +1,13 @@
 package com.fly.sys.clazz;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class ClassForm {
+public class ClassForm implements Serializable {
     private String id;
     private String name;
     private int colCount;

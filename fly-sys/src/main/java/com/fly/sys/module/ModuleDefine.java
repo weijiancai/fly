@@ -1,16 +1,16 @@
 package com.fly.sys.module;
 
 import com.fly.sys.clazz.ClassDefine;
-import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.project.ProjectDefine;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class ModuleDefine {
+public class ModuleDefine implements Serializable {
     private String id;
     private String name;
     private String displayName;

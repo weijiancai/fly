@@ -2,13 +2,14 @@ package com.fly.sys.project;
 
 import com.fly.sys.module.ModuleDefine;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class ProjectModule {
+public class ProjectModule implements Serializable {
     private String projectId;
     private String displayName;
     private String moduleId;
@@ -112,5 +113,10 @@ public class ProjectModule {
 
     public void setModuleId(String moduleId) {
         this.moduleId = moduleId;
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
     }
 }

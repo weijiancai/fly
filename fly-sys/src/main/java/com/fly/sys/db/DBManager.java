@@ -45,11 +45,11 @@ public class DBManager {
         // 装载sys数据源
         loadSysDbms();
         // 初始化系统表
-        try {
+        /*try {
             init();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public static void init() throws Exception {
@@ -153,6 +153,9 @@ public class DBManager {
         // 保存
         template.save(DbmsPDBFactory.getDbmsSchema(schema));
         schemaNameMap.put(schema.getNameKey(), schema);
+        List<DbmsSchema> schemaList = new ArrayList<DbmsSchema>();
+        schemaList.add(schema);
+        dbmsDefine.setSchemaList(schemaList);
 
         // 插入表sys_dbms_table
         final List<DbmsTable> tableList = new ArrayList<DbmsTable>();
@@ -181,6 +184,7 @@ public class DBManager {
                 }
             }
         }, conn.getCatalog());
+        schema.setTableList(tableList);
 
         // 插入表sys_dbms_column
         sql = "SELECT * FROM information_schema.COLUMNS WHERE table_schema=? AND table_name=?";

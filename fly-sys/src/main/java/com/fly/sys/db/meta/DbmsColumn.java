@@ -3,12 +3,13 @@ package com.fly.sys.db.meta;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.dict.DictCode;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author weijiancai
  */
-public class DbmsColumn {
+public class DbmsColumn implements Serializable {
     private String id;
     private String name;
     private String alias;

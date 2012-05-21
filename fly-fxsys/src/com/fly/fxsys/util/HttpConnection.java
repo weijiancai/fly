@@ -1,9 +1,6 @@
 package com.fly.fxsys.util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -39,5 +36,19 @@ public class HttpConnection {
         conn.disconnect();
 
         return sb.toString();
+    }
+
+    public Object getObject() throws IOException, ClassNotFoundException {
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.connect();
+        InputStream in = conn.getInputStream();
+        ObjectInputStream ois = new ObjectInputStream(in);
+
+        Object obj = ois.readObject();
+        ois.close();
+
+        return  obj;
     }
 }

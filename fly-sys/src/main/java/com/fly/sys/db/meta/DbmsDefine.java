@@ -1,5 +1,6 @@
 package com.fly.sys.db.meta;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Map;
 /**
  * @author weijiancai
  */
-public class DbmsDefine {
+public class DbmsDefine implements Serializable {
     private String id;
     private String name;
     private String type;

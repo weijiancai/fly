@@ -1,12 +1,13 @@
 package com.fly.sys.db.meta;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class DbmsSchema {
+public class DbmsSchema implements Serializable {
     private String id;
     private String name;
     private String alias;

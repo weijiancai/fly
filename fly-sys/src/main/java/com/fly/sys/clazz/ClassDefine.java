@@ -2,6 +2,7 @@ package com.fly.sys.clazz;
 
 import com.fly.sys.db.meta.DbmsTable;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
  *
  * @author weijiancai
  */
-public class ClassDefine {
+public class ClassDefine implements Serializable {
     private String id;
     private String name;
     private String cname;

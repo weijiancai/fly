@@ -1,6 +1,5 @@
 package com.fly.sys.web;
 
-import com.alibaba.fastjson.JSON;
 import com.fly.sys.project.ProjectDefine;
 import com.fly.sys.project.ProjectManager;
 import com.fly.sys.util.UString;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * @author weijiancai
@@ -18,8 +18,16 @@ import java.io.IOException;
 public class ProjectServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProjectDefine projectDefine = ProjectManager.getProjectByUrl(UString.substringBefore(request.getRequestURL().toString(), request.getRequestURI()));
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(JSON.toJSONString(projectDefine));
+//        response.setContentType("application/json;charset=UTF-8");
+//        response.getWriter().write(JSON.toJSONString(projectDefine));
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
+            oos.writeObject(projectDefine);
+            oos.flush();
+            oos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -1,7 +1,9 @@
 package com.fly.sys.project;
 
+import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.db.RowMapper;
 import com.fly.sys.module.ModuleDefine;
+import com.fly.sys.module.ModuleManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,6 +45,8 @@ public class ProjectRowMapperFactory {
                 module.setValid("T".equals(rs.getString("is_valid")));
                 module.setClassId(rs.getString("class_id"));
 
+                module.setClassDefine(ClassManager.getClassDefineById(module.getClassId()));
+
                 return module;
             }
         };
@@ -61,8 +65,8 @@ public class ProjectRowMapperFactory {
                     module.setSuperModuleId(rs.getString("super_module_id"));
                     module.setValid("T".equals(rs.getString("is_valid")));
 
-//                    module.setModule(ModuleManager.getModuleById(rs.getString("module_id")));
-//                    module.setSuperModule(ModuleManager.getModuleById(rs.getString("super_module_id")));
+                    module.setModule(ModuleManager.getModuleById(rs.getString("module_id")));
+                    module.setSuperModule(ModuleManager.getModuleById(rs.getString("super_module_id")));
 
                     return module;
                 }

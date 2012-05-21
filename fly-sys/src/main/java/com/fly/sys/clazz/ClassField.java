@@ -2,6 +2,7 @@ package com.fly.sys.clazz;
 
 import com.fly.sys.db.meta.DbmsColumn;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  *
  * @author weijiancai
  */
-public class ClassField {
+public class ClassField implements Serializable {
     private String id;
     private String name;
     private String fieldDesc;

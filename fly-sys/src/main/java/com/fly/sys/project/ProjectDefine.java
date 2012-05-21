@@ -2,13 +2,14 @@ package com.fly.sys.project;
 
 import com.alibaba.fastjson.JSON;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class ProjectDefine {
+public class ProjectDefine implements Serializable {
     private String id;
     private String name;
     private String projectDesc;

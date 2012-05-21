@@ -1,10 +1,9 @@
 package com.fly.fxsys.control;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fly.fxsys.R;
 import com.fly.fxsys.config.SysInfo;
 import com.fly.fxsys.util.HttpConnection;
+import com.fly.sys.project.ProjectDefine;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,6 +25,7 @@ public class FxBase extends Application {
     protected static FxDesktop desktop;
 
     public static final String URL = "http://localhost:8080";
+    public static ProjectDefine project = new ProjectDefine();
 
     public FxBase() {
         try {
@@ -60,10 +60,15 @@ public class FxBase extends Application {
         stage.show();
     }
 
-    private void initProject() throws IOException {
+    private void initProject() throws IOException, ClassNotFoundException {
         HttpConnection conn = new HttpConnection(URL + "/project");
-        JSONObject obj = JSON.parseObject(conn.getContentStr());
-        desktop.getModuleMenu().initMenu(obj);
+//        JSONObject obj = JSON.parseObject(conn.getContentStr());
+        long start = System.currentTimeMillis();
+        project = (ProjectDefine) conn.getObject();
+        long end = System.currentTimeMillis();
+        System.out.println("消耗时间：" + (end - start));
+        System.out.println(project);
+        desktop.getModuleMenu().initMenu(project);
     }
 
     public void setSkin(String skin) {
