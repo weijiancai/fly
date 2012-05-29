@@ -1,8 +1,13 @@
 package com.fly.fxsys.util;
 
+import com.alibaba.fastjson.JSON;
+import com.fly.fxsys.control.FxBase;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author weijiancai
@@ -50,5 +55,28 @@ public class HttpConnection {
         ois.close();
 
         return  obj;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<Map<String, Object>> query(String className, Map<String, String> map) throws IOException, ClassNotFoundException {
+        URL url = new URL(FxBase.URL + "/" + className + ".class");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+//        conn.connect();
+        String params = String.format("query=%s", JSON.toJSONString(map));
+        conn.getOutputStream().write(params.getBytes());
+        conn.getOutputStream().flush();
+        conn.getOutputStream().close();
+        int code = conn.getResponseCode();
+        System.out.println("Response Code = " + code);
+
+        InputStream in = conn.getInputStream();
+        ObjectInputStream ois = new ObjectInputStream(in);
+
+        Object obj = ois.readObject();
+        ois.close();
+
+        return  (List<Map<String, Object>>)obj;
     }
 }

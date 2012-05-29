@@ -187,4 +187,60 @@ public class ClassPDBFactory {
             }
         };
     }
+
+    public static IPDB getClassQuery(final ClassQuery classQuery) {
+        return new IPDB() {
+            @Override
+            public Map<String, Map<String, Object>> getPDBMap() {
+                classQuery.setId(UUIDUtil.getUUID());
+
+                Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("id", classQuery.getId());
+                map.put("class_id", classQuery.getClassDefine().getId());
+                map.put("name", classQuery.getName());
+                map.put("col_width", classQuery.getColWidth());
+                map.put("col_count", classQuery.getColCount());
+                map.put("label_gap", classQuery.getLabelGap());
+                map.put("field_gap", classQuery.getFieldGap());
+                map.put("is_valid", classQuery.isValid() ? "T" : "F");
+                map.put("input_date", new Date());
+                map.put("sort_num", classQuery.getSortNum());
+
+                result.put("sys_class_query", map);
+
+                return result;
+            }
+        };
+    }
+
+    public static IPDB getQueryField(final QueryField field) {
+        return new IPDB() {
+            @Override
+            public Map<String, Map<String, Object>> getPDBMap() {
+                field.setId(UUIDUtil.getUUID());
+
+                Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("id", field.getId());
+                map.put("query_id", field.getClassQuery().getId());
+                map.put("field_id", field.getClassField().getId());
+                map.put("display_name", field.getDisplayName());
+                map.put("display_style", field.getDisplayStyle());
+                map.put("is_display", field.isDisplay() ? "T" : "F");
+                map.put("width", field.getWidth());
+                map.put("height", field.getHeight());
+                map.put("operator", field.getOperator());
+                map.put("is_valid", field.isValid() ? "T" : "F");
+                map.put("input_date", new Date());
+                map.put("sort_num", field.getSortNum());
+
+                result.put("sys_class_query_field", map);
+
+                return result;
+            }
+        };
+    }
 }

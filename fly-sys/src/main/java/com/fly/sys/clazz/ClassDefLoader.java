@@ -64,13 +64,30 @@ public class ClassDefLoader {
                         form.setFieldList(formFieldList);
                     }
 
+                    // 查询类Query
+                    sql = "SELECT * FROM sys_class_query WHERE class_id=?";
+                    List<ClassQuery> queryList = template.query(sql, ClassRowMapperFactory.getClassQuery(clazz), clazz.getId());
+                    clazz.setClassQueryList(queryList);
+                    // 查询类Form字段
+                    sql = "SELECT * FROM sys_class_query_field WHERE query_id=?";
+                    for (ClassQuery query : queryList) {
+                        List<QueryField> queryFieldList = template.query(sql, ClassRowMapperFactory.getQueryField(query), query.getId());
+                        query.setQueryFieldList(queryFieldList);
+                    }
+
                     // 查询类Table
                     sql = "SELECT * FROM sys_class_table WHERE class_id=?";
                     List<ClassTable> tableList = template.query(sql, ClassRowMapperFactory.getClassTable(clazz), clazz.getId());
                     clazz.setClassTableList(tableList);
+                    // 查询类Table字段
+                    sql = "SELECT * FROM sys_class_table_field WHERE class_table_id=?";
+                    for (ClassTable table : tableList) {
+                        List<TableField> tableFieldList = template.query(sql, ClassRowMapperFactory.getClassTableField(table), table.getId());
+                        table.setTableFieldList(tableFieldList);
+                    }
+
                     // 查询类Table Query
                     sql = "SELECT * FROM sys_class_table_query WHERE table_id=?";
-
                 }
             } else {
                 classSortNum = 10;
@@ -134,8 +151,12 @@ public class ClassDefLoader {
         classTable.setValid(true);
         classTable.setClassDefine(clazz);
         template.save(ClassPDBFactory.getClassTable(classTable));
+        List<ClassTable> classTableList = new ArrayList<ClassTable>();
+        classTableList.add(classTable);
+        clazz.setClassTableList(classTableList);
 
         // 插入sys_class_table_field
+        List<TableField> tableFieldList = new ArrayList<TableField>();
         TableField tableField;
         fieldSortNum = 0;
         for (ClassField classField : fieldList) {
@@ -149,7 +170,9 @@ public class ClassDefLoader {
             tableField.setSortNum(fieldSortNum += 10);
             // 插入表
             template.save(ClassPDBFactory.getTableField(tableField));
+            tableFieldList.add(tableField);
         }
+        classTable.setTableFieldList(tableFieldList);
 
         // 插入sys_class_form信息
         ClassForm classForm = new ClassForm();
@@ -179,6 +202,41 @@ public class ClassDefLoader {
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
         }
+
+        // 插入sys_class_query信息
+        ClassQuery classQuery = new ClassQuery();
+        classQuery.setName("default");
+        classQuery.setColCount(3);
+        classQuery.setColWidth(180);
+        classQuery.setClassDefine(clazz);
+        classQuery.setLabelGap(5);
+        classQuery.setFieldGap(15);
+        classQuery.setSortNum(classSortNum);
+        classQuery.setValid(true);
+        template.save(ClassPDBFactory.getClassQuery(classQuery));
+        List<ClassQuery> classQueryList = new ArrayList<ClassQuery>();
+        classQueryList.add(classQuery);
+        clazz.setClassQueryList(classQueryList);
+
+        // 插入sys_class_query_field
+        List<QueryField> queryFieldList = new ArrayList<QueryField>();
+        QueryField queryField;
+        fieldSortNum = 0;
+        for (ClassField classField : fieldList) {
+            queryField = new QueryField();
+            queryField.setClassQuery(classQuery);
+            queryField.setClassField(classField);
+            queryField.setDisplayName(classField.getFieldDesc());
+            queryField.setOperator("=");
+            queryField.setWidth(180);
+            queryField.setDisplay(true);
+            queryField.setSortNum(fieldSortNum += 10);
+            queryField.setValid(true);
+            // 插入表
+            template.save(ClassPDBFactory.getQueryField(queryField));
+            queryFieldList.add(queryField);
+        }
+        classQuery.setQueryFieldList(queryFieldList);
 
         // 插入类-table关联表
         List<DbmsTable> tableList = new ArrayList<DbmsTable>();

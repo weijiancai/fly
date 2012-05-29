@@ -28,6 +28,7 @@ public class ClassDefine implements Serializable {
     private List<ClassField> fieldList;
     private List<DbmsTable> dbmsTableList;
     private List<ClassTable> classTableList;
+    private List<ClassQuery> classQueryList;
 
     private Map<String, ClassField> fieldMap;
     private Map<String, ClassForm> formMap;
@@ -158,6 +159,14 @@ public class ClassDefine implements Serializable {
 
     public void setClassTableList(List<ClassTable> classTableList) {
         this.classTableList = classTableList;
+    }
+
+    public List<ClassQuery> getClassQueryList() {
+        return classQueryList;
+    }
+
+    public void setClassQueryList(List<ClassQuery> classQueryList) {
+        this.classQueryList = classQueryList;
     }
 
     @Override

@@ -100,6 +100,52 @@ public class ClassRowMapperFactory {
         };
     }
 
+    public static RowMapper<ClassQuery> getClassQuery(final ClassDefine clazz) {
+        return new RowMapper<ClassQuery>() {
+            @Override
+            public ClassQuery mapRow(ResultSet rs) throws SQLException {
+                ClassQuery query = new ClassQuery();
+
+                query.setId(rs.getString("id"));
+                query.setName(rs.getString("name"));
+                query.setColCount(rs.getInt("col_Count"));
+                query.setColWidth(rs.getInt("col_width"));
+                query.setLabelGap(rs.getInt("label_gap"));
+                query.setFieldGap(rs.getInt("field_gap"));
+                query.setValid("T".equals(rs.getString("is_valid")));
+                query.setInputDate(rs.getDate("input_date"));
+                query.setSortNum(rs.getInt("sort_num"));
+                query.setClassDefine(clazz);
+
+                return query;
+            }
+        };
+    }
+
+    public static RowMapper<QueryField> getQueryField(final ClassQuery query) {
+        return new RowMapper<QueryField>() {
+            @Override
+            public QueryField mapRow(ResultSet rs) throws SQLException {
+                QueryField field = new QueryField();
+
+                field.setId(rs.getString("id"));
+                field.setDisplayName(rs.getString("display_name"));
+                field.setDisplayStyle(rs.getString("display_style"));
+                field.setHeight(rs.getInt("height"));
+                field.setWidth(rs.getInt("width"));
+                field.setOperator(rs.getString("operator"));
+                field.setDisplay("T".equals(rs.getString("is_display")));
+                field.setValid("T".equals(rs.getString("is_valid")));
+                field.setInputDate(rs.getDate("input_date"));
+                field.setSortNum(rs.getInt("sort_num"));
+                field.setClassQuery(query);
+                field.setClassField(ClassManager.getClassFieldById(rs.getString("field_id")));
+
+                return field;
+            }
+        };
+    }
+
     public static RowMapper<ClassTable> getClassTable(final ClassDefine clazz) {
         return new RowMapper<ClassTable>() {
             @Override
@@ -116,6 +162,29 @@ public class ClassRowMapperFactory {
                 table.setClassDefine(clazz);
 
                 return table;
+            }
+        };
+    }
+
+    public static RowMapper<TableField> getClassTableField(final ClassTable table) {
+        return new RowMapper<TableField>() {
+            @Override
+            public TableField mapRow(ResultSet rs) throws SQLException {
+                TableField field = new TableField();
+
+                field.setId(rs.getString("id"));
+                field.setDisplayName(rs.getString("display_name"));
+                field.setDisplayStyle(rs.getString("display_style"));
+                field.setColWidth(rs.getInt("col_width"));
+                field.setDisplay("T".equals(rs.getString("is_display")));
+                field.setValid("T".equals(rs.getString("is_valid")));
+                field.setInputDate(rs.getDate("input_date"));
+                field.setSortNum(rs.getInt("sort_num"));
+                field.setClassTable(table);
+
+                field.setClassField(ClassManager.getClassFieldById(rs.getString("field_id")));
+
+                return field;
             }
         };
     }

@@ -56,8 +56,6 @@ public class ModuleManager {
                 template.save(ProjectPDBFactory.getModule(module));
                 moduleIdMap.put(module.getId(), module);
                 moduleNameMap.put(module.getName(), module);
-
-
             }
 
             // 更新父模块

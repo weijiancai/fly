@@ -1,11 +1,12 @@
 package com.fly.sys.clazz;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author weijiancai
  */
-public class TableField {
+public class TableField implements Serializable {
     private String id;
     private String displayName;
     private String displayStyle;

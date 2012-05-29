@@ -5,19 +5,25 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * table查询
+ *
  * @author weijiancai
+ * @version 1.0.0
  */
-public class ClassTable implements Serializable {
+public class ClassQuery implements Serializable {
     private String id;
+    private String classId;
     private String name;
+    private int colCount;
     private int colWidth;
-    private String sql;
-    private boolean isValid;
+    private int labelGap;
+    private int fieldGap;
     private Date inputDate;
+    private boolean isValid;
     private int sortNum;
 
     private ClassDefine classDefine;
-    private List<TableField> tableFieldList;
+    private List<QueryField> queryFieldList;
 
     public String getId() {
         return id;
@@ -25,6 +31,14 @@ public class ClassTable implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 
     public String getName() {
@@ -35,6 +49,14 @@ public class ClassTable implements Serializable {
         this.name = name;
     }
 
+    public int getColCount() {
+        return colCount;
+    }
+
+    public void setColCount(int colCount) {
+        this.colCount = colCount;
+    }
+
     public int getColWidth() {
         return colWidth;
     }
@@ -43,20 +65,20 @@ public class ClassTable implements Serializable {
         this.colWidth = colWidth;
     }
 
-    public String getSql() {
-        return sql;
+    public int getLabelGap() {
+        return labelGap;
     }
 
-    public void setSql(String sql) {
-        this.sql = sql;
+    public void setLabelGap(int labelGap) {
+        this.labelGap = labelGap;
     }
 
-    public boolean isValid() {
-        return isValid;
+    public int getFieldGap() {
+        return fieldGap;
     }
 
-    public void setValid(boolean valid) {
-        isValid = valid;
+    public void setFieldGap(int fieldGap) {
+        this.fieldGap = fieldGap;
     }
 
     public Date getInputDate() {
@@ -65,6 +87,14 @@ public class ClassTable implements Serializable {
 
     public void setInputDate(Date inputDate) {
         this.inputDate = inputDate;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
     }
 
     public int getSortNum() {
@@ -83,11 +113,11 @@ public class ClassTable implements Serializable {
         this.classDefine = classDefine;
     }
 
-    public List<TableField> getTableFieldList() {
-        return tableFieldList;
+    public List<QueryField> getQueryFieldList() {
+        return queryFieldList;
     }
 
-    public void setTableFieldList(List<TableField> tableFieldList) {
-        this.tableFieldList = tableFieldList;
+    public void setQueryFieldList(List<QueryField> queryFieldList) {
+        this.queryFieldList = queryFieldList;
     }
 }

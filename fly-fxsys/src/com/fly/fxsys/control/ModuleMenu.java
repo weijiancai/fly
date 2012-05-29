@@ -35,7 +35,7 @@ public class ModuleMenu extends BorderPane {
                 ProjectModule module = treeView.getSelectionModel().getSelectedItem().getValue();
                 if (module.getModule().getClassDefine() != null) {
                     Workspace workspace = new Workspace(module.getModule().getClassDefine());
-                    desktop.getWorkbench().getChildren().add(workspace);
+                    desktop.getWorkbench().addWorkspace(workspace);
                 }
             }
         });

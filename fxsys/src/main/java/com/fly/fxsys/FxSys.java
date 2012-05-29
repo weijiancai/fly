@@ -45,11 +45,11 @@ public class FxSys extends Application {
         HttpConnection conn = new HttpConnection("http://localhost:8080/project");
         /*ProjectDefine projectDefine = JSON.parseObject(conn.getContentStr(), ProjectDefine.class);
         System.out.println(projectDefine);*/
-        JSONObject obj = JSON.parseObject(conn.getContentStr());
+//        JSONObject obj = JSON.parseObject(conn.getContentStr());
 //        System.out.println(obj);
 
         // 树形结构
-        final TreeItem<String> treeRoot = new TreeItem<String>("Root node");
+        /*final TreeItem<String> treeRoot = new TreeItem<String>("Root node");
 
         JSONArray array = obj.getJSONArray("moduleList");
         TreeItem<String> treeItem;
@@ -61,7 +61,7 @@ public class FxSys extends Application {
                 treeRoot.getChildren().add(treeItem);
                 iteratorTree(treeItem, o, array);
             }
-        }
+        }*/
 
 
 
@@ -83,8 +83,8 @@ public class FxSys extends Application {
 
         final TreeView<String> treeView = new TreeView<String>();
         treeView.setShowRoot(false);
-        treeView.setRoot(treeRoot);
-        treeRoot.setExpanded(true);
+//        treeView.setRoot(treeRoot);
+//        treeRoot.setExpanded(true);
 
         final BorderPane borderPane = new BorderPane();
 
