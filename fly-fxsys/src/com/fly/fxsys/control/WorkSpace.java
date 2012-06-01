@@ -23,7 +23,7 @@ import java.util.Map;
  * @author weijiancai
  * @version 1.0.0
  */
-public class Workspace extends StackPane {
+public class WorkSpace extends StackPane {
     private BorderPane root;
     private VBox top;
     private ToolBar queryBar;
@@ -34,7 +34,7 @@ public class Workspace extends StackPane {
     private ClassDefine clazz;
     private Map<String, TextField> tfMap;
 
-    public Workspace() {
+    public WorkSpace() {
         super();
         this.setStyle("-fx-padding:5");
         root = new BorderPane();
@@ -45,7 +45,7 @@ public class Workspace extends StackPane {
         this.getChildren().add(root);
     }
 
-    public Workspace(ClassDefine clazz) {
+    public WorkSpace(ClassDefine clazz) {
         this();
         this.clazz = clazz;
         top = new VBox();
