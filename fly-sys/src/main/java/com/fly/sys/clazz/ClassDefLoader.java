@@ -164,7 +164,7 @@ public class ClassDefLoader {
             tableField.setClassTable(classTable);
             tableField.setClassField(classField);
             tableField.setDisplayName(classField.getFieldDesc());
-            tableField.setColWidth(80);
+            tableField.setColWidth(getColWidth(classField));
             tableField.setValid(true);
             tableField.setDisplay(true);
             tableField.setSortNum(fieldSortNum += 10);
@@ -250,6 +250,21 @@ public class ClassDefLoader {
         // 存入缓存
         cache.put(clazz.getName().toLowerCase(), clazz);
         classIdMap.put(clazz.getId(), clazz);
+    }
+
+    private static int getColWidth(ClassField classField) {
+        int max = classField.getColumn().getMaxLength();
+        if (max == 32) {
+            return 80;
+        } else if (max == 64) {
+            return 160;
+        } else if (max == 128) {
+            return 220;
+        } else if (max == 1024) {
+            return 250;
+        }
+
+        return 60;
     }
 
     /**

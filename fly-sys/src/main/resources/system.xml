@@ -2,22 +2,30 @@
 
 <system>
     <modules>
-        <module name="sys_manager" displayName="系统管理" sortNum="10" level="1"/>
-        <module name="dbms_manager" displayName="数据库管理" superModule="sys_manager" sortNum="10" level="2"/>
-        <module name="dbms_define" displayName="数据库定义" superModule="dbms_manager" sortNum="10" class="DbmsDefine" level="2"/>
-        <module name="dbms_schema" displayName="Schema定义" superModule="dbms_manager" sortNum="20" class="DbmsSchema" level="2"/>
-        <module name="dbms_table" displayName="数据库表" superModule="dbms_manager" sortNum="30" class="DbmsTable" level="2"/>
-        <module name="dbms_column" displayName="数据库列" superModule="dbms_manager" sortNum="40" class="DbmsColumn" level="2"/>
+        <module name="sys_manager" displayName="系统管理" sortNum="10"/>
+
+        <module name="dbms_manager" displayName="数据库管理" superModule="sys_manager" sortNum="10"/>
+        <module name="dbms_define" displayName="数据库定义" superModule="dbms_manager" sortNum="10" class="DbmsDefine"/>
+        <module name="dbms_schema" displayName="Schema定义" superModule="dbms_manager" sortNum="20" class="DbmsSchema"/>
+        <module name="dbms_table" displayName="数据库表" superModule="dbms_manager" sortNum="30" class="DbmsTable"/>
+        <module name="dbms_column" displayName="数据库列" superModule="dbms_manager" sortNum="40" class="DbmsColumn"/>
+
+        <module name="class_manager" displayName="类管理" superModule="sys_manager" sortNum="20"/>
+        <module name="class_define" displayName="类定义" superModule="class_manager" sortNum="10" class="ClassDefine"/>
     </modules>
 
     <project name="FLY-SYS" projectDesc="飞翔系统" packageName="com.fly.sys" sortNum="10" projectUrl="http://localhost:8080">
         <modules>
-            <module name="sys_manager" level="1"/>
-            <module name="dbms_manager" superModule="sys_manager" level="2"/>
-            <module name="dbms_define" superModule="dbms_manager" level="2"/>
-            <module name="dbms_schema" superModule="dbms_manager" level="2"/>
-            <module name="dbms_table" superModule="dbms_manager" level="2"/>
-            <module name="dbms_column" superModule="dbms_manager" level="2"/>
+            <module name="sys_manager"/>
+            
+            <module name="dbms_manager" superModule="sys_manager"/>
+            <module name="dbms_define" superModule="dbms_manager"/>
+            <module name="dbms_schema" superModule="dbms_manager"/>
+            <module name="dbms_table" superModule="dbms_manager"/>
+            <module name="dbms_column" superModule="dbms_manager"/>
+            
+            <module name="class_manager" superModule="sys_manager"/>
+            <module name="class_define" superModule="class_manager"/>
         </modules>
     </project>
 </system>
