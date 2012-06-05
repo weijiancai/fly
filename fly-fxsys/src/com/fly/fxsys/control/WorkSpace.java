@@ -185,8 +185,9 @@ public class WorkSpace extends StackPane {
                             return new SimpleStringProperty("");
                         }
                     });
-                    tableView.getColumns().add(col);
+                    col.setPrefWidth(tableField.getColWidth());
 
+                    tableView.getColumns().add(col);
                 }
             }
             setOnMouseClicked(new EventHandler<MouseEvent>() {
