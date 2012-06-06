@@ -15,7 +15,7 @@ public class Workbench extends StackPane {
         this.getChildren().add(tabPane);
     }
 
-    public void addWorkspace(final Workspace workspace) {
+    public void addWorkspace(final WorkSpace workspace) {
         Tab tab = getTab(workspace.getTitle());
         if (tab == null) {
             tab = new Tab(workspace.getTitle());

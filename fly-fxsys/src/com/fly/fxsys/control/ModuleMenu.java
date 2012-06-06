@@ -34,7 +34,7 @@ public class ModuleMenu extends BorderPane {
             public void changed(ObservableValue<? extends TreeItem<ProjectModule>> observableValue, TreeItem<ProjectModule> projectModuleTreeItem, TreeItem<ProjectModule> projectModuleTreeItem1) {
                 ProjectModule module = treeView.getSelectionModel().getSelectedItem().getValue();
                 if (module.getModule().getClassDefine() != null) {
-                    Workspace workspace = new Workspace(module.getModule().getClassDefine());
+                    WorkSpace workspace = new WorkSpace(module.getModule().getClassDefine());
                     desktop.getWorkbench().addWorkspace(workspace);
                 }
             }
