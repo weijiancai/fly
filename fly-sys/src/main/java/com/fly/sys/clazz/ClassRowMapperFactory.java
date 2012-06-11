@@ -66,6 +66,8 @@ public class ClassRowMapperFactory {
                 form.setColWidth(rs.getInt("col_width"));
                 form.setLabelGap(rs.getInt("label_gap"));
                 form.setFieldGap(rs.getInt("field_gap"));
+                form.setHgap(rs.getInt("hgap"));
+                form.setVgap(rs.getInt("vgap"));
                 form.setValid("T".equals(rs.getString("is_valid")));
                 form.setInputDate(rs.getDate("input_date"));
                 form.setSortNum(rs.getInt("sort_num"));

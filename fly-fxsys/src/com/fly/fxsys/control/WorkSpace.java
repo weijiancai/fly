@@ -1,6 +1,7 @@
 package com.fly.fxsys.control;
 
 import com.fly.fxsys.util.HttpConnection;
+import com.fly.fxsys.view.FormView;
 import com.fly.sys.clazz.*;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -30,6 +31,7 @@ public class WorkSpace extends StackPane {
     private Button btn_query;
     private GridPane queryGrid;
     private TableView<Map<String, Object>> tableView;
+    private FormView queryForm;
 
     private ClassDefine clazz;
     private Map<String, TextField> tfMap;
@@ -52,9 +54,11 @@ public class WorkSpace extends StackPane {
         top.setSpacing(10);
         top.setStyle("-fx-padding:0 5 10 5");
         root.setTop(top);
+        queryForm = new FormView(clazz.getFormList().get(0));
 
         initQueryBar();
-        initQueryGrid();
+//        initQueryGrid();
+        top.getChildren().add(queryForm);
         initTableView();
     }
 
@@ -100,6 +104,10 @@ public class WorkSpace extends StackPane {
             int idxRow = 0;
             int idxCol = 0;
             for (QueryField field : classQuery.getQueryFieldList()) {
+                if (!field.isDisplay()) { // 不显示
+                    continue;
+                }
+
                 label = new Label(field.getDisplayName());
                 queryGrid.add(label, idxCol++, idxRow);
 

@@ -147,6 +147,8 @@ public class ClassPDBFactory {
                 map.put("col_width", form.getColWidth());
                 map.put("col_count", form.getColCount());
                 map.put("label_gap", form.getLabelGap());
+                map.put("hgap", form.getHgap());
+                map.put("vgap", form.getVgap());
                 map.put("field_gap", form.getFieldGap());
                 map.put("is_valid", form.isValid() ? "T" : "F");
                 map.put("input_date", new Date());

@@ -1,11 +1,12 @@
 package com.fly.sys.clazz;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author weijiancai
  */
-public class FormField {
+public class FormField implements Serializable {
     private String id;
     private String displayName;
     private boolean isSingleLine;

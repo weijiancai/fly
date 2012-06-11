@@ -14,6 +14,8 @@ public class ClassForm implements Serializable {
     private int colWidth;
     private int labelGap;
     private int fieldGap;
+    private int hgap;
+    private int vgap;
     private boolean isValid;
     private Date inputDate;
     private int sortNum;
@@ -67,6 +69,22 @@ public class ClassForm implements Serializable {
 
     public void setFieldGap(int fieldGap) {
         this.fieldGap = fieldGap;
+    }
+
+    public int getHgap() {
+        return hgap;
+    }
+
+    public void setHgap(int hgap) {
+        this.hgap = hgap;
+    }
+
+    public int getVgap() {
+        return vgap;
+    }
+
+    public void setVgap(int vgap) {
+        this.vgap = vgap;
     }
 
     public boolean isValid() {

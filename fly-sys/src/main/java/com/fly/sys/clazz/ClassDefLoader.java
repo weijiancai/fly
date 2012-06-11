@@ -178,15 +178,21 @@ public class ClassDefLoader {
         ClassForm classForm = new ClassForm();
         classForm.setName("default");
         classForm.setColCount(3);
-        classForm.setColWidth(120);
+        classForm.setColWidth(180);
         classForm.setClassDefine(clazz);
         classForm.setLabelGap(5);
         classForm.setFieldGap(15);
+        classForm.setHgap(3);
+        classForm.setVgap(5);
         classForm.setSortNum(classSortNum);
         classForm.setValid(true);
         template.save(ClassPDBFactory.getClassForm(classForm));
+        List<ClassForm> classFormList = new ArrayList<ClassForm>();
+        classFormList.add(classForm);
+        clazz.setFormList(classFormList);
 
         // 插入sys_class_form_field
+        List<FormField> formFieldList = new ArrayList<FormField>();
         FormField formField;
         fieldSortNum = 0;
         for (ClassField classField : fieldList) {
@@ -201,7 +207,9 @@ public class ClassDefLoader {
             formField.setValid(true);
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
+            formFieldList.add(formField);
         }
+        classForm.setFieldList(formFieldList);
 
         // 插入sys_class_query信息
         ClassQuery classQuery = new ClassQuery();
