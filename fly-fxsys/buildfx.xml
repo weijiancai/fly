@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="fxsys" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <property file="fxsys.properties"/>
+
+    <path id="project.lib">
+        <fileset dir="${project.lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${javafx.sdk.path}/rt/lib">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <!--<echo message="&quot;${java.sdk.path}/bin/keytool&quot; -delete -alias ${alias} -storepass ${storepass}"/>
+        <exec executable="cmd" failonerror="true">
+            <arg line="&quot;${java.sdk.path}/bin/keytool&quot; -delete -alias ${alias} -storepass ${storepass}"/>
+        </exec>-->
+
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${release.dir}"/>
+
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${release.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${build.dir}/classes" encoding="${source.encoding}">
+            <classpath refid="project.lib"/>
+        </javac>
+    </target>
+
+    <target name="default" depends="init, genkey">
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${javafx.sdk.path}/tools/ant-javafx.jar"/>
+
+        <fx:application id="fxsys" name="fly fxsys" mainclass="${main.class}">
+            <fx:param name="entry_url" value="http://www.baidu.com"/>
+        </fx:application>
+
+        <copydir src="${project.lib}" dest="${dist.dir}/libs" includes="**/*.jar"/>
+
+        <fx:resources id="appRes">
+            <fx:fileset dir="${dist.dir}">
+                <include name="${application.title}.jar"/>
+                <include name="libs/fastjson-1.1.17.jar"/>
+            </fx:fileset>
+        </fx:resources>
+
+        <fx:jar destfile="${dist.dir}/${application.title}.jar">
+            <fx:application refid="fxsys"/>
+
+            <fx:resources refid="appRes"/>
+
+            <fileset dir="target/classes"/>
+            <fileset dir="../fly-sys/target/classes"/>
+
+            <manifest>
+                <attribute name="Implementation-Vendor" value="${application.vendor}"/>
+                <attribute name="Implementation-Title" value="${application.title}"/>
+                <attribute name="Implementation-Version" value="${application.version}"/>
+            </manifest>
+        </fx:jar>
+
+        <signjar keystore="${build.dir}/${alias}.keystore" destdir="${dist.dir}" alias="${alias}" storepass="${storepass}" keypass="${storepass}">
+            <fileset dir="${dist.dir}">
+                <include name="${application.title}.jar"/>
+                <include name="libs/fastjson-1.1.17.jar"/>
+            </fileset>
+        </signjar>
+
+        <fx:deploy width="${javafx.run.width}" height="${javafx.run.height}" outdir="${dist.dir}" embedjnlp="false" outfile="${application.title}">
+            <fx:application refid="fxsys"/>
+
+            <fx:resources refid="appRes"/>
+
+            <fx:info title="YHDT : ${application.title}" vendor="${application.vendor}">
+                <icon/>
+            </fx:info>
+
+            <fx:permissions elevated="true"/>
+        </fx:deploy>
+    </target>
+
+    <target name="genkey">
+        <echo message="genkey..." />
+
+        <genkey alias="${alias}" storepass="${storepass}" keystore="${build.dir}/${alias}.keystore" validity="${validity}"
+                        verbose="true" keysize="${keysize}" keyalg="${keyalg}" sigalg="${sigalg}"
+                        dname="CN=${dname.CN}, OU=${dname.OU}, O=${dname.O}, L=${dname.L}, ST=${dname.ST}, C=${dname.C}"
+                        />
+
+        <echo message="genkey...ok." />
+    </target>
+</project>
