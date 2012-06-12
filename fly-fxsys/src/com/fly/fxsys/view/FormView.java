@@ -2,30 +2,65 @@ package com.fly.fxsys.view;
 
 import com.fly.sys.clazz.ClassForm;
 import com.fly.sys.clazz.FormField;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.*;
 
 /**
  * @author weijiancai
  * @version 1.0.0
  */
 public class FormView extends BorderPane implements View {
-    private GridPane formGrid;
-    
-    private ClassForm form;
+    public static final int QUERY_FORM = 0;
+    public static final int EDIT_FORM = 1;
 
-    public FormView(ClassForm form) {
+    private Button btn_back;
+    private Button btn_query;
+
+    private EventHandler<ActionEvent> backHandler;
+    private EventHandler<ActionEvent> queryHandler;
+
+    private ClassForm form;
+    private int type;
+
+    public FormView(ClassForm form, int type) {
         this.form = form;
+        this.type = type;
         
         initUI();
     }
 
     @Override
     public void initUI() {
-        formGrid = new GridPane();
+        initToolBar();
+        initFormGridPane();
+    }
+
+    private void initToolBar() {
+        ToolBar toolBar = new ToolBar();
+        Region region = new Region();
+        HBox.setHgrow(region, Priority.ALWAYS);
+        toolBar.getItems().add(region);
+
+        btn_back = new Button("后退");
+
+        btn_query = new Button("查询");
+
+        if (type == QUERY_FORM) {
+            toolBar.getItems().add(btn_query);
+        } else if (type == EDIT_FORM) {
+            toolBar.getItems().add(btn_back);
+        }
+
+        this.setTop(toolBar);
+    }
+
+    private void initFormGridPane() {
+        GridPane formGrid = new GridPane();
         formGrid.setHgap(form.getHgap());
         formGrid.setVgap(form.getVgap());
 
@@ -39,7 +74,7 @@ public class FormView extends BorderPane implements View {
             if (!field.isDisplay()) { // 不显示
                 continue;
             }
-            
+
             // 单行
             if (field.isSingleLine()) {
                 idxRow++;
@@ -49,7 +84,7 @@ public class FormView extends BorderPane implements View {
                 formGrid.add(labelGap, 1, idxRow);
                 textField = new TextField();
                 textField.setPrefHeight(field.getHeight());
-                //tf.setText(map.get(colName).toString());
+//                textField.setText(field);
                 //tf.setAlignment(Pos.TOP_LEFT);
                 formGrid.add(textField, 2, idxRow, form.getColCount() * 4 - 5, 1);
                 idxCol = 0;
@@ -93,5 +128,23 @@ public class FormView extends BorderPane implements View {
 
     @Override
     public void initUIData() {
+    }
+
+    public EventHandler<ActionEvent> getBackHandler() {
+        return backHandler;
+    }
+
+    public void setBackHandler(EventHandler<ActionEvent> backHandler) {
+        this.backHandler = backHandler;
+        btn_back.setOnAction(backHandler);
+    }
+
+    public EventHandler<ActionEvent> getQueryHandler() {
+        return queryHandler;
+    }
+
+    public void setQueryHandler(EventHandler<ActionEvent> queryHandler) {
+        this.queryHandler = queryHandler;
+        btn_query.setOnAction(queryHandler);
     }
 }

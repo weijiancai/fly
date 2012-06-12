@@ -2,7 +2,10 @@ package com.fly.fxsys.control;
 
 import com.fly.fxsys.util.HttpConnection;
 import com.fly.fxsys.view.FormView;
-import com.fly.sys.clazz.*;
+import com.fly.sys.clazz.ClassDefine;
+import com.fly.sys.clazz.ClassField;
+import com.fly.sys.clazz.ClassTable;
+import com.fly.sys.clazz.TableField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,7 +17,6 @@ import javafx.scene.layout.*;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ public class WorkSpace extends StackPane {
     private GridPane queryGrid;
     private TableView<Map<String, Object>> tableView;
     private FormView queryForm;
+    private FormView editForm;
 
     private ClassDefine clazz;
     private Map<String, TextField> tfMap;
@@ -47,29 +50,15 @@ public class WorkSpace extends StackPane {
         this.getChildren().add(root);
     }
 
-    public WorkSpace(ClassDefine clazz) {
+    public WorkSpace(final ClassDefine clazz) {
         this();
         this.clazz = clazz;
         top = new VBox();
         top.setSpacing(10);
         top.setStyle("-fx-padding:0 5 10 5");
         root.setTop(top);
-        queryForm = new FormView(clazz.getFormList().get(0));
-
-        initQueryBar();
-//        initQueryGrid();
-        top.getChildren().add(queryForm);
-        initTableView();
-    }
-
-    public String getTitle() {
-        return clazz.getCname();
-    }
-
-    private void initQueryBar() {
-        queryBar = new ToolBar();
-        btn_query = new Button("查询");
-        btn_query.setOnAction(new EventHandler<ActionEvent>() {
+        queryForm = new FormView(clazz.getFormList().get(0), FormView.QUERY_FORM);
+        queryForm.setQueryHandler(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
@@ -82,64 +71,40 @@ public class WorkSpace extends StackPane {
                 }
             }
         });
+
+//        initQueryBar();
+        top.getChildren().add(queryForm);
+        initTableView();
+
+        editForm = new FormView(clazz.getFormList().get(0), FormView.EDIT_FORM);
+        editForm.setBackHandler(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                editForm.setVisible(false);
+                root.setVisible(true);
+            }
+        });
+        editForm.setVisible(false);
+        this.getChildren().add(editForm);
+    }
+
+    public String getTitle() {
+        return clazz.getCname();
+    }
+
+    private void initQueryBar() {
+        queryBar = new ToolBar();
+        btn_query = new Button("查询");
+        btn_query.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+            }
+        });
         Region region = new Region();
         HBox.setHgrow(region, Priority.ALWAYS);
         queryBar.getItems().addAll(region, btn_query);
         top.getChildren().add(queryBar);
-    }
-
-    private void initQueryGrid() {
-        queryGrid = new GridPane();
-        queryGrid.setHgap(3);
-        queryGrid.setVgap(5);
-
-        if (null != clazz && clazz.getClassQueryList() != null && clazz.getClassQueryList().size() > 0) {
-            tfMap = new HashMap<String, TextField>();
-            ClassQuery classQuery = clazz.getClassQueryList().get(0);
-
-            Label label;
-            Region labelGap;
-            TextField textField;
-            Region fieldGap;
-            int idxRow = 0;
-            int idxCol = 0;
-            for (QueryField field : classQuery.getQueryFieldList()) {
-                if (!field.isDisplay()) { // 不显示
-                    continue;
-                }
-
-                label = new Label(field.getDisplayName());
-                queryGrid.add(label, idxCol++, idxRow);
-
-                labelGap = new Region();
-                labelGap.setPrefWidth(classQuery.getLabelGap());
-                queryGrid.add(labelGap, idxCol++, idxRow);
-
-                textField = new TextField();
-                textField.setPrefWidth(field.getWidth());
-                /*if (null != data) {
-                    textField.setText(data.get(field.getName()) == null ? "" : data.get(field.getName()).toString());
-                }*/
-                queryGrid.add(textField, idxCol++, idxRow);
-                tfMap.put(field.getDisplayName(), textField);
-
-                if (classQuery.getColCount() == 1) {
-                    idxCol = 0;
-                    idxRow++;
-                } else {
-                    if (idxCol == classQuery.getColCount() * 4 - 1) {
-                        idxCol = 0;
-                        idxRow++;
-                    } else {
-                        fieldGap = new Region();
-                        fieldGap.setPrefWidth(classQuery.getFieldGap());
-                        queryGrid.add(fieldGap, idxCol++, idxRow);
-                    }
-                }
-            }
-        }
-
-        top.getChildren().add(queryGrid);
     }
 
     @SuppressWarnings("unchecked")
@@ -198,11 +163,13 @@ public class WorkSpace extends StackPane {
                     tableView.getColumns().add(col);
                 }
             }
-            setOnMouseClicked(new EventHandler<MouseEvent>() {
+            tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
                     if (e.getClickCount() == 2) {
                         System.out.println(tableView.getSelectionModel().getSelectedIndex());
+                        editForm.setVisible(true);
+                        root.setVisible(false);
                     }
                 }
             });
