@@ -39,6 +39,24 @@ public class FormView extends BorderPane implements View {
             if (!field.isDisplay()) { // 不显示
                 continue;
             }
+            
+            // 单行
+            if (field.isSingleLine()) {
+                idxRow++;
+                formGrid.add(new Label(field.getDisplayName()), 0, idxRow);
+                labelGap = new Region();
+                labelGap.setPrefWidth(form.getLabelGap());
+                formGrid.add(labelGap, 1, idxRow);
+                textField = new TextField();
+                textField.setPrefHeight(field.getHeight());
+                //tf.setText(map.get(colName).toString());
+                //tf.setAlignment(Pos.TOP_LEFT);
+                formGrid.add(textField, 2, idxRow, form.getColCount() * 4 - 5, 1);
+                idxCol = 0;
+                idxRow++;
+
+                continue;
+            }
 
             label = new Label(field.getDisplayName());
             formGrid.add(label, idxCol++, idxRow);
