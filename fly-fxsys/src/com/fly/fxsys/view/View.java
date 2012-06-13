@@ -1,5 +1,7 @@
 package com.fly.fxsys.view;
 
+import java.util.Map;
+
 /**
  * @author weijiancai
  * @version 1.0.0
@@ -7,5 +9,5 @@ package com.fly.fxsys.view;
 public interface View {
     void initUI();
 
-    void initUIData();
+    void initUIData(Map<String, Object> data);
 }

@@ -1,14 +1,19 @@
 package com.fly.fxsys.view;
 
+import com.fly.sys.clazz.ClassField;
 import com.fly.sys.clazz.ClassForm;
 import com.fly.sys.clazz.FormField;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author weijiancai
@@ -20,6 +25,10 @@ public class FormView extends BorderPane implements View {
 
     private Button btn_back;
     private Button btn_query;
+
+    private Map<String, Node> fieldNodeMap = new HashMap<String, Node>();
+    private Map<String, FormField> fieldMap = new HashMap<String, FormField>();
+    private Map<String, FormField> columnNameMap = new HashMap<String, FormField>();
 
     private EventHandler<ActionEvent> backHandler;
     private EventHandler<ActionEvent> queryHandler;
@@ -74,6 +83,7 @@ public class FormView extends BorderPane implements View {
             if (!field.isDisplay()) { // 不显示
                 continue;
             }
+            columnNameMap.put(field.getClassField().getColumn().getName().replace("_", ""), field);
 
             // 单行
             if (field.isSingleLine()) {
@@ -86,6 +96,7 @@ public class FormView extends BorderPane implements View {
                 textField.setPrefHeight(field.getHeight());
 //                textField.setText(field);
                 //tf.setAlignment(Pos.TOP_LEFT);
+                fieldNodeMap.put(field.getId(), textField);
                 formGrid.add(textField, 2, idxRow, form.getColCount() * 4 - 5, 1);
                 idxCol = 0;
                 idxRow++;
@@ -105,6 +116,7 @@ public class FormView extends BorderPane implements View {
             /*if (null != data) {
                 textField.setText(data.get(field.getName()) == null ? "" : data.get(field.getName()).toString());
             }*/
+            fieldNodeMap.put(field.getId(), textField);
             formGrid.add(textField, idxCol++, idxRow);
 //            tfMap.put(field.getDisplayName(), textField);
 
@@ -127,7 +139,22 @@ public class FormView extends BorderPane implements View {
     }
 
     @Override
-    public void initUIData() {
+    public void initUIData(Map<String, Object> data) {
+        FormField field;
+        Node node;
+        Object value;
+        for (String key : data.keySet()) {
+            field = columnNameMap.get(key);
+            if (null != field) {
+                node = fieldNodeMap.get(field.getId());
+                if (null != node) {
+                    if (node instanceof TextField) {
+                        value = data.get(key);
+                        ((TextField) node).setText(value == null ? "" : value.toString());
+                    }
+                }
+            }
+        }
     }
 
     public EventHandler<ActionEvent> getBackHandler() {

@@ -1,6 +1,7 @@
 package com.fly.fxsys.control;
 
 import com.fly.fxsys.util.HttpConnection;
+import com.fly.fxsys.view.DataGrid;
 import com.fly.fxsys.view.FormView;
 import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.clazz.ClassField;
@@ -29,10 +30,7 @@ import java.util.Map;
 public class WorkSpace extends StackPane {
     private BorderPane root;
     private VBox top;
-    private ToolBar queryBar;
-    private Button btn_query;
-    private GridPane queryGrid;
-    private TableView<Map<String, Object>> tableView;
+    private DataGrid tableView;
     private FormView queryForm;
     private FormView editForm;
 
@@ -43,9 +41,6 @@ public class WorkSpace extends StackPane {
         super();
         this.setStyle("-fx-padding:5");
         root = new BorderPane();
-        tableView = new TableView<Map<String, Object>>();
-
-        root.setCenter(tableView);
 
         this.getChildren().add(root);
     }
@@ -72,9 +67,7 @@ public class WorkSpace extends StackPane {
             }
         });
 
-//        initQueryBar();
         top.getChildren().add(queryForm);
-        initTableView();
 
         editForm = new FormView(clazz.getFormList().get(0), FormView.EDIT_FORM);
         editForm.setBackHandler(new EventHandler<ActionEvent>() {
@@ -86,95 +79,23 @@ public class WorkSpace extends StackPane {
         });
         editForm.setVisible(false);
         this.getChildren().add(editForm);
+
+        tableView = new DataGrid(clazz.getClassTableList().get(0));
+        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    editForm.setVisible(true);
+                    editForm.initUIData(tableView.getSelectionModel().getSelectedItem());
+                    root.setVisible(false);
+                }
+            }
+        });
+
+        root.setCenter(tableView);
     }
 
     public String getTitle() {
         return clazz.getCname();
-    }
-
-    private void initQueryBar() {
-        queryBar = new ToolBar();
-        btn_query = new Button("查询");
-        btn_query.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-
-            }
-        });
-        Region region = new Region();
-        HBox.setHgrow(region, Priority.ALWAYS);
-        queryBar.getItems().addAll(region, btn_query);
-        top.getChildren().add(queryBar);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void initTableView() {
-        if (null != clazz && clazz.getClassTableList() != null && clazz.getClassTableList().size() > 0) {
-            // 初始化表头
-            ClassTable classTable = clazz.getClassTableList().get(0);
-            for (final TableField tableField : classTable.getTableFieldList()) {
-                if ("hyperlink".equals(tableField.getDisplayStyle())) {
-                    TableColumn<Map<String, Object>, Hyperlink> col = new TableColumn<Map<String, Object>, Hyperlink>(tableField.getDisplayName());
-                    col.setPrefWidth(classTable.getColWidth());
-                    /*col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink>, ObservableValue<Hyperlink>>() {
-                        @Override
-                        public ObservableValue<Hyperlink> call(final TableColumn.CellDataFeatures<Map<String, Object>, Hyperlink> map) {
-                            Hyperlink hl = new Hyperlink(map.getValue().get(colAttr.getName()).toString());
-                            hl.setStyle("-fx-text-fill: #0000ff;-fx-underline:true;");
-                            hl.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent e) {
-                                    Map<String, String> requestMap = new HashMap<String, String>();
-                                    requestMap.put("view", "form");
-                                    requestMap.put("classDef", tableView.getClassDef());
-
-                                    *//*FormView formView = getFormView();
-                                   Form form = new Form();
-                                   form.setFormView(formView, map.getValue());*//*
-                                    //form.setData(map.getValue());
-                                }
-                            });
-                            return new SimpleObjectProperty<Hyperlink>(hl);
-                        }
-                    });*/
-                    /*col.setCellFactory(new Callback<TableColumn<Map<String, Object>, String>, TableCell<Map<String, Object>, String>>() {
-                        @Override
-                        public TableCell<Map<String, Object>, String> call(TableColumn<Map<String, Object>, String> mapStringTableColumn) {
-                            return new HyperlinkCell();
-                        }
-                    });*/
-                    tableView.getColumns().add(col);
-                } else {
-                    TableColumn<Map<String, Object>, String> col = new TableColumn<Map<String, Object>, String>(tableField.getDisplayName());
-                    col.setPrefWidth(classTable.getColWidth());
-                    col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map<String, Object>, String>, ObservableValue<String>>() {
-                        @Override
-                        public ObservableValue<String> call(TableColumn.CellDataFeatures<Map<String, Object>, String> map) {
-                            ClassField classField = tableField.getClassField();
-                            if (null != classField && classField.getName() != null) {
-                                Object value = map.getValue().get(classField.getName().toLowerCase());
-                                return new SimpleStringProperty(value == null ? "" : value.toString());
-                            }
-                            return new SimpleStringProperty("");
-                        }
-                    });
-                    col.setPrefWidth(tableField.getColWidth());
-
-                    tableView.getColumns().add(col);
-                }
-            }
-            tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent e) {
-                    if (e.getClickCount() == 2) {
-                        System.out.println(tableView.getSelectionModel().getSelectedIndex());
-                        editForm.setVisible(true);
-                        root.setVisible(false);
-                    }
-                }
-            });
-            // 初始化表数据
-//            getItems().addAll(tableView.getColData());
-        }
     }
 }
