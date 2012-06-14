@@ -201,7 +201,7 @@ public class ClassDefLoader {
             formField.setClassField(classField);
             formField.setDisplayName(classField.getFieldDesc());
             formField.setSingleLine(false);
-            formField.setWidth(120);
+            formField.setWidth(180);
             formField.setDisplay(true);
             formField.setSortNum(fieldSortNum += 10);
             formField.setValid(true);

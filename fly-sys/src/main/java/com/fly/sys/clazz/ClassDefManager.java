@@ -5,8 +5,6 @@ import com.fly.sys.R;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.db.DataSource;
 import com.fly.sys.db.JdbcTemplate;
-import com.fly.sys.db.meta.Column;
-import com.fly.sys.db.meta.Table;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -30,24 +28,6 @@ public class ClassDefManager {
         classMap.put("version", "1.0");  // 版本
 
         //save(classMap, "sys_class_define");
-    }
-    
-    // 数据库列转换为对象字段
-    public static void columnToField(String className, String... tableNames) {
-        // 更新已有字段信息
-        // 插入新字段信息
-        DataSource ds = DBManager.getDataSource(R.ds.SYS);
-        Table table;
-        List<Column> columnList;
-        Map<String, Object> params;
-        for (String tableName : tableNames) {
-            table = ds.getTable(tableName);
-            columnList = table.getColumnList();
-            params = new HashMap<String, Object>();
-            for (Column column : columnList) {
-                //params.put("id", getUUID());
-            }
-        }
     }
 
     // 更新数据库表信息

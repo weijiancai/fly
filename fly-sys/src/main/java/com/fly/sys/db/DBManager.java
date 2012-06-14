@@ -23,7 +23,6 @@ public class DBManager {
     private static Properties sysDbmsProp = new Properties();
     private static XML xml;
     private static Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
-    private static Map<String, DbmsDef> dbmsMap = new HashMap<String, DbmsDef>();
     private static Map<String, DictCategory> dictMap = new HashMap<String, DictCategory>();
     private static int sortNum = 10;
 
@@ -278,7 +277,6 @@ public class DBManager {
         try {
             xml = new XML(UFile.getFileFromClassPath("/datasource.xml"));
             dataSourceMap = xml.toMap("//datasource", "name", DataSource.class);
-            dbmsMap = xml.toMap("//dbms", "name", DbmsDef.class);
             dictMap = xml.toMap("//categoryList", "name", DictCategory.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,20 +297,6 @@ public class DBManager {
         }
 
         return ds;
-    }
-
-    /**
-     * 初始化数据库
-     * @throws Exception exception
-     */
-    public static void initDBMS() throws Exception {
-        for (DbmsDef dbms : dbmsMap.values()) {
-            dbms.setSchemaList(xml.toList("//dbms[@name='" + dbms.getName() + "']/schemaList/schema", Schema.class));
-            System.out.println(dbms);
-            if ("mysql".equals(dbms.getType())) {
-                //initMysqlDBMS(dbms);
-            }
-        }
     }
 
     /**

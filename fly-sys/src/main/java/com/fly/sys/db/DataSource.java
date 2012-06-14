@@ -2,8 +2,8 @@ package com.fly.sys.db;
 
 import com.fly.common.Callback;
 import com.fly.common.util.StringUtil;
-import com.fly.sys.db.meta.Column;
-import com.fly.sys.db.meta.Table;
+import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.db.meta.DbmsTable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,8 +23,8 @@ public class DataSource {
     private String url;
     private String username;
     private String password;
-    private List<Table> tableList;
-    private Map<String, Table> tableMap = new HashMap<String, Table>();
+    private List<DbmsTable> tableList;
+    private Map<String, DbmsTable> tableMap = new HashMap<String, DbmsTable>();
 
     public DataSource(String name, String driverClass, String url, String username, String password) {
         this.name = name;
@@ -54,12 +54,12 @@ public class DataSource {
         JdbcTemplate template = new JdbcTemplate(conn);
         // 查询所有表
         String sql = "SELECT table_name name, table_comment comment FROM information_schema.TABLES WHERE table_schema=?";
-        tableList = new ArrayList<Table>();
+        tableList = new ArrayList<DbmsTable>();
         template.query(sql, new Callback<ResultSet>() {
             @Override
             public void call(ResultSet rs, Object... obj) {
                 try {
-                    Table table = new Table(rs.getString("name"), rs.getString("comment"));
+                    DbmsTable table = new DbmsTable(rs.getString("name"), rs.getString("comment"));
                     tableList.add(table);
                     tableMap.put(table.getName(), table);
                 } catch (Exception e) {
@@ -69,20 +69,20 @@ public class DataSource {
         }, conn.getCatalog());
         // 查询所有表的字段
         sql = "SELECT * FROM information_schema.COLUMNS WHERE table_schema=? AND table_name=?";
-        for (Table table : tableList) {
-            final List<Column> columnList = new ArrayList<Column>();
+        for (DbmsTable table : tableList) {
+            final List<DbmsColumn> columnList = new ArrayList<DbmsColumn>();
 
             template.query(sql, new Callback<ResultSet>() {
                 @Override
                 public void call(ResultSet rs, Object... obj) {
                     try {
-                        Column column = new Column();
+                        DbmsColumn column = new DbmsColumn();
                         column.setName(rs.getString("column_name"));
                         column.setComment(rs.getString("column_comment"));
                         column.setDataType(rs.getString("data_type"));
                         column.setDefaultValue(rs.getString("column_default"));
                         column.setMaxLength(rs.getInt("character_maximum_length"));
-                        column.setNull("YES".equalsIgnoreCase(rs.getString("is_nullable")));
+                        column.setNullable("YES".equalsIgnoreCase(rs.getString("is_nullable")));
                         columnList.add(column);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -151,15 +151,15 @@ public class DataSource {
         return url.substring(url.indexOf(""))
     }*/
 
-    public List<Table> getTableList() {
+    public List<DbmsTable> getTableList() {
         return tableList;
     }
 
-    public void setTableList(List<Table> tableList) {
+    public void setTableList(List<DbmsTable> tableList) {
         this.tableList = tableList;
     }
 
-    public Table getTable(String tableName) {
+    public DbmsTable getTable(String tableName) {
         return tableMap.get(tableName);
     }
 

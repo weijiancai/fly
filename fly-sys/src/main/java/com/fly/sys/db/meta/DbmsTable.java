@@ -23,6 +23,14 @@ public class DbmsTable implements Serializable {
     private List<DbmsColumn> columnList;
     private List<ClassDefine> classList;
 
+    public DbmsTable() {
+    }
+
+    public DbmsTable(String name, String comment) {
+        this.name = name;
+        this.comment = comment;
+    }
+
     public String getId() {
         return id;
     }

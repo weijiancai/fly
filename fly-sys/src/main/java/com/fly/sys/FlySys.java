@@ -14,7 +14,6 @@ public class FlySys {
         // 系统未初始化
         if (!SysInfo.isDbmsInit()) {
             // 1. 初始化DBMS
-            DBManager.initDBMS();
             // 2. 导入ClassDef类信息
         }
     }

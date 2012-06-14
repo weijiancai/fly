@@ -21,7 +21,7 @@ public class DbmsDefine implements Serializable {
     private int sortNum;
 
     private List<DbmsSchema> schemaList;
-    private Map<String, Schema> schemaMap;
+    private Map<String, DbmsSchema> schemaMap;
 
     public String getId() {
         return id;
@@ -103,11 +103,11 @@ public class DbmsDefine implements Serializable {
         this.schemaList = schemaList;
     }
 
-    public Map<String, Schema> getSchemaMap() {
+    public Map<String, DbmsSchema> getSchemaMap() {
         return schemaMap;
     }
 
-    public void setSchemaMap(Map<String, Schema> schemaMap) {
+    public void setSchemaMap(Map<String, DbmsSchema> schemaMap) {
         this.schemaMap = schemaMap;
     }
 
