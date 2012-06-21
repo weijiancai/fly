@@ -7,6 +7,9 @@ import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.clazz.ClassField;
 import com.fly.sys.clazz.ClassTable;
 import com.fly.sys.clazz.TableField;
+import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.util.UString;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,10 +32,9 @@ import java.util.Map;
  */
 public class WorkSpace extends StackPane {
     private BorderPane root;
-    private VBox top;
     private DataGrid tableView;
-    private FormView queryForm;
     private FormView editForm;
+    private TabPane tabPane;
 
     private ClassDefine clazz;
     private Map<String, TextField> tfMap;
@@ -48,16 +50,16 @@ public class WorkSpace extends StackPane {
     public WorkSpace(final ClassDefine clazz) {
         this();
         this.clazz = clazz;
-        top = new VBox();
+        VBox top = new VBox();
         top.setSpacing(10);
         top.setStyle("-fx-padding:0 5 10 5");
         root.setTop(top);
-        queryForm = new FormView(clazz.getFormList().get(0), FormView.QUERY_FORM);
+        FormView queryForm = new FormView(clazz.getFormList().get(0), FormView.QUERY_FORM);
         queryForm.setQueryHandler(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    List<Map<String, Object>> list = HttpConnection.query (clazz.getName(), null);
+                    List<Map<String, Object>> list = HttpConnection.query(clazz.getName(), null);
                     tableView.setItems(FXCollections.observableList(list));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -69,6 +71,9 @@ public class WorkSpace extends StackPane {
 
         top.getChildren().add(queryForm);
 
+        tabPane = new TabPane();
+        Tab mainTab = new Tab("主表信息");
+        tabPane.getTabs().add(mainTab);
         editForm = new FormView(clazz.getFormList().get(0), FormView.EDIT_FORM);
         editForm.setBackHandler(new EventHandler<ActionEvent>() {
             @Override
@@ -77,15 +82,16 @@ public class WorkSpace extends StackPane {
                 root.setVisible(true);
             }
         });
-        editForm.setVisible(false);
-        this.getChildren().add(editForm);
+        tabPane.setVisible(false);
+        mainTab.setContent(editForm);
+        this.getChildren().add(tabPane);
 
         tableView = new DataGrid(clazz.getClassTableList().get(0));
         tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    editForm.setVisible(true);
+                    tabPane.setVisible(true);
                     editForm.initUIData(tableView.getSelectionModel().getSelectedItem());
                     root.setVisible(false);
                 }
@@ -93,6 +99,25 @@ public class WorkSpace extends StackPane {
         });
 
         root.setCenter(tableView);
+
+        try {
+            initItemTab();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initItemTab() throws ClassNotFoundException, IOException {
+        ClassDefine classDefine;
+        Tab tab;
+        for (String className : clazz.getItemClassNameList()) {
+            System.out.println(className);
+            classDefine = HttpConnection.getClassDefine(className);
+            tab = new Tab(classDefine.getCname());
+            tabPane.getTabs().add(tab);
+        }
     }
 
     public String getTitle() {

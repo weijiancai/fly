@@ -62,7 +62,7 @@ public class FxSys extends Application {
 //        StackPane desktop = new StackPane();
 //        desktop.getChildren().add(btn);
         final FxDesktop root = new FxDesktop(stage);
-        final Dialog dialog = new Dialog(false);
+        final Dialog dialog = new Dialog(true);
 
         Button closeButton = new Button("Close");
         closeButton.setOnAction(new EventHandler<ActionEvent>() {

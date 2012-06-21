@@ -247,6 +247,9 @@ public class DBManager {
                     conditionMap.clear();
                     conditionMap.put("id", column.getId());
                     template.update(valueMap, conditionMap, "sys_dbms_column");
+                    column.setFk(true);
+                    column.setFkColumn(refColumn);
+                    column.setFkColumnId(refColumn.getId());
                 }
             }
         }
@@ -338,5 +341,9 @@ public class DBManager {
 
     public static DbmsDefine getDbms(String dbmsName) {
         return dbmsNameMap.get(dbmsName);
+    }
+
+    public static Map<String, DbmsColumn> getColumnIdMap() {
+        return columnIdMap;
     }
 }

@@ -2,9 +2,11 @@ package com.fly.fxsys.util;
 
 import com.alibaba.fastjson.JSON;
 import com.fly.fxsys.control.FxBase;
+import com.fly.sys.clazz.ClassDefine;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -78,5 +80,19 @@ public class HttpConnection {
         ois.close();
 
         return  (List<Map<String, Object>>)obj;
+    }
+
+    public static ClassDefine getClassDefine(String className) throws IOException, ClassNotFoundException {
+        URL url = new URL(FxBase.URL + "/" + className + ".class");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.connect();
+        InputStream in = conn.getInputStream();
+        ObjectInputStream ois = new ObjectInputStream(in);
+
+        Object obj = ois.readObject();
+        ois.close();
+
+        return (ClassDefine)obj;
     }
 }

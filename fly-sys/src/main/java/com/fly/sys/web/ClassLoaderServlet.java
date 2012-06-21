@@ -36,8 +36,12 @@ public class ClassLoaderServlet extends HttpServlet {
             oos.flush();
             oos.close();
         } else {
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(JSON.toJSONString(classDefine));
+//            response.setContentType("application/json;charset=UTF-8");
+//            response.getWriter().write(JSON.toJSONString(classDefine));
+            ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
+            oos.writeObject(classDefine);
+            oos.flush();
+            oos.close();
         }
     }
 

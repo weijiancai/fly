@@ -3,6 +3,7 @@ package com.fly.sys.clazz;
 import com.fly.sys.db.meta.DbmsTable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ public class ClassDefine implements Serializable {
     private List<DbmsTable> dbmsTableList;
     private List<ClassTable> classTableList;
     private List<ClassQuery> classQueryList;
+
+    private List<String> itemClassNameList = new ArrayList<String>();
 
     private Map<String, ClassField> fieldMap;
     private Map<String, ClassForm> formMap;
@@ -167,6 +170,14 @@ public class ClassDefine implements Serializable {
 
     public void setClassQueryList(List<ClassQuery> classQueryList) {
         this.classQueryList = classQueryList;
+    }
+
+    public List<String> getItemClassNameList() {
+        return itemClassNameList;
+    }
+
+    public void addItemClassName(String className) {
+        itemClassNameList.add(className);
     }
 
     @Override

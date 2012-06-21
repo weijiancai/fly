@@ -14,10 +14,6 @@ public class Dialog extends BorderPane {
     private boolean isModal;
     private Pane modalPane;
 
-    private TopBar topBar;
-
-
-
     public Dialog(FxDesktop desktop, String color, boolean modal) {
         this.desktop = desktop;
         this.isModal = modal;
@@ -44,7 +40,7 @@ public class Dialog extends BorderPane {
             modalPane.setStyle("-fx-background-color:#cccccc");
         }
 
-        topBar = new TopBar(this);
+        TopBar topBar = new TopBar(this);
         this.setTop(topBar);
     }
 

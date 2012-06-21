@@ -1,12 +1,12 @@
 package com.fly.sys.clazz;
 
-import com.fly.common.util.StringUtil;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.util.UString;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -108,12 +108,25 @@ public class ClassDefLoader {
         } finally {
             template.close();
         }
+
+        // 初始化明细
+        initItem();
+    }
+
+    private static void initItem() {
+        DbmsColumn column;
+        for (ClassField field : classFieldIdMap.values()) {
+            column = field.getColumn();
+            if (null != column && column.isFk()) {
+                field.getClassDef().addItemClassName(UString.tableNameToClassName(column.getTable().getName()));
+            }
+        }
     }
 
     public static void initClassDefFromTable(JdbcTemplate template, DbmsTable table) throws Exception {
         // 将表定义信息插入到类定义信息中
         ClassDefine clazz = new ClassDefine();
-        clazz.setName(tableNameToClassName(table.getName()));
+        clazz.setName(UString.tableNameToClassName(table.getName()));
         clazz.setCname(table.getDisplayName());
         clazz.setAuthor("system");
         clazz.setDesc(table.getComment());
@@ -122,6 +135,7 @@ public class ClassDefLoader {
         clazz.setSortNum(classSortNum);
         // 插入类定义信息
         template.save(ClassPDBFactory.getClassDefine(clazz));
+        classIdMap.put(clazz.getId(), clazz);
 
         List<ClassField> fieldList = new ArrayList<ClassField>();
 
@@ -132,7 +146,7 @@ public class ClassDefLoader {
             field = new ClassField();
             field.setClassDef(clazz);
             field.setColumn(column);
-            field.setName(columnNameToFieldName(column.getName()));
+            field.setName(UString.columnNameToFieldName(column.getName()));
             field.setFieldDesc(column.getDisplayName());
             field.setType(column.getDataType());
             field.setValid(true);
@@ -140,6 +154,7 @@ public class ClassDefLoader {
             // 插入表sys_class_field
             template.save(ClassPDBFactory.getClassField(field));
             fieldList.add(field);
+            classFieldIdMap.put(field.getId(), field);
         }
         clazz.setFieldList(fieldList);
 
@@ -283,34 +298,5 @@ public class ClassDefLoader {
      */
     public static ClassDefine loadClassDef(String className) {
         return cache.get(className.toLowerCase());
-    }
-
-    /**
-     * 将数据库的表名，准换为类名，例如sys_dbms_define,转换后的结果是DbmsDefine
-     *
-     * @param tableName 数据库表名
-     * @return 返回类名
-     */
-    private static String tableNameToClassName(String tableName) {
-        StringBuilder result = new StringBuilder();
-        int i = 0;
-        for (String str : tableName.split("_")) {
-            if (i++ == 0) {
-                continue;
-            }
-
-            result.append(StringUtil.firstCharToUpper(str.toLowerCase()));
-        }
-
-        return result.toString();
-    }
-
-    private static String columnNameToFieldName(String columnName) {
-        StringBuilder result = new StringBuilder();
-        for (String str : columnName.split("_")) {
-            result.append(StringUtil.firstCharToUpper(str.toLowerCase()));
-        }
-
-        return result.toString();
     }
 }
