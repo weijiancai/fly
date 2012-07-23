@@ -11,13 +11,17 @@ import com.fly.sys.view.table.ColAttr;
 import com.fly.sys.view.table.TableView;
 import com.fly.sys.view.tree.EasyuiNode;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -34,6 +38,9 @@ import java.util.Map;
  * @author weijiancai
  */
 public class FxSys extends Application {
+    private char ch = 'a';
+    private int row;
+    private int col;
     @Override
     public void start(Stage stage) throws Exception {
         /*URL url = new URL("http://localhost:8080/ProductDefine.class");
@@ -187,7 +194,7 @@ public class FxSys extends Application {
         String jsonStr = JSON.toJSONString(tableView);
 //        System.out.println(jsonStr);
         TableView tv = JSON.parseObject(jsonStr, TableView.class);
-        Table table = new Table();
+        final Table table = new Table();
         table.setTableView(tv);
         /*final javafx.scene.control.TableView<Map<String, Object>> fxtv = new javafx.scene.control.TableView<Map<String, Object>>();
         List<ColAttr> colList = tv.getColAttr();
@@ -245,9 +252,38 @@ public class FxSys extends Application {
         });
         fxtv.getItems().addAll(tv.getColData());*/
 
+        final javafx.scene.control.TableView tableView1 = getTableView();
+
+        form.addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                /*Map<String, Object> map = new HashMap<String, Object>();
+                map.put("className", "Module");
+                map.put("cName", "模块");
+                map.put("author", "weijiancai");
+                map.put("version", "1.0.0");
+                map.put("classDesc", "模块定义信息");
+                map.put("look", "查看明细");
+                table.getTablePane().addRow(map);*/
+                tableView1.getItems().add(new Person("Wei",   "Jiancai",    "michael.brown@example.com"));
+            }
+        });
+
+
+
+        form.modifyButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                /*Map<String, Object> map = table.getTablePane().getItems().get(0);
+                map.put("className", "修改！！！");
+                FXCollections.replaceAll(table.getTablePane().getItems(), map, map);*/
+                ((Person)tableView1.getItems().get(0)).firstName.set("张");
+            }
+        });
+
 
         borderPane.setLeft(treeView);
-        borderPane.setCenter(table);
+        borderPane.setCenter(tableView1);
         //borderPane.setBottom(new Hyperlink("超链接"));
         Scene scene = new Scene(borderPane, 1020, 700);
         stage.setScene(scene);
@@ -345,4 +381,45 @@ public class FxSys extends Application {
     public static void main(String[] args) {
         launch(FxSys.class);
     }
+
+    public javafx.scene.control.TableView<Person> getTableView() {
+        final ObservableList<Person> data = FXCollections.observableArrayList(
+                new Person("Jacob",     "Smith",    "jacob.smith@example.com" ),
+                new Person("Isabella",  "Johnson",  "isabella.johnson@example.com" ),
+                new Person("Ethan",     "Williams", "ethan.williams@example.com" ),
+                new Person("Emma",      "Jones",    "emma.jones@example.com" ),
+                new Person("Michael",   "Brown",    "michael.brown@example.com" )
+        );
+        TableColumn firstNameCol = new TableColumn();
+        firstNameCol.setText("First");
+        firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
+        TableColumn lastNameCol = new TableColumn();
+        lastNameCol.setText("Last");
+        lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
+        TableColumn emailCol = new TableColumn();
+        emailCol.setText("Email");
+        emailCol.setMinWidth(200);
+        emailCol.setCellValueFactory(new PropertyValueFactory("email"));
+        javafx.scene.control.TableView tableView = new javafx.scene.control.TableView();
+        tableView.setItems(data);
+        tableView.getColumns().addAll(firstNameCol, lastNameCol, emailCol);
+        return tableView;
+    }
+
+    public static class Person {
+        private StringProperty firstName;
+        private StringProperty lastName;
+        private StringProperty email;
+
+        private Person(String fName, String lName, String email) {
+            this.firstName = new SimpleStringProperty(fName);
+            this.lastName = new SimpleStringProperty(lName);
+            this.email = new SimpleStringProperty(email);
+        }
+
+        public StringProperty firstNameProperty() { return firstName; }
+        public StringProperty lastNameProperty() { return lastName; }
+        public StringProperty emailProperty() { return email; }
+    }
 }
+

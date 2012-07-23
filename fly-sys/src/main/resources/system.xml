@@ -14,7 +14,7 @@
         <module name="class_define" displayName="类定义" superModule="class_manager" sortNum="10" class="ClassDefine"/>
     </modules>
 
-    <project name="FLY-SYS" projectDesc="飞翔系统" packageName="com.fly.sys" sortNum="10" projectUrl="http://localhost:8080">
+    <project name="FLY-SYS" projectDesc="飞翔系统" packageName="com.fly.sys" sortNum="10" projectUrl="http://localhost:8088">
         <modules>
             <module name="sys_manager"/>
             

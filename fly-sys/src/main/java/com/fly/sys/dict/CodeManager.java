@@ -25,7 +25,7 @@ public class CodeManager {
     }
 
     public static void init() throws Exception {
-        Connection conn = DBManager.getConn();
+        Connection conn = DBManager.getSysConn();
 
         try {
             conn.setAutoCommit(false);

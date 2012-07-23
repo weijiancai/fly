@@ -1,4 +1,4 @@
-package com.fly.fxdriver;
+package com.fly.fxdriver.wl;
 
 import org.hamcrest.Description;
 import org.hamcrest.SelfDescribing;

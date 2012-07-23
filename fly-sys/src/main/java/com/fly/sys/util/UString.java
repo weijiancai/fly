@@ -1,7 +1,5 @@
 package com.fly.sys.util;
 
-import com.fly.common.util.StringUtil;
-
 /**
  * @author weijiancai
  */
@@ -45,7 +43,7 @@ public class UString {
     }
 
     /**
-     * 将数据库的表名，准换为类名，例如sys_dbms_define,转换后的结果是DbmsDefine
+     * 将数据库的表名，转换为类名，例如sys_dbms_define,转换后的结果是DbmsDefine
      *
      * @param tableName 数据库表名
      * @return 返回类名
@@ -54,11 +52,11 @@ public class UString {
         StringBuilder result = new StringBuilder();
         int i = 0;
         for (String str : tableName.split("_")) {
-            if (i++ == 0) {
+            if (i++ == 0 && tableName.startsWith("sys_")) {
                 continue;
             }
 
-            result.append(StringUtil.firstCharToUpper(str.toLowerCase()));
+            result.append(firstCharToUpper(str.toLowerCase()));
         }
 
         return result.toString();
@@ -67,9 +65,19 @@ public class UString {
     public static String columnNameToFieldName(String columnName) {
         StringBuilder result = new StringBuilder();
         for (String str : columnName.split("_")) {
-            result.append(StringUtil.firstCharToUpper(str.toLowerCase()));
+            result.append(firstCharToUpper(str.toLowerCase()));
         }
 
         return result.toString();
+    }
+
+    /**
+     * 首字母大写
+     *
+     * @param str 字符串
+     * @return 返回首字母大写的字符串
+     */
+    public static String firstCharToUpper(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

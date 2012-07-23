@@ -24,7 +24,7 @@ public class FxBase extends Application {
     protected WindowResizeButton windowResizeButton;
     protected static FxDesktop desktop;
 
-    public static final String URL = "http://localhost:8080";
+    public static final String URL = "http://localhost:8088";
     public static ProjectDefine project = new ProjectDefine();
 
     public FxBase() {

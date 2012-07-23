@@ -1,14 +1,13 @@
 package com.fly.sys.db;
 
-import com.fly.common.Callback;
-import com.fly.common.util.StringUtil;
 import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.db.meta.DbmsDefine;
+import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.util.Callback;
+import com.fly.sys.util.StringUtil;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,24 +22,23 @@ public class DataSource {
     private String url;
     private String username;
     private String password;
-    private List<DbmsTable> tableList;
-    private Map<String, DbmsTable> tableMap = new HashMap<String, DbmsTable>();
+    private int sortNum;
+    private List<DbmsTable> tableList = new ArrayList<DbmsTable>();
+    private Map<String, DbmsColumn> columnNameMap = new HashMap<String, DbmsColumn>();
 
-    public DataSource(String name, String driverClass, String url, String username, String password) {
-        this.name = name;
-        this.driverClass = driverClass;
-        this.url = url;
-        this.username = username;
-        this.password = password;
-    }
+    private DbmsDefine dbmsDefine;
+    private DbmsSchema dbmsSchema;
+    private int _sortNum = 10;
 
     public DataSource() {
+
     }
 
     public void loadTables() {
         try {
             if (StringUtil.isNotEmpty(driverClass)) {
-                if (driverClass.contains("mysql")) {
+                DbmsType dbmsType = getDbmsType();
+                if (dbmsType == DbmsType.MYSQL) {
                     loadMysqlTables();
                 }
             }
@@ -48,28 +46,38 @@ public class DataSource {
             e.printStackTrace();
         }
     }
-    
+
     private void loadMysqlTables() throws Exception {
         Connection conn = getConn();
         JdbcTemplate template = new JdbcTemplate(conn);
         // 查询所有表
         String sql = "SELECT table_name name, table_comment comment FROM information_schema.TABLES WHERE table_schema=?";
-        tableList = new ArrayList<DbmsTable>();
         template.query(sql, new Callback<ResultSet>() {
             @Override
             public void call(ResultSet rs, Object... obj) {
                 try {
-                    DbmsTable table = new DbmsTable(rs.getString("name"), rs.getString("comment"));
+                    DbmsTable table = new DbmsTable();
+                    table.setSchema(getDbmsSchema());
+                    table.setName(rs.getString("name"));
+                    table.setAlias(rs.getString("name"));
+                    table.setComment(rs.getString("comment"));
+                    table.setDisplayName(rs.getString("comment"));
+                    table.setValid(true);
+                    table.setSortNum(_sortNum);
+                    _sortNum += 10;
+
+                    // 保存
                     tableList.add(table);
-                    tableMap.put(table.getName(), table);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }, conn.getCatalog());
-        // 查询所有表的字段
+
+        // 插入表sys_dbms_column
         sql = "SELECT * FROM information_schema.COLUMNS WHERE table_schema=? AND table_name=?";
-        for (DbmsTable table : tableList) {
+        for (final DbmsTable table : tableList) {
+            _sortNum = 10;
             final List<DbmsColumn> columnList = new ArrayList<DbmsColumn>();
 
             template.query(sql, new Callback<ResultSet>() {
@@ -77,13 +85,22 @@ public class DataSource {
                 public void call(ResultSet rs, Object... obj) {
                     try {
                         DbmsColumn column = new DbmsColumn();
+                        column.setTable(table);
                         column.setName(rs.getString("column_name"));
+                        column.setAlias(rs.getString("column_name"));
                         column.setComment(rs.getString("column_comment"));
+                        column.setDisplayName(rs.getString("column_comment"));
                         column.setDataType(rs.getString("data_type"));
                         column.setDefaultValue(rs.getString("column_default"));
                         column.setMaxLength(rs.getInt("character_maximum_length"));
                         column.setNullable("YES".equalsIgnoreCase(rs.getString("is_nullable")));
+                        column.setPk("PRI".equals(rs.getString("column_key")));
+                        column.setValid(true);
+                        column.setSortNum(_sortNum);
+                        _sortNum += 10;
+
                         columnList.add(column);
+                        columnNameMap.put(column.getNameKey(), column);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -92,6 +109,44 @@ public class DataSource {
 
             table.setColumnList(columnList);
         }
+
+        // 查询外键关系
+        sql = "SELECT table_name, column_name, referenced_table_name, referenced_column_name FROM information_schema.KEY_COLUMN_USAGE WHERE table_schema='" + conn.getCatalog() +"'";
+        List<Map<String, Object>> list = template.queryForList(sql);
+        String tableName, columnName, referencedTableName, referencedColumnName;
+        DbmsColumn column, refColumn;
+        Map<String, Object> valueMap = new HashMap<String, Object>();
+        Map<String, Object> conditionMap = new HashMap<String, Object>();
+
+        Connection sysConn = DBManager.getSysConn();
+        JdbcTemplate sysJdbcTemplate = new JdbcTemplate(sysConn);
+        for (Map<String, Object> map : list) {
+            tableName = map.get("table_name").toString();
+            columnName = map.get("column_name").toString();
+            Object refTableName = map.get("referenced_table_name");
+            Object refColumnName = map.get("referenced_column_name");
+            if (refTableName != null && refColumnName != null) {
+                referencedTableName = refTableName.toString();
+                referencedColumnName = refColumnName.toString();
+                column = columnNameMap.get("sys_dbms.sys." + tableName + "." + columnName);
+                refColumn = columnNameMap.get("sys_dbms.sys." + referencedTableName + "." + referencedColumnName);
+                if (column != null && refColumn != null) {
+                    valueMap.clear();
+                    valueMap.put("fk_column_id", refColumn.getId());
+                    valueMap.put("is_fk", "T");
+                    conditionMap.clear();
+                    conditionMap.put("id", column.getId());
+                    sysJdbcTemplate.update(valueMap, conditionMap, "sys_dbms_column");
+                    column.setFk(true);
+                    column.setFkColumn(refColumn);
+                    column.setFkColumnId(refColumn.getId());
+                }
+            }
+        }
+        sysConn.commit();
+        sysJdbcTemplate.close();
+
+        template.close();
     }
 
     public String getName() {
@@ -134,33 +189,56 @@ public class DataSource {
         this.password = password;
     }
 
-    public Connection getConn() {
-        try {
-            Class.forName(getDriverClass());
-            return  DriverManager.getConnection(getUrl(), getUsername(), getPassword());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public int getSortNum() {
+        return sortNum;
     }
 
-    /*public String getTableSchema() {
-        return url.substring(url.indexOf(""))
-    }*/
+    public void setSortNum(int sortNum) {
+        this.sortNum = sortNum;
+    }
+
+    public Connection getConn() throws Exception {
+        Class.forName(getDriverClass());
+        return  DriverManager.getConnection(getUrl(), getUsername(), getPassword());
+    }
 
     public List<DbmsTable> getTableList() {
         return tableList;
     }
 
-    public void setTableList(List<DbmsTable> tableList) {
-        this.tableList = tableList;
+    public Map<String, DbmsColumn> getColumnNameMap() {
+        return columnNameMap;
     }
 
-    public DbmsTable getTable(String tableName) {
-        return tableMap.get(tableName);
+    public DbmsDefine getDbmsDefine() throws Exception {
+        if (dbmsDefine == null) {
+            dbmsDefine = new DbmsDefine();
+            dbmsDefine.setName(name + "_dbms");
+            dbmsDefine.setType(getDbmsType().toString());
+            dbmsDefine.setDriverClass(driverClass);
+            dbmsDefine.setValid(true);
+            dbmsDefine.setSortNum(sortNum);
+        }
+
+        return dbmsDefine;
+    }
+
+    public DbmsSchema getDbmsSchema() throws Exception {
+        if (null == dbmsSchema) {
+            dbmsSchema = new DbmsSchema();
+            dbmsSchema.setName(name);
+            dbmsSchema.setAlias(name);
+            dbmsSchema.setVersion("0.0.0");
+            dbmsSchema.setValid(true);
+            dbmsSchema.setUrl(url);
+            dbmsSchema.setDefault(true);
+            dbmsSchema.setUserName(username);
+            dbmsSchema.setPassword(password);
+            dbmsSchema.setSortNum(sortNum);
+            dbmsSchema.setDbms(getDbmsDefine());
+        }
+
+        return dbmsSchema;
     }
 
     @Override
@@ -175,5 +253,13 @@ public class DataSource {
         sb.append(", tableList=").append(tableList);
         sb.append('}');
         return sb.toString();
+    }
+
+    public DbmsType getDbmsType() {
+        if ("com.mysql.jdbc.Driver".equals(driverClass)) {
+            return DbmsType.MYSQL;
+        }
+
+        return DbmsType.UNKNOWN;
     }
 }

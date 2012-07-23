@@ -1,7 +1,7 @@
 package com.fly.sys.db;
 
-import com.fly.common.Callback;
 import com.fly.sys.IPDB;
+import com.fly.sys.util.Callback;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class JdbcTemplate {
 
     public JdbcTemplate() {
         try {
-            conn = DBManager.getConn();
+            conn = DBManager.getSysConn();
             conn.setAutoCommit(false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -26,6 +26,11 @@ public class JdbcTemplate {
 
     public JdbcTemplate(Connection conn) {
         this.conn = conn;
+        try {
+            conn.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Map<String, Object>> queryForList(String sql) throws Exception {
@@ -134,7 +139,13 @@ public class JdbcTemplate {
                 keyList.add(key);
             }
             sql.append(") VALUES (").append(values).append(")");
-            System.out.println(sql);
+            String outSql = sql.toString();
+            Object obj;
+            for (String key : params.keySet()) {
+                obj = params.get(key);
+                outSql = outSql.replaceFirst("\\?", obj == null ? "' '" : "'" + obj.toString() + "'");
+            }
+            System.out.println(outSql);
             PreparedStatement pstmt = conn.prepareStatement(sql.toString());
             i = 1;
             for (String key : keyList) {
@@ -195,7 +206,6 @@ public class JdbcTemplate {
     public void close() {
         if(null != conn) {
             try {
-                conn.commit();
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -251,6 +261,16 @@ public class JdbcTemplate {
                 }
             }
             throw e;
+        }
+    }
+
+    public void commit() {
+        if (null != conn) {
+            try {
+                conn.commit();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

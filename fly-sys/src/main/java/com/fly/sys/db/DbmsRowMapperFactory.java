@@ -1,6 +1,5 @@
 package com.fly.sys.db;
 
-import com.fly.common.util.StringUtil;
 import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsDefine;
 import com.fly.sys.db.meta.DbmsSchema;
@@ -8,6 +7,7 @@ import com.fly.sys.db.meta.DbmsTable;
 import com.fly.sys.dict.CodeManager;
 import com.fly.sys.dict.DictCategory;
 import com.fly.sys.dict.DictCode;
+import com.fly.sys.util.StringUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

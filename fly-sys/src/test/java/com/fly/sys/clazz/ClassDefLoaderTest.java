@@ -1,6 +1,7 @@
 package com.fly.sys.clazz;
 
 import com.fly.sys.config.SysInfo;
+import com.fly.sys.db.DBManager;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
@@ -40,6 +41,7 @@ public class ClassDefLoaderTest {
     public void testInitClassDef() throws Exception {
         SysInfo.setDbmsInit(true);
         SysInfo.setClassDefInit(false);
+        DBManager.init();
         ClassDefLoader.init();
     }
 }

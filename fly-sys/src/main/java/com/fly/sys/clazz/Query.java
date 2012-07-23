@@ -40,7 +40,7 @@ public class Query {
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
 
         try {
-            JdbcTemplate template = new JdbcTemplate(DBManager.getConn());
+            JdbcTemplate template = new JdbcTemplate(DBManager.getSysConn());
             result.addAll(template.queryForList(sql.toLowerCase()));
 //            template.close();
         } catch (Exception e) {

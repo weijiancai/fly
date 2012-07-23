@@ -78,7 +78,7 @@ public class WorkSpace extends StackPane {
         editForm.setBackHandler(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                editForm.setVisible(false);
+                tabPane.setVisible(false);
                 root.setVisible(true);
             }
         });

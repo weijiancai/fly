@@ -104,6 +104,19 @@ public class ClassDefine implements Serializable {
         return formList;
     }
 
+    public ClassForm getDefaultForm() {
+        if (formList != null && formList.size() > 0) {
+            for (ClassForm form : formList) {
+                if ("default".equals(form.getName())) {
+                    return form;
+                }
+            }
+            return formList.get(0);
+        }
+
+        return null;
+    }
+
     public void setFormList(List<ClassForm> formList) {
         this.formList = formList;
     }

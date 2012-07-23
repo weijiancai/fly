@@ -1,13 +1,13 @@
 package com.fly.sys.module;
 
-import com.fly.common.util.DomUtil;
-import com.fly.common.util.StringUtil;
-import com.fly.common.util.UFile;
 import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.project.ProjectPDBFactory;
 import com.fly.sys.project.ProjectRowMapperFactory;
+import com.fly.sys.util.DomUtil;
+import com.fly.sys.util.StringUtil;
+import com.fly.sys.util.UFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,6 +73,8 @@ public class ModuleManager {
                     template.update(aMap, conditionMap, "sys_module_define");
                 }
             }
+
+            template.commit();
 
 //            SysInfo.setModuleDefInit(true);
 //            SysInfo.store();

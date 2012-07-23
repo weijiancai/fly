@@ -22,6 +22,8 @@ public class Form extends GridPane {
     private Map<String, TextField> tfMap;
     
     private HBox buttonBox;
+    public Button addButton = new Button("增加");
+    public Button modifyButton = new Button("修改");
 
     public FormView getFormView() {
         return formView;
@@ -81,7 +83,7 @@ public class Form extends GridPane {
             buttonBox = new HBox();
             Region region = new Region();
             HBox.setHgrow(region, Priority.ALWAYS);
-            buttonBox.getChildren().addAll(region, new Button("确定"));
+            buttonBox.getChildren().addAll(region, new Button("确定"), addButton, modifyButton);
             add(buttonBox, 0, idxRow + 1, formView.getColCount() * 4 - 1, 1);
         }
     }

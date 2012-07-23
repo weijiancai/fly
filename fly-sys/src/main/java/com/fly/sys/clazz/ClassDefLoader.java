@@ -4,6 +4,7 @@ import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.db.meta.DbmsDefine;
 import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
 import com.fly.sys.util.UString;
@@ -35,8 +36,7 @@ public class ClassDefLoader {
     }*/
 
     public static void init() throws Exception {
-        Connection conn = DBManager.getConn();
-        conn.setAutoCommit(false);
+        Connection conn = DBManager.getSysConn();
         JdbcTemplate template = new JdbcTemplate(conn);
         try {
             if (SysInfo.isClassDefInit()) { // ClassDef 已经初始化
@@ -93,10 +93,12 @@ public class ClassDefLoader {
                 classSortNum = 10;
                 // 请空表sys_class_define
                 template.clearTable("sys_class_define");
-                for (DbmsSchema schema : DBManager.getDbms().getSchemaList()) {
-                    for (DbmsTable table : schema.getTableList()) {
-                        initClassDefFromTable(template, table);
-                        classSortNum += 10;
+                for (DbmsDefine dbms : DBManager.getDbmsList()) {
+                    for (DbmsSchema schema : dbms.getSchemaList()) {
+                        for (DbmsTable table : schema.getTableList()) {
+                            initClassDefFromTable(template, table);
+                            classSortNum += 10;
+                        }
                     }
                 }
             }

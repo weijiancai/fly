@@ -1,11 +1,11 @@
 package com.fly.sys.project;
 
-import com.fly.common.util.DomUtil;
-import com.fly.common.util.UFile;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.module.ModuleDefine;
 import com.fly.sys.module.ModuleManager;
+import com.fly.sys.util.DomUtil;
+import com.fly.sys.util.UFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,6 +98,7 @@ public class ProjectManager {
             }
         }
 
+        template.commit();
         template.close();
     }
 

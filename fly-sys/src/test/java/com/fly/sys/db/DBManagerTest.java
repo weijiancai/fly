@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.sql.Connection;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -16,8 +17,8 @@ public class DBManagerTest {
     public void testInitDBMS() throws Exception {
         //SysInfo.setDbmsInit(false);
 
-        //DBManager.init();
-        DbmsDefine dbms = DBManager.getDbms();
+        DBManager.init();
+        DbmsDefine dbms = DBManager.getSysDbms();
     }
 
     /**
@@ -25,7 +26,13 @@ public class DBManagerTest {
      */
     @Test
     public void testGetConn() throws Exception {
-        Connection conn = DBManager.getConn();
+        Connection conn = DBManager.getSysConn();
         assertThat(conn, notNullValue());
+    }
+
+    @Test
+    public void testLoadDataSource() {
+        DBManager.loadDataSource();
+        assertThat(DBManager.getDataSourceMap().size(), equalTo(2));
     }
 }

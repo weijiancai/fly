@@ -1,17 +1,12 @@
 package com.fly.sys.db;
 
-import com.fly.common.Callback;
-import com.fly.common.XML;
-import com.fly.common.util.UFile;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.meta.*;
 import com.fly.sys.dict.DictCategory;
+import com.fly.sys.util.UFile;
+import com.fly.sys.util.XML;
 
-import java.io.InputStreamReader;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.util.*;
 
 /**
@@ -38,11 +33,11 @@ public class DBManager {
     private static Map<String, DbmsColumn> columnNameMap = new HashMap<String, DbmsColumn>();
     private static Map<String, DbmsColumn> columnIdMap = new HashMap<String, DbmsColumn>();
 
-    public static List<DbmsDefine> dbmsList;
+    public static List<DbmsDefine> dbmsList = new ArrayList<DbmsDefine>();
 
     static {
-        // 装载sys数据源
-        loadSysDbms();
+        // 装载数据源
+        loadDataSource();
         // 初始化系统表
         /*try {
             init();
@@ -52,17 +47,22 @@ public class DBManager {
     }
 
     public static void init() throws Exception {
-        Connection conn = getConn();
+        Connection conn = getSysConn();
 
         try {
-            conn.setAutoCommit(false);
+            JdbcTemplate template = new JdbcTemplate(conn);
             if (!SysInfo.isDbmsInit()) { // 初始化系统
-                if ("mysql".equalsIgnoreCase(conn.getMetaData().getDatabaseProductName())) {
-                    initMysqlDBMS(conn);
+                // 清空表sys_dbms_define
+                template.clearTable("sys_r_class_table");
+                template.clearTable("sys_dbms_define");
+                for (DataSource dataSource : dataSourceMap.values()) {
+                    initDBMS(dataSource, template);
                 }
 
+                conn.commit();
+//              SysInfo.setDbmsInit(true);
+//              SysInfo.store();
             } else {
-                JdbcTemplate template = new JdbcTemplate(conn);
                 // 查询sys_dbms_define
                 String sql = "SELECT * FROM sys_dbms_define";
                 dbmsList = template.query(sql, DbmsRowMapperFactory.getDbmsDefine());
@@ -102,8 +102,6 @@ public class DBManager {
                     }
                 }
             }
-
-            conn.commit();
         } catch (Exception e) {
             e.printStackTrace();
             if (null != conn) {
@@ -116,162 +114,40 @@ public class DBManager {
         }
     }
 
-    private static void initMysqlDBMS(Connection conn) throws Exception {
-        final JdbcTemplate template = new JdbcTemplate(conn);
-
-        DatabaseMetaData metaData = conn.getMetaData();
-        // 清空表sys_dbms_define
-        template.clearTable("sys_r_class_table");
-        template.clearTable("sys_dbms_define");
+    private static void initDBMS(DataSource dataSource, JdbcTemplate template) throws Exception {
+        dataSource.loadTables();
 
         // 插入表sys_dbms_define
-        dbmsDefine = new DbmsDefine();
-        dbmsDefine.setName("sys_dbms");
-        dbmsDefine.setType(metaData.getDatabaseProductName());
-        dbmsDefine.setDriverClass(driverClass);
-        dbmsDefine.setValid(true);
-        dbmsDefine.setSortNum(sortNum);
+        DbmsDefine dbmsDef = dataSource.getDbmsDefine();
         // 保存
-        template.save(DbmsPDBFactory.getDbmsDefine(dbmsDefine));
-        dbmsNameMap.put(dbmsDefine.getNameKey(), dbmsDefine);
-        dbmsList = new ArrayList<DbmsDefine>();
-        dbmsList.add(dbmsDefine);
+        template.save(DbmsPDBFactory.getDbmsDefine(dbmsDef));
+        dbmsNameMap.put(dbmsDef.getNameKey(), dbmsDef);
+        dbmsList.add(dbmsDef);
 
         // 插入表sys_dbms_schema
-        final DbmsSchema schema = new DbmsSchema();
-        schema.setDbms(dbmsDefine);
-        schema.setName("sys");
-        schema.setAlias("sys");
-        schema.setVersion("0.0.0");
-        schema.setValid(true);
-        schema.setSortNum(sortNum);
-        schema.setUrl(url);
-        schema.setDefault(true);
-        schema.setUserName(userName);
-        schema.setPassword(password);
+        final DbmsSchema schema = dataSource.getDbmsSchema();
         // 保存
         template.save(DbmsPDBFactory.getDbmsSchema(schema));
         schemaNameMap.put(schema.getNameKey(), schema);
         List<DbmsSchema> schemaList = new ArrayList<DbmsSchema>();
         schemaList.add(schema);
-        dbmsDefine.setSchemaList(schemaList);
+        dbmsDef.setSchemaList(schemaList);
 
         // 插入表sys_dbms_table
-        final List<DbmsTable> tableList = new ArrayList<DbmsTable>();
-        // 查询所有表
-        String sql = "SELECT table_name name, table_comment comment FROM information_schema.TABLES WHERE table_schema=?";
-        template.query(sql, new Callback<ResultSet>() {
-            @Override
-            public void call(ResultSet rs, Object... obj) {
-                try {
-                    DbmsTable table = new DbmsTable();
-                    table.setSchema(schema);
-                    table.setName(rs.getString("name"));
-                    table.setAlias(rs.getString("name"));
-                    table.setComment(rs.getString("comment"));
-                    table.setDisplayName(rs.getString("comment"));
-                    table.setValid(true);
-                    table.setSortNum(sortNum);
-                    sortNum += 10;
+        final List<DbmsTable> tableList = dataSource.getTableList();
+        for (DbmsTable dbmsTable : tableList) {
+            template.save(DbmsPDBFactory.getDbmsTable(dbmsTable));
+            tableNameMap.put(dbmsTable.getNameKey(), dbmsTable);
 
-                    // 保存
-                    template.save(DbmsPDBFactory.getDbmsTable(table));
-                    tableList.add(table);
-                    tableNameMap.put(table.getNameKey(), table);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            for (DbmsColumn dbmsColumn : dbmsTable.getColumnList()) {
+                template.save(DbmsPDBFactory.getDbmsColumn(dbmsColumn));
             }
-        }, conn.getCatalog());
+        }
         schema.setTableList(tableList);
 
-        // 插入表sys_dbms_column
-        sql = "SELECT * FROM information_schema.COLUMNS WHERE table_schema=? AND table_name=?";
-        for (final DbmsTable table : tableList) {
-            sortNum = 10;
-            final List<DbmsColumn> columnList = new ArrayList<DbmsColumn>();
-
-            template.query(sql, new Callback<ResultSet>() {
-                @Override
-                public void call(ResultSet rs, Object... obj) {
-                    try {
-                        DbmsColumn column = new DbmsColumn();
-                        column.setTable(table);
-                        column.setName(rs.getString("column_name"));
-                        column.setAlias(rs.getString("column_name"));
-                        column.setComment(rs.getString("column_comment"));
-                        column.setDisplayName(rs.getString("column_comment"));
-                        column.setDataType(rs.getString("data_type"));
-                        column.setDefaultValue(rs.getString("column_default"));
-                        column.setMaxLength(rs.getInt("character_maximum_length"));
-                        column.setNullable("YES".equalsIgnoreCase(rs.getString("is_nullable")));
-                        column.setPk("PRI".equals(rs.getString("column_key")));
-                        //column.setFk("MUL".equals(rs.getString("column_key")));
-                        column.setValid(true);
-                        column.setSortNum(sortNum);
-                        sortNum += 10;
-
-                        columnList.add(column);
-                        template.save(DbmsPDBFactory.getDbmsColumn(column));
-                        columnNameMap.put(column.getNameKey(), column);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, conn.getCatalog(), table.getName());
-
-            table.setColumnList(columnList);
-        }
-
-        // 查询外键关系
-        sql = "SELECT table_name, column_name, referenced_table_name, referenced_column_name FROM information_schema.KEY_COLUMN_USAGE WHERE table_schema='" + conn.getCatalog() +"'";
-        List<Map<String, Object>> list = template.queryForList(sql);
-        String tableName, columnName, referencedTableName, referencedColumnName;
-        DbmsColumn column, refColumn;
-        Map<String, Object> valueMap = new HashMap<String, Object>();
-        Map<String, Object> conditionMap = new HashMap<String, Object>();
-        for (Map<String, Object> map : list) {
-            tableName = map.get("table_name").toString();
-            columnName = map.get("column_name").toString();
-            Object refTableName = map.get("referenced_table_name");
-            Object refColumnName = map.get("referenced_column_name");
-            if (refTableName != null && refColumnName != null) {
-                referencedTableName = refTableName.toString();
-                referencedColumnName = refColumnName.toString();
-                column = columnNameMap.get("sys_dbms.sys." + tableName + "." + columnName);
-                refColumn = columnNameMap.get("sys_dbms.sys." + referencedTableName + "." + referencedColumnName);
-                if (column != null && refColumn != null) {
-                    valueMap.clear();
-                    valueMap.put("fk_column_id", refColumn.getId());
-                    valueMap.put("is_fk", "T");
-                    conditionMap.clear();
-                    conditionMap.put("id", column.getId());
-                    template.update(valueMap, conditionMap, "sys_dbms_column");
-                    column.setFk(true);
-                    column.setFkColumn(refColumn);
-                    column.setFkColumnId(refColumn.getId());
-                }
-            }
-        }
-
-        sortNum = 10;
-//        SysInfo.setDbmsInit(true);
-//        SysInfo.store();
-    }
-
-    private static void loadSysDbms() {
-        try {
-            sysDbmsProp.load(new InputStreamReader(DBManager.class.getResourceAsStream("/sys_dbms.properties")));
-            driverClass = sysDbmsProp.getProperty("driverClass");
-            userName = sysDbmsProp.getProperty("userName");
-            password = sysDbmsProp.getProperty("password");
-            url = sysDbmsProp.getProperty("url");
-            if (null == driverClass || null == userName || null == password) {
-                throw new Exception("请正确配置sys数据源信息");
-            }
-        } catch (Exception e) {
-            //System.exit(0);
-            e.printStackTrace();
+        columnNameMap.putAll(dataSource.getColumnNameMap());
+        if ("sys_dbms".equals(dbmsDef.getName())) {
+            dbmsDefine = dbmsDef;
         }
     }
 
@@ -286,20 +162,12 @@ public class DBManager {
         }
     }
 
-    public DBManager() {
-
+    public static DataSource getDataSource(String dsName) {
+        return dataSourceMap.get(dsName);
     }
 
-    public static DataSource getDataSource(String dsName) {
-        DataSource ds = dataSourceMap.get(dsName);
-        if(null == ds) {
-            return null;
-        }
-        if (ds.getTableList() == null || ds.getTableList().size() == 0) {
-            ds.loadTables();
-        }
-
-        return ds;
+    public static Map<String, DataSource> getDataSourceMap() {
+        return dataSourceMap;
     }
 
     /**
@@ -319,10 +187,8 @@ public class DBManager {
         // 3. 如果数据库中没有文件中的信息，则将文件中的信息导入到数据库
     }
 
-    public static Connection getConn() throws Exception {
-        Class.forName(driverClass);
-
-        return DriverManager.getConnection(url, userName, password);
+    public static Connection getSysConn() throws Exception {
+        return getDataSource("sys").getConn();
     }
 
     /**
@@ -335,7 +201,7 @@ public class DBManager {
         return columnIdMap.get(columnId);
     }
 
-    public static DbmsDefine getDbms() {
+    public static DbmsDefine getSysDbms() throws Exception {
         return dbmsDefine;
     }
 
@@ -345,5 +211,9 @@ public class DBManager {
 
     public static Map<String, DbmsColumn> getColumnIdMap() {
         return columnIdMap;
+    }
+
+    public static List<DbmsDefine> getDbmsList() {
+        return dbmsList;
     }
 }
