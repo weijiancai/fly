@@ -107,6 +107,7 @@ public class ApplicationRunner extends Application {
             }
         };
         thread.start();
+        thread.start();
         Platform.runLater(thread);
     }
 

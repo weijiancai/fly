@@ -2,6 +2,7 @@ package com.fly.sys.clazz;
 
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.DBManager;
+import com.fly.sys.util.json.Json;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
@@ -40,8 +41,11 @@ public class ClassDefLoaderTest {
     @Test
     public void testInitClassDef() throws Exception {
         SysInfo.setDbmsInit(true);
-        SysInfo.setClassDefInit(false);
+        SysInfo.setClassDefInit(true);
         DBManager.init();
         ClassDefLoader.init();
+
+        ClassDefine classDefine = ClassDefLoader.classIdMap.values().iterator().next();
+        System.out.println(Json.toJsonString(classDefine));
     }
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="qunit/qunit.css">
+</head>
+<body>
+<div id="qunit"></div>
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<script type="text/javascript" src="../../main/webapp/js/jquery.tools.min.js"></script>
+<script type="text/javascript" src="../../main/webapp/js/fly.js"></script>
+
+<script type="text/javascript">
+    test("formGrid toString", function() {
+        var fieldList = [];
+        fieldList.push()
+        var classForm = {
+            id: 'ABCDJWEIWEIFFWI',
+            name: 'peronForm',
+            colCount: 3,
+            colWidth: 80,
+            labelGap: 5,
+            fieldGap: 15,
+            hgap: 5,
+            vgap: 5,
+            isValid: true,
+            fieldList: fieldList
+        };
+        var except = '<table></table>';
+        var actual = genTable();
+        equal(actual, except);
+    });
+</script>
+</body>
+</html>

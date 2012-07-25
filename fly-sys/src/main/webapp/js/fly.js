@@ -13,8 +13,11 @@ $(function() {
 });
 
 function genTable(classForm) {
+    if(!classForm) {
+        return '';
+    }
     var form = new DataForm(classForm);
-    var tableStr = "<table>";
+    var formGrid = new GridPane(form.hgap, form.vgap);
 
     var idxRow = 0;
     var idxCol = 0;
@@ -28,21 +31,64 @@ function genTable(classForm) {
 
         if("true" == field.isSingleLine) {
             idxRow++;
-            tableStr += "<tr></tr>";
+            formGrid.add(getLabelTd(field.displayName), idxRow, 0);
+            formGrid.add(getGapTd(field.labelGap), idxRow, 1);
+            formGrid.add(getTextFieldTd(field.id, field.width, field.height, form.colCount * 4 - 5), idxRow, 2);
+            idxCol = 0;
+            idxRow++;
+
+            continue;
+        }
+
+        formGrid.add(getLabelTd(field.displayName), idxRow, idxCol++);
+        formGrid.add(getGapTd(field.labelGap), idxRow, idxCol++);
+        formGrid.add(getTextFieldTd(field.id, field.width, field.height), idxRow, idxCol++);
+
+        if(form.colCount == 1) {
+            idxCol = 0;
+            idxRow++;
+        } else {
+            if(idxCol == form.colCount * 4 - 1) {
+                idxCol = 0;
+                idxRow++;
+            } else {
+                formGrid.add(getGapTd(field.fieldGap), idxRow, idxCol++);
+            }
         }
     }
+
+    return formGrid.toString();
 }
 
-function GridPane() {
+function GridPane(hgap, vgap) {
+    this.hgap = hgap;
+    this.vgap = vgap;
     this.table = [];
 }
 
-GridPane.prototype.add = function(node, row, col) {
-    var array = this.table[row];
-    if(!(array && array.length)) {
-        this.table[row] = [];
+GridPane.prototype = {
+    add: function(node, row, col) {
+        var array = this.table[row];
+        if(!(array && array.length)) {
+            this.table[row] = [];
+        }
+        array[col] = node;
+    },
+    toString: function() {
+        var tableStr = '<table>';
+        var array = this.table;
+        for(var i = 0; i < array.length; i++) {
+            tableStr += '<tr>';
+            var subArray = array[i];
+            for(var j = 0; j < subArray.length; j++) {
+                tableStr += subArray[j];
+            }
+            tableStr += '</tr>';
+        }
+        tableStr += '</table>';
+
+        return tableStr;
     }
-    array[col] = node;
 };
 
 function DataForm(classForm) {
@@ -75,4 +121,58 @@ function FormField(fd) {
     this.inputDate = fd['inputDate'];
     this.isValid = fd['isValid'];
     this.sortNum = fd['sortNum'];
+}
+
+
+function getGap(width) {
+    return '<span style="width:' + width + '"></span>';
+}
+
+function getGapTd(width) {
+    return '<td>' + getGap(width) + '"</td>';
+}
+
+function getHGap(colspan, hGap) {
+    return '<td colspan="' + colspan+ '" style="height:' + hGap + '"></td>'
+}
+
+
+function getLabelTd(name, labelForId, width) {
+    return '<td>' + getLabel(name, labelForId, width)+ '</td>';
+}
+
+function getTextFieldTd(id, width, height, colspan, rowspan) {
+    var spanStr = "";
+    if(colspan) {
+        spanStr += ' colspan="' + colspan + '"';
+    }
+    if(rowspan) {
+        spanStr += ' rowspan="' + rowspan + '"';
+    }
+    if(spanStr.length > 0) {
+        return '<td' + spanStr + '>' + getTextField(id, width, height) + '</td>';
+    } else {
+        return '<td>' + getTextField(id, width, height) + '</td>';
+    }
+}
+
+
+function getLabel(name, labelForId, width) {
+    return '<label for="' + labelForId+ '" style="width:' + width + ';">' + name+ '</label>';
+}
+
+function getTextField(id, width, height) {
+    var styleStr = "";
+    if(width) {
+        styleStr += "width:" + width + ";";
+    }
+    if(height) {
+        styleStr += "height:" + height + ";";
+    }
+    if(styleStr.length > 0) {
+        return '<input id="' + id + '" type="text" style="' + styleStr + '"/>'
+    } else {
+        return '<input id="' + id + '" type="text"/>'
+    }
+
 }
