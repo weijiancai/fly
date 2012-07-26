@@ -1,8 +1,9 @@
 package com.fly.sys.clazz;
 
+import com.alibaba.fastjson.JSON;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.DBManager;
-import com.fly.sys.util.json.Json;
+import com.fly.sys.vo.FormVO;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
@@ -46,6 +47,7 @@ public class ClassDefLoaderTest {
         ClassDefLoader.init();
 
         ClassDefine classDefine = ClassDefLoader.classIdMap.values().iterator().next();
-        System.out.println(Json.toJsonString(classDefine));
+//        System.out.println(Json.toJsonString(classDefine));
+        System.out.println(JSON.toJSONString(FormVO.getInstance(classDefine.getDefaultForm()), true));
     }
 }

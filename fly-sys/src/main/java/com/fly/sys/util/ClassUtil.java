@@ -24,7 +24,7 @@ public class ClassUtil {
      * @return 返回类类型的所有Field包括父类中的Field
      */
     public static Field[] getAllFields(Class clazz) {
-        if (!clazz.getName().startsWith("com.ccsee.ecargo")) {
+        if (!clazz.getName().startsWith("com.fly")) {
             return new Field[0];
         }
         Map<String, Field> map = new HashMap<String, Field>();

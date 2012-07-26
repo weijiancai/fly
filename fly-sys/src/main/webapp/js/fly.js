@@ -25,11 +25,11 @@ function genTable(classForm) {
     var field;
     for(var i = 0; i < fieldList.length; i++) {
         field = fieldList[i];
-        if("true" !== field.isDisplay) { // 不显示
+        if(!field.isDisplay) { // 不显示
             continue;
         }
 
-        if("true" == field.isSingleLine) {
+        if(field.isSingleLine) {
             idxRow++;
             formGrid.add(getLabelTd(field.displayName), idxRow, 0);
             formGrid.add(getGapTd(field.labelGap), idxRow, 1);
@@ -70,7 +70,8 @@ GridPane.prototype = {
     add: function(node, row, col) {
         var array = this.table[row];
         if(!(array && array.length)) {
-            this.table[row] = [];
+            array = [];
+            this.table[row] = array;
         }
         array[col] = node;
     },
@@ -100,7 +101,7 @@ function DataForm(classForm) {
     this.fieldGap = classForm['fieldGap'];
     this.hgap = classForm['hgap'];
     this.vgap = classForm['vgap'];
-    this.isValid = classForm['isValid'];
+    this.isValid = classForm['valid'];
     this.inputDate = classForm['inputDate'];
     this.sortNum = classForm['sortNum'];
     this.fieldList = [];
@@ -113,13 +114,13 @@ function DataForm(classForm) {
 function FormField(fd) {
     this.id = fd['id'];
     this.displayName = fd['displayName'];
-    this.isSingleLine = fd['isSingleLine'];
-    this.isDisplay = fd['isDisplay'];
+    this.isSingleLine = fd['singleLine'];
+    this.isDisplay = fd['display'];
     this.width = fd['width'];
     this.height = fd['height'];
     this.displayStyle = fd['displayStyle'];
     this.inputDate = fd['inputDate'];
-    this.isValid = fd['isValid'];
+    this.isValid = fd['valid'];
     this.sortNum = fd['sortNum'];
 }
 

@@ -11,23 +11,132 @@
 <script type="text/javascript" src="../../main/webapp/js/fly.js"></script>
 
 <script type="text/javascript">
-    test("formGrid toString", function() {
-        var fieldList = [];
-        fieldList.push()
-        var classForm = {
-            id: 'ABCDJWEIWEIFFWI',
-            name: 'peronForm',
-            colCount: 3,
-            colWidth: 80,
-            labelGap: 5,
-            fieldGap: 15,
-            hgap: 5,
-            vgap: 5,
-            isValid: true,
-            fieldList: fieldList
+    function getClassForm() {
+        return {
+        	"colCount":3,
+        	"colWidth":180,
+        	"fieldGap":15,
+        	"fieldList":[
+        		{
+        			"display":true,
+        			"displayName":"是否有效",
+        			"height":0,
+        			"id":"241b47c494fa4fc29b2f1a304062bf48",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":40,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"录入时间",
+        			"height":0,
+        			"id":"383789e577d04ad2a3bbe3a79a24f5ff",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":10,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"字段名称",
+        			"height":0,
+        			"id":"56ec2fd842544584977bd4d4819111bb",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":50,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"字段ID",
+        			"height":0,
+        			"id":"67e2a1149a14475db000b43f61887ae9",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":90,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"列内码",
+        			"height":0,
+        			"id":"6b5a75f0d90b4303bedad22a8e4da460",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":30,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"排序号",
+        			"height":0,
+        			"id":"6b5f57ffe7f74a3ba1721660c527933f",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":80,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"字段数据类型",
+        			"height":0,
+        			"id":"8613b23f4d42417aaf4c1c4ff04c245d",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":60,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"字段描述",
+        			"height":0,
+        			"id":"8e331d9efce1444b914ad47455a511cc",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":20,
+        			"valid":true,
+        			"width":180
+        		},
+        		{
+        			"display":true,
+        			"displayName":"类内码",
+        			"height":0,
+        			"id":"e6759257439f4b51989c2ef170b89485",
+        			"inputDate":1343145600000,
+        			"singleLine":false,
+        			"sortNum":70,
+        			"valid":true,
+        			"width":180
+        		}
+        	],
+        	"hgap":3,
+        	"id":"cf24662f93024213a658d446baeae6d8",
+        	"inputDate":1343145600000,
+        	"labelGap":5,
+        	"name":"default",
+        	"sortNum":190,
+        	"valid":true,
+        	"vgap":5
         };
-        var except = '<table></table>';
-        var actual = genTable();
+    }
+
+    test("formGrid toString", function() {
+        var classForm = getClassForm();
+        var except = '<table>' +
+                '<tr>' +
+                    '<td><label>是否有效</label></td>' +
+                    '<td><span style="width:5"></span></td>' +
+                '</tr>' +
+                '</table>';
+        var actual = genTable(classForm);
         equal(actual, except);
     });
 </script>
