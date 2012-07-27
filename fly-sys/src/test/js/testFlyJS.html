@@ -2,11 +2,12 @@
 <html>
 <head>
     <title></title>
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
     <link rel="stylesheet" href="qunit/qunit.css">
 </head>
 <body>
 <div id="qunit"></div>
-<script type="text/javascript" src="qunit/qunit.js"></script>
+<!--<script type="text/javascript" src="qunit/qunit.js"></script>-->
 <script type="text/javascript" src="../../main/webapp/js/jquery.tools.min.js"></script>
 <script type="text/javascript" src="../../main/webapp/js/fly.js"></script>
 
@@ -23,6 +24,7 @@
         			"height":0,
         			"id":"241b47c494fa4fc29b2f1a304062bf48",
         			"inputDate":1343145600000,
+        			"name":"IsValid",
         			"singleLine":false,
         			"sortNum":40,
         			"valid":true,
@@ -34,6 +36,7 @@
         			"height":0,
         			"id":"383789e577d04ad2a3bbe3a79a24f5ff",
         			"inputDate":1343145600000,
+        			"name":"InputDate",
         			"singleLine":false,
         			"sortNum":10,
         			"valid":true,
@@ -45,6 +48,7 @@
         			"height":0,
         			"id":"56ec2fd842544584977bd4d4819111bb",
         			"inputDate":1343145600000,
+        			"name":"Name",
         			"singleLine":false,
         			"sortNum":50,
         			"valid":true,
@@ -56,7 +60,8 @@
         			"height":0,
         			"id":"67e2a1149a14475db000b43f61887ae9",
         			"inputDate":1343145600000,
-        			"singleLine":false,
+        			"name":"Id",
+        			"singleLine":true,
         			"sortNum":90,
         			"valid":true,
         			"width":180
@@ -67,6 +72,7 @@
         			"height":0,
         			"id":"6b5a75f0d90b4303bedad22a8e4da460",
         			"inputDate":1343145600000,
+        			"name":"ColId",
         			"singleLine":false,
         			"sortNum":30,
         			"valid":true,
@@ -78,6 +84,7 @@
         			"height":0,
         			"id":"6b5f57ffe7f74a3ba1721660c527933f",
         			"inputDate":1343145600000,
+        			"name":"SortNum",
         			"singleLine":false,
         			"sortNum":80,
         			"valid":true,
@@ -89,6 +96,7 @@
         			"height":0,
         			"id":"8613b23f4d42417aaf4c1c4ff04c245d",
         			"inputDate":1343145600000,
+        			"name":"Type",
         			"singleLine":false,
         			"sortNum":60,
         			"valid":true,
@@ -100,6 +108,7 @@
         			"height":0,
         			"id":"8e331d9efce1444b914ad47455a511cc",
         			"inputDate":1343145600000,
+        			"name":"FieldDesc",
         			"singleLine":false,
         			"sortNum":20,
         			"valid":true,
@@ -111,7 +120,8 @@
         			"height":0,
         			"id":"e6759257439f4b51989c2ef170b89485",
         			"inputDate":1343145600000,
-        			"singleLine":false,
+        			"name":"ClassId",
+        			"singleLine":true,
         			"sortNum":70,
         			"valid":true,
         			"width":180
@@ -128,7 +138,7 @@
         };
     }
 
-    test("formGrid toString", function() {
+    /*test("formGrid toString", function() {
         var classForm = getClassForm();
         var except = '<table>' +
                 '<tr>' +
@@ -138,7 +148,9 @@
                 '</table>';
         var actual = genTable(classForm);
         equal(actual, except);
-    });
+    });*/
+    document.write(genTable(getClassForm()));
+    $(document).append(genTable(getClassForm()));
 </script>
 </body>
 </html>

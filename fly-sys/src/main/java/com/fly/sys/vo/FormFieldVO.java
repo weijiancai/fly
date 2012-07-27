@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class FormFieldVO {
     private String id;
+    private String name;
     private String displayName;
     private boolean isSingleLine;
     private boolean isDisplay;
@@ -26,6 +27,14 @@ public class FormFieldVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDisplayName() {
@@ -104,6 +113,7 @@ public class FormFieldVO {
         FormFieldVO vo = new FormFieldVO();
 
         vo.setDisplay(field.isDisplay());
+        vo.setName(field.getClassField().getName());
         vo.setDisplayName(field.getDisplayName());
         vo.setDisplayStyle(field.getDisplayStyle());
         vo.setHeight(field.getHeight());

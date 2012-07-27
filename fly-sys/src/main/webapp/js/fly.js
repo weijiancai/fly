@@ -31,18 +31,18 @@ function genTable(classForm) {
 
         if(field.isSingleLine) {
             idxRow++;
-            formGrid.add(getLabelTd(field.displayName), idxRow, 0);
-            formGrid.add(getGapTd(field.labelGap), idxRow, 1);
-            formGrid.add(getTextFieldTd(field.id, field.width, field.height, form.colCount * 4 - 5), idxRow, 2);
+            formGrid.add(getLabelTd(field.displayName, field.name), idxRow, 0);
+            formGrid.add(getGapTd(form.labelGap), idxRow, 1);
+            formGrid.add(getTextFieldTd(field.name, field.width, field.height, form.colCount * 4 - 3), idxRow, 2);
             idxCol = 0;
             idxRow++;
 
             continue;
         }
 
-        formGrid.add(getLabelTd(field.displayName), idxRow, idxCol++);
-        formGrid.add(getGapTd(field.labelGap), idxRow, idxCol++);
-        formGrid.add(getTextFieldTd(field.id, field.width, field.height), idxRow, idxCol++);
+        formGrid.add(getLabelTd(field.displayName, field.name), idxRow, idxCol++);
+        formGrid.add(getGapTd(form.labelGap), idxRow, idxCol++);
+        formGrid.add(getTextFieldTd(field.name, field.width, field.height), idxRow, idxCol++);
 
         if(form.colCount == 1) {
             idxCol = 0;
@@ -52,7 +52,7 @@ function genTable(classForm) {
                 idxCol = 0;
                 idxRow++;
             } else {
-                formGrid.add(getGapTd(field.fieldGap), idxRow, idxCol++);
+                formGrid.add(getGapTd(form.fieldGap), idxRow, idxCol++);
             }
         }
     }
@@ -79,12 +79,14 @@ GridPane.prototype = {
         var tableStr = '<table>';
         var array = this.table;
         for(var i = 0; i < array.length; i++) {
-            tableStr += '<tr>';
             var subArray = array[i];
-            for(var j = 0; j < subArray.length; j++) {
-                tableStr += subArray[j];
+            if(subArray) {
+                tableStr += '<tr>';
+                for(var j = 0; j < subArray.length; j++) {
+                    tableStr += subArray[j];
+                }
+                tableStr += '</tr>';
             }
-            tableStr += '</tr>';
         }
         tableStr += '</table>';
 
@@ -109,10 +111,15 @@ function DataForm(classForm) {
     for(var i = 0; i < classForm['fieldList'].length; i++) {
         this.fieldList.push(new FormField(classForm['fieldList'][i]));
     }
+
+    this.fieldList.sort(function(a, b) {
+        return a.sortNum - b.sortNum;
+    });
 }
 
 function FormField(fd) {
     this.id = fd['id'];
+    this.name = fd['name'];
     this.displayName = fd['displayName'];
     this.isSingleLine = fd['singleLine'];
     this.isDisplay = fd['display'];
@@ -126,15 +133,15 @@ function FormField(fd) {
 
 
 function getGap(width) {
-    return '<span style="width:' + width + '"></span>';
+    return '<span style="width:' + width + 'px;display:block;"></span>';
 }
 
 function getGapTd(width) {
-    return '<td>' + getGap(width) + '"</td>';
+    return '<td>' + getGap(width) + '</td>';
 }
 
 function getHGap(colspan, hGap) {
-    return '<td colspan="' + colspan+ '" style="height:' + hGap + '"></td>'
+    return '<td colspan="' + colspan+ '" style="height:' + hGap + 'px"></td>'
 }
 
 
@@ -146,6 +153,7 @@ function getTextFieldTd(id, width, height, colspan, rowspan) {
     var spanStr = "";
     if(colspan) {
         spanStr += ' colspan="' + colspan + '"';
+        width = '100%';
     }
     if(rowspan) {
         spanStr += ' rowspan="' + rowspan + '"';
@@ -159,16 +167,24 @@ function getTextFieldTd(id, width, height, colspan, rowspan) {
 
 
 function getLabel(name, labelForId, width) {
-    return '<label for="' + labelForId+ '" style="width:' + width + ';">' + name+ '</label>';
+    if(width) {
+        return '<label for="' + labelForId+ '" style="width:' + width + 'px;display:block;">' + name+ '</label>';
+    }
+
+    return '<label for="' + labelForId+ '">' + name+ '</label>';
 }
 
 function getTextField(id, width, height) {
     var styleStr = "";
     if(width) {
-        styleStr += "width:" + width + ";";
+        if('100%' == width) {
+            styleStr += "width:" + width + ";";
+        } else {
+            styleStr += "width:" + width + "px;";
+        }
     }
     if(height) {
-        styleStr += "height:" + height + ";";
+        styleStr += "height:" + height + "px;";
     }
     if(styleStr.length > 0) {
         return '<input id="' + id + '" type="text" style="' + styleStr + '"/>'

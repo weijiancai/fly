@@ -47,7 +47,7 @@ public class ClassRowMapperFactory {
                 field.setInputDate(rs.getDate("input_date"));
                 field.setSortNum(rs.getInt("sort_num"));
                 field.setClassDef(clazz);
-                field.setColumn(DBManager.getColumnById(rs.getString("column_id")));
+                field.setColumn(DBManager.getColumnById(rs.getString("col_id")));
 
                 return field;
             }
