@@ -192,41 +192,8 @@ public class ClassDefLoader {
         classTable.setTableFieldList(tableFieldList);
 
         // 插入sys_class_form信息
-        ClassForm classForm = new ClassForm();
-        classForm.setName("default");
-        classForm.setColCount(3);
-        classForm.setColWidth(180);
-        classForm.setClassDefine(clazz);
-        classForm.setLabelGap(5);
-        classForm.setFieldGap(15);
-        classForm.setHgap(3);
-        classForm.setVgap(5);
-        classForm.setSortNum(classSortNum);
-        classForm.setValid(true);
-        template.save(ClassPDBFactory.getClassForm(classForm));
-        List<ClassForm> classFormList = new ArrayList<ClassForm>();
-        classFormList.add(classForm);
-        clazz.setFormList(classFormList);
-
-        // 插入sys_class_form_field
-        List<FormField> formFieldList = new ArrayList<FormField>();
-        FormField formField;
-        fieldSortNum = 0;
-        for (ClassField classField : fieldList) {
-            formField = new FormField();
-            formField.setClassForm(classForm);
-            formField.setClassField(classField);
-            formField.setDisplayName(classField.getFieldDesc());
-            formField.setSingleLine(false);
-            formField.setWidth(180);
-            formField.setDisplay(true);
-            formField.setSortNum(fieldSortNum += 10);
-            formField.setValid(true);
-            // 插入表
-            template.save(ClassPDBFactory.getFormField(formField));
-            formFieldList.add(formField);
-        }
-        classForm.setFieldList(formFieldList);
+        initClassForm(template, clazz, fieldList, "0");
+        initClassForm(template, clazz, fieldList, "1");
 
         // 插入sys_class_query信息
         ClassQuery classQuery = new ClassQuery();
@@ -275,6 +242,50 @@ public class ClassDefLoader {
         // 存入缓存
         cache.put(clazz.getName().toLowerCase(), clazz);
         classIdMap.put(clazz.getId(), clazz);
+    }
+
+    private static void initClassForm(JdbcTemplate template, ClassDefine clazz, List<ClassField> fieldList, String formType) throws Exception {
+        int fieldSortNum;
+        ClassForm classForm = new ClassForm();
+        classForm.setFormType(formType);
+        if ("0".equals(formType)) {
+            classForm.setName(clazz.getName() + "_Query");
+        } else if ("1".equals(formType)) {
+            classForm.setName(clazz.getName() + "_Edit");
+        }
+        classForm.setColCount(3);
+        classForm.setColWidth(180);
+        classForm.setClassDefine(clazz);
+        classForm.setLabelGap(5);
+        classForm.setFieldGap(15);
+        classForm.setHgap(3);
+        classForm.setVgap(5);
+        classForm.setSortNum(classSortNum);
+        classForm.setValid(true);
+        template.save(ClassPDBFactory.getClassForm(classForm));
+        List<ClassForm> classFormList = new ArrayList<ClassForm>();
+        classFormList.add(classForm);
+        clazz.setFormList(classFormList);
+
+        // 插入sys_class_form_field
+        List<FormField> formFieldList = new ArrayList<FormField>();
+        FormField formField;
+        fieldSortNum = 0;
+        for (ClassField classField : fieldList) {
+            formField = new FormField();
+            formField.setClassForm(classForm);
+            formField.setClassField(classField);
+            formField.setDisplayName(classField.getFieldDesc());
+            formField.setSingleLine(false);
+            formField.setWidth(180);
+            formField.setDisplay(true);
+            formField.setSortNum(fieldSortNum += 10);
+            formField.setValid(true);
+            // 插入表
+            template.save(ClassPDBFactory.getFormField(formField));
+            formFieldList.add(formField);
+        }
+        classForm.setFieldList(formFieldList);
     }
 
     private static int getColWidth(ClassField classField) {

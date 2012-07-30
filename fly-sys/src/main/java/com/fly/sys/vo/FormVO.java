@@ -14,6 +14,7 @@ import java.util.List;
 public class FormVO {
     private String id;
     private String name;
+    private String formType;
     private int colCount;
     private int colWidth;
     private int labelGap;
@@ -40,6 +41,14 @@ public class FormVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFormType() {
+        return formType;
+    }
+
+    public void setFormType(String formType) {
+        this.formType = formType;
     }
 
     public int getColCount() {
@@ -133,6 +142,7 @@ public class FormVO {
         vo.setInputDate(form.getInputDate());
         vo.setLabelGap(form.getLabelGap());
         vo.setName(form.getName());
+        vo.setFormType(form.getFormType());
         vo.setSortNum(form.getSortNum());
         vo.setValid(form.isValid());
         vo.setVgap(form.getVgap());

@@ -4,6 +4,11 @@
     <title></title>
     <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
     <link rel="stylesheet" href="qunit/qunit.css">
+    <style type="text/css">
+        .queryForm {
+
+        }
+    </style>
 </head>
 <body>
 <div id="qunit"></div>
@@ -127,6 +132,7 @@
         			"width":180
         		}
         	],
+            "formType":"0",
         	"hgap":3,
         	"id":"cf24662f93024213a658d446baeae6d8",
         	"inputDate":1343145600000,
@@ -134,7 +140,8 @@
         	"name":"default",
         	"sortNum":190,
         	"valid":true,
-        	"vgap":5
+        	"vgap":5,
+            fieldset: {}
         };
     }
 
@@ -149,8 +156,15 @@
         var actual = genTable(classForm);
         equal(actual, except);
     });*/
-    document.write(genTable(getClassForm()));
-    $(document).append(genTable(getClassForm()));
+    var form = new DataForm(getClassForm());
+    document.write(form.toString());
+//    $(document).append(genTable(getClassForm()));
 </script>
+<!--<fieldset>
+    <legend>测试王风纪委飞</legend>
+    <script type="text/javascript">
+        document.write(form.toString());
+    </script>
+</fieldset>-->
 </body>
 </html>

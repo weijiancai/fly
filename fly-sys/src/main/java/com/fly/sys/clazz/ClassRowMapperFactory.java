@@ -62,6 +62,7 @@ public class ClassRowMapperFactory {
 
                 form.setId(rs.getString("id"));
                 form.setName(rs.getString("name"));
+                form.setFormType(rs.getString("form_type"));
                 form.setColCount(rs.getInt("col_Count"));
                 form.setColWidth(rs.getInt("col_width"));
                 form.setLabelGap(rs.getInt("label_gap"));

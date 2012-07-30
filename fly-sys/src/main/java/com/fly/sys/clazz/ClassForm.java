@@ -10,6 +10,7 @@ import java.util.List;
 public class ClassForm implements Serializable {
     private String id;
     private String name;
+    private String formType;
     private int colCount;
     private int colWidth;
     private int labelGap;
@@ -37,6 +38,14 @@ public class ClassForm implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFormType() {
+        return formType;
+    }
+
+    public void setFormType(String formType) {
+        this.formType = formType;
     }
 
     public int getColCount() {

@@ -12,54 +12,6 @@ $(function() {
     })
 });
 
-function genTable(classForm) {
-    if(!classForm) {
-        return '';
-    }
-    var form = new DataForm(classForm);
-    var formGrid = new GridPane(form.hgap, form.vgap);
-
-    var idxRow = 0;
-    var idxCol = 0;
-    var fieldList = form.fieldList;
-    var field;
-    for(var i = 0; i < fieldList.length; i++) {
-        field = fieldList[i];
-        if(!field.isDisplay) { // 不显示
-            continue;
-        }
-
-        if(field.isSingleLine) {
-            idxRow++;
-            formGrid.add(getLabelTd(field.displayName, field.name), idxRow, 0);
-            formGrid.add(getGapTd(form.labelGap), idxRow, 1);
-            formGrid.add(getTextFieldTd(field.name, field.width, field.height, form.colCount * 4 - 3), idxRow, 2);
-            idxCol = 0;
-            idxRow++;
-
-            continue;
-        }
-
-        formGrid.add(getLabelTd(field.displayName, field.name), idxRow, idxCol++);
-        formGrid.add(getGapTd(form.labelGap), idxRow, idxCol++);
-        formGrid.add(getTextFieldTd(field.name, field.width, field.height), idxRow, idxCol++);
-
-        if(form.colCount == 1) {
-            idxCol = 0;
-            idxRow++;
-        } else {
-            if(idxCol == form.colCount * 4 - 1) {
-                idxCol = 0;
-                idxRow++;
-            } else {
-                formGrid.add(getGapTd(form.fieldGap), idxRow, idxCol++);
-            }
-        }
-    }
-
-    return formGrid.toString();
-}
-
 function GridPane(hgap, vgap) {
     this.hgap = hgap;
     this.vgap = vgap;
@@ -76,7 +28,7 @@ GridPane.prototype = {
         array[col] = node;
     },
     toString: function() {
-        var tableStr = '<table>';
+        var tableStr = '<table class="gridPane">';
         var array = this.table;
         for(var i = 0; i < array.length; i++) {
             var subArray = array[i];
@@ -97,6 +49,7 @@ GridPane.prototype = {
 function DataForm(classForm) {
     this.id = classForm['id'];
     this.name = classForm['name'];
+    this.formType = classForm['formType'];
     this.colCount = classForm['colCount'];
     this.colWidth = classForm['colWidth'];
     this.labelGap = classForm['labelGap'];
@@ -107,15 +60,81 @@ function DataForm(classForm) {
     this.inputDate = classForm['inputDate'];
     this.sortNum = classForm['sortNum'];
     this.fieldList = [];
+    this.gridPane = new GridPane(this.hgap, this.vgap);
+    this.fieldset = classForm['fieldset'];
 
     for(var i = 0; i < classForm['fieldList'].length; i++) {
         this.fieldList.push(new FormField(classForm['fieldList'][i]));
     }
 
+    // 按SortNum排序
     this.fieldList.sort(function(a, b) {
         return a.sortNum - b.sortNum;
     });
+    // 初始化
+    this.init();
 }
+
+DataForm.prototype = {
+    init: function() {
+        var formGrid = this.gridPane;
+
+        var idxRow = 0;
+        var idxCol = 0;
+        var fieldList = this.fieldList;
+        var field;
+        for(var i = 0; i < fieldList.length; i++) {
+            field = fieldList[i];
+            if(!field.isDisplay) { // 不显示
+                continue;
+            }
+
+            if(field.isSingleLine) {
+                idxRow++;
+                formGrid.add(getLabelTd(field.displayName, field.name), idxRow, 0);
+                formGrid.add(getGapTd(this.labelGap), idxRow, 1);
+                formGrid.add(getTextFieldTd(field.name, field.width, field.height, this.colCount * 4 - 3), idxRow, 2);
+                idxCol = 0;
+                idxRow++;
+
+                continue;
+            }
+
+            formGrid.add(getLabelTd(field.displayName, field.name), idxRow, idxCol++);
+            formGrid.add(getGapTd(this.labelGap), idxRow, idxCol++);
+            formGrid.add(getTextFieldTd(field.name, field.width, field.height), idxRow, idxCol++);
+
+            if(this.colCount == 1) {
+                idxCol = 0;
+                idxRow++;
+            } else {
+                if(idxCol == this.colCount * 4 - 1) {
+                    idxCol = 0;
+                    idxRow++;
+                } else {
+                    formGrid.add(getGapTd(this.fieldGap), idxRow, idxCol++);
+                }
+            }
+        }
+    },
+    toString: function() {
+        var styleClass = '';
+        var legendStr = '';
+        if("0" == this.formType) {
+            styleClass = 'queryForm';
+            legendStr = '查询条件';
+        } else if("1" == this.formType) {
+            styleClass = 'editForm';
+        }
+        var formStr = '<form id="' + this.name + '" class="' + styleClass + '">';
+        if(this.fieldset) {
+            formStr += '<fieldset><legend>' + legendStr + '</legend>' + this.gridPane.toString() +'</fieldset>'
+        } else {
+            formStr += this.gridPane.toString();
+        }
+        return formStr + '</form>';
+    }
+};
 
 function FormField(fd) {
     this.id = fd['id'];

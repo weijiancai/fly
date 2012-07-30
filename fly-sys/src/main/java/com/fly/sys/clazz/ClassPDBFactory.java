@@ -144,6 +144,7 @@ public class ClassPDBFactory {
                 map.put("id", form.getId());
                 map.put("class_id", form.getClassDefine().getId());
                 map.put("name", form.getName());
+                map.put("form_type", form.getFormType());
                 map.put("col_width", form.getColWidth());
                 map.put("col_count", form.getColCount());
                 map.put("label_gap", form.getLabelGap());
