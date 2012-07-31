@@ -12,6 +12,20 @@ $(function() {
     })
 });
 
+function DataClass(classDefine) {
+    this.id = classDefine['id'];
+    this.name = classDefine['name'];
+    this.cname = classDefine['cname'];
+    this.superClass = classDefine['superClass'];
+    this.author = classDefine['author'];
+    this.desc = classDefine['desc'];
+    this.version = classDefine['version'];
+    this.isValid = classDefine['isValid'];
+    this.sortNum = classDefine['sortNum'];
+
+    this.queryForm = new DataForm(classDefine['queryForm']);
+}
+
 function GridPane(hgap, vgap) {
     this.hgap = hgap;
     this.vgap = vgap;

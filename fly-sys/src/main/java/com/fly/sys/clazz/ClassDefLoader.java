@@ -263,9 +263,7 @@ public class ClassDefLoader {
         classForm.setSortNum(classSortNum);
         classForm.setValid(true);
         template.save(ClassPDBFactory.getClassForm(classForm));
-        List<ClassForm> classFormList = new ArrayList<ClassForm>();
-        classFormList.add(classForm);
-        clazz.setFormList(classFormList);
+        clazz.addClassForm(classForm);
 
         // 插入sys_class_form_field
         List<FormField> formFieldList = new ArrayList<FormField>();

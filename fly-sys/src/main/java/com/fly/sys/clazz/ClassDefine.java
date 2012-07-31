@@ -193,6 +193,12 @@ public class ClassDefine implements Serializable {
         itemClassNameList.add(className);
     }
 
+    public void addClassForm(ClassForm form) {
+        if (formList == null) {
+            formList = new ArrayList<ClassForm>();
+        }
+        formList.add(form);
+    }
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
