@@ -1,17 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Administrator
- * Date: 12-5-9
- * Time: 下午10:51
- * To change this template use File | Settings | File Templates.
- */
-$(function() {
-    // 获取项目信息
-    $.post("projectDefine.class", function(data) {
-        alert(data);
-    })
-});
-
 function DataClass(classDefine) {
     this.id = classDefine['id'];
     this.name = classDefine['name'];
@@ -76,6 +62,7 @@ function DataForm(classForm) {
     this.fieldList = [];
     this.gridPane = new GridPane(this.hgap, this.vgap);
     this.fieldset = classForm['fieldset'];
+    this.actionBar = classForm['actionBar'];
 
     for(var i = 0; i < classForm['fieldList'].length; i++) {
         this.fieldList.push(new FormField(classForm['fieldList'][i]));
@@ -142,9 +129,17 @@ DataForm.prototype = {
         }
         var formStr = '<form id="' + this.name + '" class="' + styleClass + '">';
         if(this.fieldset) {
-            formStr += '<fieldset><legend>' + legendStr + '</legend>' + this.gridPane.toString() +'</fieldset>'
-        } else {
-            formStr += this.gridPane.toString();
+            formStr += '<fieldset><legend>' + legendStr + '</legend>';
+        }
+
+        formStr += this.gridPane.toString();
+
+        if(this.actionBar) {
+            formStr += this.actionBar.toString();
+        }
+
+        if(this.fieldset) {
+            formStr += '</fieldset>';
         }
         return formStr + '</form>';
     }
@@ -224,5 +219,38 @@ function getTextField(id, width, height) {
     } else {
         return '<input id="' + id + '" type="text"/>'
     }
-
 }
+
+/**
+ * 控制条控件
+ */
+function ActionBar() {
+    this.actions = [];
+}
+
+ActionBar.prototype = {
+    add: function(actionButton) {
+        this.actions.push(actionButton);
+    },
+    toString: function() {
+        var str = '<div style="text-align: center;">';
+        for(var i = 0; i < this.actions.length; i++) {
+            str += this.actions[i].toString();
+        }
+        str += '</div>';
+        return str;
+    }
+};
+
+function ActionButton(id, name, value, onClick) {
+    this.id = id;
+    this.name = name;
+    this.value = value;
+    this.onClick = onClick;
+}
+
+ActionButton.prototype = {
+    toString: function() {
+        return '<input type="button" id="' + this.id + '" name="' + this.name + '" value="' + this.value + '" onclick="'+ this.onClick +'()"/>';
+    }
+};

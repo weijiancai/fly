@@ -12,204 +12,207 @@
 </head>
 <body>
 <div></div>
-<script type="text/javascript" src="../../main/webapp/js/jquery.tools.min.js"></script>
-<script type="text/javascript" src="../../main/webapp/js/jquery.easyui.min-1.2.3.js"></script>
 <script type="text/javascript" src="../../main/webapp/js/fly.js"></script>
 <script type="text/javascript" src="../../main/webapp/js/fly_easyui.js"></script>
-
 <script type="text/javascript">
     function getClass() {
         return {
-        	"author":"system",
-        	"classTable":{
-        		"colWidth":80,
-        		"id":"23e44ea5fa664b1ebe9beff25310088d",
-        		"name":"default",
-        		"sortNum":1080,
-        		"tableFieldList":[
-        			{
-        				"colWidth":60,
-        				"display":true,
-        				"displayName":"table内码",
-        				"id":"47498d74e2894257ba8c018ae6a8e621",
-        				"sortNum":10,
-        				"valid":true
-        			},
-        			{
-        				"colWidth":60,
-        				"display":true,
-        				"displayName":"类内码",
-        				"id":"e1a039dae0db4187a7a4b215cfd7a833",
-        				"sortNum":20,
-        				"valid":true
-        			},
-        			{
-        				"colWidth":60,
-        				"display":true,
-        				"displayName":"form内码",
-        				"id":"22669d2b50e64e26933b121e915c1167",
-        				"sortNum":30,
-        				"valid":true
-        			},
-        			{
-        				"colWidth":60,
-        				"display":true,
-        				"displayName":"模块内码",
-        				"id":"2a0f7dbfcb4d4b2fa77026a91ccee603",
-        				"sortNum":40,
-        				"valid":true
-        			}
-        		],
-        		"valid":true
-        	},
-        	"cname":"模块类",
-        	"desc":"模块类",
-        	"editForm":{
-        		"colCount":3,
-        		"colWidth":180,
-        		"fieldGap":15,
-        		"fieldList":[
-        			{
-        				"display":true,
-        				"displayName":"table内码",
-        				"height":0,
-        				"id":"7d3a33b9a6f44decaf0cb089910e5ff2",
-        				"name":"TableId",
-        				"singleLine":false,
-        				"sortNum":10,
-        				"valid":true,
-        				"width":180
-        			},
-        			{
-        				"display":true,
-        				"displayName":"类内码",
-        				"height":0,
-        				"id":"19c769625e4d429e8238eae59f8e9c79",
-        				"name":"ClassId",
-        				"singleLine":false,
-        				"sortNum":20,
-        				"valid":true,
-        				"width":180
-        			},
-        			{
-        				"display":true,
-        				"displayName":"form内码",
-        				"height":0,
-        				"id":"a8da60ba56dc4c8abd8efe70ad2700b9",
-        				"name":"FormId",
-        				"singleLine":false,
-        				"sortNum":30,
-        				"valid":true,
-        				"width":180
-        			},
-        			{
-        				"display":true,
-        				"displayName":"模块内码",
-        				"height":0,
-        				"id":"b739b0e878034b11967b6cdc2f18ee73",
-        				"name":"ModuleD",
-        				"singleLine":false,
-        				"sortNum":40,
-        				"valid":true,
-        				"width":180
-        			}
-        		],
-        		"formType":"1",
-        		"hgap":3,
-        		"id":"d73f846dc8d0433fbc1080b433b52d05",
-        		"labelGap":5,
-        		"name":"RModuleClass_Edit",
-        		"sortNum":1080,
-        		"valid":true,
-        		"vgap":5
-        	},
-        	"id":"3e89a1536c844db4b7bf41cf91ba0227",
-        	"name":"RModuleClass",
-        	"queryForm":{
-        		"colCount":3,
-        		"colWidth":180,
-        		"fieldGap":15,
-        		"fieldList":[
-        			{
-        				"display":true,
-        				"displayName":"table内码",
-        				"height":0,
-        				"id":"f34b6985e0e94af5ba4ac64d8489ccf0",
-        				"name":"TableId",
-        				"singleLine":false,
-        				"sortNum":10,
-        				"valid":true,
-        				"width":180
-        			},
-        			{
-        				"display":true,
-        				"displayName":"类内码",
-        				"height":0,
-        				"id":"caf519c02e8d4cd9b170a7175370ea1e",
-        				"name":"ClassId",
-        				"singleLine":false,
-        				"sortNum":20,
-        				"valid":true,
-        				"width":180
-        			},
-        			{
-        				"display":true,
-        				"displayName":"form内码",
-        				"height":0,
-        				"id":"28386466072445b4a85cb1b168e0a350",
-        				"name":"FormId",
-        				"singleLine":false,
-        				"sortNum":30,
-        				"valid":true,
-        				"width":180
-        			},
-        			{
-        				"display":true,
-        				"displayName":"模块内码",
-        				"height":0,
-        				"id":"361ea6e07ef04b31bc8568952f7c1ddc",
-        				"name":"ModuleD",
-        				"singleLine":false,
-        				"sortNum":40,
-        				"valid":true,
-        				"width":180
-        			}
-        		],
-        		"formType":"0",
-        		"hgap":3,
-        		"id":"c66dbb0f0a6f464d80cab2fed9cf838a",
-        		"labelGap":5,
-        		"name":"RModuleClass_Query",
-        		"sortNum":1080,
-        		"valid":true,
-        		"vgap":5
-        	},
-        	"sortNum":1080,
-        	"valid":true,
-        	"version":"0.0.0"
+            "author":"system",
+            "classTable":{
+                "colWidth":80,
+                "id":"23e44ea5fa664b1ebe9beff25310088d",
+                "name":"default",
+                "sortNum":1080,
+                "tableFieldList":[
+                    {
+                        "colWidth":60,
+                        "display":true,
+                        "displayName":"table内码",
+                        "id":"47498d74e2894257ba8c018ae6a8e621",
+                        "sortNum":10,
+                        "valid":true
+                    },
+                    {
+                        "colWidth":60,
+                        "display":true,
+                        "displayName":"类内码",
+                        "id":"e1a039dae0db4187a7a4b215cfd7a833",
+                        "sortNum":20,
+                        "valid":true
+                    },
+                    {
+                        "colWidth":60,
+                        "display":true,
+                        "displayName":"form内码",
+                        "id":"22669d2b50e64e26933b121e915c1167",
+                        "sortNum":30,
+                        "valid":true
+                    },
+                    {
+                        "colWidth":60,
+                        "display":true,
+                        "displayName":"模块内码",
+                        "id":"2a0f7dbfcb4d4b2fa77026a91ccee603",
+                        "sortNum":40,
+                        "valid":true
+                    }
+                ],
+                "valid":true
+            },
+            "cname":"模块类",
+            "desc":"模块类",
+            "editForm":{
+                "colCount":3,
+                "colWidth":180,
+                "fieldGap":15,
+                "fieldList":[
+                    {
+                        "display":true,
+                        "displayName":"table内码",
+                        "height":0,
+                        "id":"7d3a33b9a6f44decaf0cb089910e5ff2",
+                        "name":"TableId",
+                        "singleLine":false,
+                        "sortNum":10,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"类内码",
+                        "height":0,
+                        "id":"19c769625e4d429e8238eae59f8e9c79",
+                        "name":"ClassId",
+                        "singleLine":false,
+                        "sortNum":20,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"form内码",
+                        "height":0,
+                        "id":"a8da60ba56dc4c8abd8efe70ad2700b9",
+                        "name":"FormId",
+                        "singleLine":false,
+                        "sortNum":30,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"模块内码",
+                        "height":0,
+                        "id":"b739b0e878034b11967b6cdc2f18ee73",
+                        "name":"ModuleD",
+                        "singleLine":false,
+                        "sortNum":40,
+                        "valid":true,
+                        "width":180
+                    }
+                ],
+                "formType":"1",
+                "hgap":3,
+                "id":"d73f846dc8d0433fbc1080b433b52d05",
+                "labelGap":5,
+                "name":"RModuleClass_Edit",
+                "sortNum":1080,
+                "valid":true,
+                "vgap":5
+            },
+            "id":"3e89a1536c844db4b7bf41cf91ba0227",
+            "name":"RModuleClass",
+            "queryForm":{
+                "colCount":3,
+                "colWidth":180,
+                "fieldGap":15,
+                "fieldList":[
+                    {
+                        "display":true,
+                        "displayName":"table内码",
+                        "height":0,
+                        "id":"f34b6985e0e94af5ba4ac64d8489ccf0",
+                        "name":"TableId",
+                        "singleLine":false,
+                        "sortNum":10,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"类内码",
+                        "height":0,
+                        "id":"caf519c02e8d4cd9b170a7175370ea1e",
+                        "name":"ClassId",
+                        "singleLine":false,
+                        "sortNum":20,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"form内码",
+                        "height":0,
+                        "id":"28386466072445b4a85cb1b168e0a350",
+                        "name":"FormId",
+                        "singleLine":false,
+                        "sortNum":30,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"模块内码",
+                        "height":0,
+                        "id":"361ea6e07ef04b31bc8568952f7c1ddc",
+                        "name":"ModuleD",
+                        "singleLine":false,
+                        "sortNum":40,
+                        "valid":true,
+                        "width":180
+                    }
+                ],
+                "formType":"0",
+                "hgap":3,
+                "id":"c66dbb0f0a6f464d80cab2fed9cf838a",
+                "labelGap":5,
+                "name":"RModuleClass_Query",
+                "sortNum":1080,
+                "valid":true,
+                "vgap":5
+            },
+            "sortNum":1080,
+            "valid":true,
+            "version":"0.0.0"
         };
     }
 
-    /*test("formGrid toString", function() {
-        var classForm = getClassForm();
-        var except = '<table>' +
-                '<tr>' +
-                    '<td><label>是否有效</label></td>' +
-                    '<td><span style="width:5"></span></td>' +
-                '</tr>' +
-                '</table>';
-        var actual = genTable(classForm);
-        equal(actual, except);
-    });*/
     var win = new DataWindow(getClass());
     document.write(win.toString());
-//    $(document).append(genTable(getClassForm()));
 </script>
-<!--<fieldset>
-    <legend>测试王风纪委飞</legend>
-    <script type="text/javascript">
-        document.write(form.toString());
-    </script>
-</fieldset>-->
+<script type="text/javascript" src="../../main/webapp/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="../../main/webapp/js/jquery.easyui.min-1.2.3.js"></script>
+
+
+
+<script type="text/javascript">
+
+
+    /*test("formGrid toString", function() {
+     var classForm = getClassForm();
+     var except = '<table>' +
+     '<tr>' +
+     '<td><label>是否有效</label></td>' +
+     '<td><span style="width:5"></span></td>' +
+     '</tr>' +
+     '</table>';
+     var actual = genTable(classForm);
+     equal(actual, except);
+     });*/
+    //    $(document).append(genTable(getClassForm()));
+    $(document).ready(function() {
+
+    });
+</script>
 </body>
 </html>
