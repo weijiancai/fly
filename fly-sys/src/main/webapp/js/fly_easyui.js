@@ -12,12 +12,16 @@ function DataWindow(classDefine) {
 
 DataWindow.prototype = {
     toString: function() {
-        return '<div class="easyui-layout">' + getNorth(this.clazz) + '</div>';
+        return '<div class="easyui-layout">' + getNorth(this.clazz) + getCenter(this.clazz) + '</div>';
     }
 };
 
 function getNorth(clazz) {
-    return '<div region="north" split="false" style="height: 100px;" border="false">' + clazz.queryForm.toString() + '</div>'
+    return '<div region="north" split="false" border="false">' + clazz.queryForm.toString() + '</div>';
+}
+
+function getCenter(clazz) {
+    return '<div region="center" split="false" border="false">' + clazz.dataTable.toString() + '</div>';
 }
 
 function formQuery() {

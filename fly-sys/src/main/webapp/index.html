@@ -1,17 +1,20 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>demo</title>
-    <script type="text/javascript" src="js/jquery.tools.min.js"></script>
+    <title>FLY SYS</title>
+    <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
+    <link rel="stylesheet" type="text/css" href="style/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="style/easyui/themes/icon.css">
     <script type="text/javascript" src="js/fly.js"></script>
+    <script type="text/javascript" src="js/fly_easyui.js"></script>
+    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="js/jquery.easyui.min-1.2.3.js"></script>
 </head>
-<body>
-    <label for="Name">姓名</label>
-    <input id="Name" type="text"/>
-<table>
-    <tr>
-        <td colspan="5"></td>
-    </tr>
-</table>
+<body class="easyui-layout">
+        <div region="north" title="North Title" split="true" style="height:100px;">north</div>
+        <div region="south" title="South Title" split="true" style="height:100px;">south</div>
+        <div region="east" iconCls="icon-reload" title="East" split="true" style="width:100px;">east</div>
+        <div region="west" split="true" title="West" style="width:100px;">west</div>
+        <div region="center" title="center title" style="padding:5px;background:#eee;">center</div>
 </body>
 </html>

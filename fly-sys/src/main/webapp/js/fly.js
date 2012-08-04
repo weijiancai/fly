@@ -10,6 +10,7 @@ function DataClass(classDefine) {
     this.sortNum = classDefine['sortNum'];
 
     this.queryForm = new DataForm(classDefine['queryForm']);
+    this.dataTable = new DataTable(classDefine['classTable']);
 }
 
 function GridPane(hgap, vgap) {
@@ -254,3 +255,45 @@ ActionButton.prototype = {
         return '<input type="button" id="' + this.id + '" name="' + this.name + '" value="' + this.value + '" onclick="'+ this.onClick +'()"/>';
     }
 };
+
+function DataTable(classTable) {
+    this.id = classTable['id'];
+    this.name = classTable['name'];
+    this.colWidth = classTable['colWidth'];
+    this.isValid = classTable['isValid'];
+    this.fieldList = [];
+
+    var tableFieldList = classTable['tableFieldList'];
+    for(var i = 0; i < tableFieldList.length; i++) {
+        this.fieldList.push(new TableField(tableFieldList[i]));
+    }
+
+    // 按SortNum排序
+    this.fieldList.sort(function(a, b) {
+        return a.sortNum - b.sortNum;
+    });
+}
+
+DataTable.prototype = {
+    toString: function() {
+        var str = '<table><thead><tr>';
+        for(var i = 0; i < this.fieldList.length; i++) {
+            var field = this.fieldList[i];
+            if(field) {
+                str += '<th>' + field.displayName + '</th>'
+            }
+        }
+
+        return str +'</tr></thead></table>';
+    }
+}
+
+function TableField(classTableField) {
+    this.id = classTableField['id'];
+    this.displayName = classTableField['displayName'];
+    this.displayStyle = classTableField['displayStyle'];
+    this.isDisplay = classTableField['isDisplay'];
+    this.colWidth = classTableField['colWidth'];
+    this.isValid = classTableField['isValid'];
+    this.sortNum = classTableField['sortNum'];
+}
