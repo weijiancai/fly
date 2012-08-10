@@ -261,6 +261,7 @@ function DataTable(classTable) {
     this.name = classTable['name'];
     this.colWidth = classTable['colWidth'];
     this.isValid = classTable['isValid'];
+    this.tableBar = classTable['tableBar'];
     this.fieldList = [];
 
     var tableFieldList = classTable['tableFieldList'];
@@ -276,7 +277,8 @@ function DataTable(classTable) {
 
 DataTable.prototype = {
     toString: function() {
-        var str = '<table><thead><tr>';
+        var str = '<table id="' + this.id + '" class="easyui-datagrid"><thead><tr>';
+
         for(var i = 0; i < this.fieldList.length; i++) {
             var field = this.fieldList[i];
             if(field) {
@@ -286,7 +288,7 @@ DataTable.prototype = {
 
         return str +'</tr></thead></table>';
     }
-}
+};
 
 function TableField(classTableField) {
     this.id = classTableField['id'];

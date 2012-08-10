@@ -7,12 +7,19 @@ function DataWindow(classDefine) {
     actionBar.add(new ActionButton("", "", "查询", "formQuery"));
     actionBar.add(new ActionButton("", "", "重置", "formReset"));
     classDefine['queryForm'].actionBar = actionBar;
+
+    var tableBar = new ActionBar();
+    tableBar.add(new ActionButton("", "", "增加", ""));
+    tableBar.add(new ActionButton("", "", "修改", ""));
+    tableBar.add(new ActionButton("", "", "删除", ""));
+    classDefine['classTable'].tableBar = tableBar;
+
     this.clazz = new DataClass(classDefine);
 }
 
 DataWindow.prototype = {
     toString: function() {
-        return '<div class="easyui-layout">' + getNorth(this.clazz) + getCenter(this.clazz) + '</div>';
+        return '<div class="easyui-layout" style="position: static;">' + getNorth(this.clazz) + getCenter(this.clazz) + '</div>';
     }
 };
 
