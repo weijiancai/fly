@@ -3,6 +3,8 @@ package com.fly.fxsys.view;
 import com.fly.sys.clazz.ClassField;
 import com.fly.sys.clazz.ClassTable;
 import com.fly.sys.clazz.TableField;
+import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.util.UString;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -11,6 +13,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,9 +24,14 @@ import java.util.Map;
  */
 public class DataGrid extends TableView<Map<String, Object>> implements View {
     private ClassTable classTable;
+    private Map<String, ClassField> columnClassFieldMap = new HashMap<String, ClassField>();
 
     public DataGrid(ClassTable classTable) {
         this.classTable = classTable;
+        for (TableField field : classTable.getTableFieldList()) {
+            DbmsColumn column = field.getClassField().getColumn();
+            columnClassFieldMap.put(column.getId(), field.getClassField());
+        }
 
         initUI();
     }
@@ -71,5 +81,36 @@ public class DataGrid extends TableView<Map<String, Object>> implements View {
                 getColumns().add(col);
             }
         }
+    }
+
+    public Map<String, Object> getSelectedItem() {
+        return this.getSelectionModel().getSelectedItem();
+    }
+
+    public Map<String, String> getFkColumnMap() {
+        Map<String, String> result = new HashMap<String, String>();
+        for (TableField field : classTable.getTableFieldList()) {
+            DbmsColumn column = field.getClassField().getColumn();
+            if (column.isFk() && column.getFkColumn() != null) {
+                result.put(column.getName(), column.getFkColumn().getId());
+            }
+        }
+
+        return result;
+    }
+
+    public List<String> getPkColumnIds() {
+        List<String> result = new ArrayList<String>();
+        for (TableField field : classTable.getTableFieldList()) {
+            DbmsColumn column = field.getClassField().getColumn();
+            if (column.isPk()) {
+                result.add(column.getId());
+            }
+        }
+        return result;
+    }
+
+    public ClassField getClassFieldByColId(String columnId) {
+        return columnClassFieldMap.get(columnId);
     }
 }

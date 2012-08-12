@@ -12,8 +12,10 @@ import java.util.Date;
  */
 public class TableFieldVO {
     private String id;
+    private String name;
     private String displayName;
     private String displayStyle;
+    private String align;
     private boolean isDisplay;
     private int colWidth;
     private Date inputDate;
@@ -26,6 +28,14 @@ public class TableFieldVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDisplayName() {
@@ -42,6 +52,14 @@ public class TableFieldVO {
 
     public void setDisplayStyle(String displayStyle) {
         this.displayStyle = displayStyle;
+    }
+
+    public String getAlign() {
+        return align;
+    }
+
+    public void setAlign(String align) {
+        this.align = align;
     }
 
     public boolean isDisplay() {
@@ -91,9 +109,11 @@ public class TableFieldVO {
         vo.setDisplayName(field.getDisplayName());
         vo.setDisplayStyle(field.getDisplayStyle());
         vo.setId(field.getId());
+        vo.setName(field.getClassField().getName());
         vo.setInputDate(field.getInputDate());
         vo.setSortNum(field.getSortNum());
         vo.setValid(field.isValid());
+        vo.setAlign(field.getAlign());
 
         return vo;
     }

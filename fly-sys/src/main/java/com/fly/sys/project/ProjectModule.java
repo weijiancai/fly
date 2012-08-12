@@ -97,9 +97,9 @@ public class ProjectModule implements Serializable {
 
 
     public List<ProjectModule> getChildren() {
-        /*if (children == null) {
+        if (children == null) {
             children = ProjectManager.getChildrenModule(projectId, module.getId());
-        }*/
+        }
         return children;
     }
 

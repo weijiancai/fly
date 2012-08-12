@@ -13,55 +13,91 @@
 </head>
 <body>
 <div></div>
-<script type="text/javascript" src="../../main/webapp/js/fly.js"></script>
-<script type="text/javascript" src="../../main/webapp/js/fly_easyui.js"></script>
 <script type="text/javascript">
     function getClass() {
         return {
             "author":"system",
             "classTable":{
                 "colWidth":80,
-                "id":"23e44ea5fa664b1ebe9beff25310088d",
+                "id":"af6966b38ea746e88e9dcb3cbbe04481",
                 "name":"default",
-                "sortNum":1080,
+                "sortNum":210,
                 "tableFieldList":[
                     {
-                        "colWidth":60,
+                        "align":"left",
+                        "colWidth":180,
                         "display":true,
-                        "displayName":"table内码",
-                        "id":"47498d74e2894257ba8c018ae6a8e621",
+                        "displayName":"项目内码",
+                        "id":"afdad5bff40743a28700b8a48b513824",
+                        "name":"ProjectId",
                         "sortNum":10,
                         "valid":true
                     },
                     {
-                        "colWidth":60,
+                        "align":"center",
+                        "colWidth":80,
                         "display":true,
-                        "displayName":"类内码",
-                        "id":"e1a039dae0db4187a7a4b215cfd7a833",
+                        "displayName":"模块内码",
+                        "id":"f34340fa4d124e2388dc6652b1c68d7c",
+                        "name":"ModuleId",
                         "sortNum":20,
                         "valid":true
                     },
                     {
-                        "colWidth":60,
+                        "align":"right",
+                        "colWidth":160,
                         "display":true,
-                        "displayName":"form内码",
-                        "id":"22669d2b50e64e26933b121e915c1167",
+                        "displayName":"显示名",
+                        "id":"c5f5e44f9fd64f36942d8252747b38b4",
+                        "name":"DisplayName",
                         "sortNum":30,
                         "valid":true
                     },
                     {
+                        "align":"left",
+                        "colWidth":80,
+                        "display":true,
+                        "displayName":"父模块",
+                        "id":"4686364a8b164e5b930bfea676479ce9",
+                        "name":"SuperModuleId",
+                        "sortNum":40,
+                        "valid":true
+                    },
+                    {
+                        "align":"left",
                         "colWidth":60,
                         "display":true,
-                        "displayName":"模块内码",
-                        "id":"2a0f7dbfcb4d4b2fa77026a91ccee603",
-                        "sortNum":40,
+                        "displayName":"是否有效",
+                        "id":"ee594ed232934f4385611024b60ba1ec",
+                        "name":"IsValid",
+                        "sortNum":50,
+                        "valid":true
+                    },
+                    {
+                        "align":"left",
+                        "colWidth":60,
+                        "display":true,
+                        "displayName":"排序号",
+                        "id":"62ec5f12f06c4c1ba9d3a4018323bf28",
+                        "name":"SortNum",
+                        "sortNum":60,
+                        "valid":true
+                    },
+                    {
+                        "align":"left",
+                        "colWidth":60,
+                        "display":true,
+                        "displayName":"录入时间",
+                        "id":"b2357eb1e8d248aab0be367b05c6d7ed",
+                        "name":"InputDate",
+                        "sortNum":70,
                         "valid":true
                     }
                 ],
                 "valid":true
             },
-            "cname":"模块类",
-            "desc":"模块类",
+            "cname":"项目模块",
+            "desc":"项目模块",
             "editForm":{
                 "colCount":3,
                 "colWidth":180,
@@ -69,10 +105,10 @@
                 "fieldList":[
                     {
                         "display":true,
-                        "displayName":"table内码",
+                        "displayName":"项目内码",
                         "height":0,
-                        "id":"7d3a33b9a6f44decaf0cb089910e5ff2",
-                        "name":"TableId",
+                        "id":"a81ac145aff24d99b2629adec2ef7f48",
+                        "name":"ProjectId",
                         "singleLine":false,
                         "sortNum":10,
                         "valid":true,
@@ -80,10 +116,10 @@
                     },
                     {
                         "display":true,
-                        "displayName":"类内码",
+                        "displayName":"模块内码",
                         "height":0,
-                        "id":"19c769625e4d429e8238eae59f8e9c79",
-                        "name":"ClassId",
+                        "id":"d6fa9ea6ba654435898e7ddd05bdb966",
+                        "name":"ModuleId",
                         "singleLine":false,
                         "sortNum":20,
                         "valid":true,
@@ -91,10 +127,10 @@
                     },
                     {
                         "display":true,
-                        "displayName":"form内码",
+                        "displayName":"显示名",
                         "height":0,
-                        "id":"a8da60ba56dc4c8abd8efe70ad2700b9",
-                        "name":"FormId",
+                        "id":"af72c2f11aad46619a361726c46316c4",
+                        "name":"DisplayName",
                         "singleLine":false,
                         "sortNum":30,
                         "valid":true,
@@ -102,27 +138,60 @@
                     },
                     {
                         "display":true,
-                        "displayName":"模块内码",
+                        "displayName":"父模块",
                         "height":0,
-                        "id":"b739b0e878034b11967b6cdc2f18ee73",
-                        "name":"ModuleD",
+                        "id":"210f4ee243f14092b8c3e678f97e14b8",
+                        "name":"SuperModuleId",
                         "singleLine":false,
                         "sortNum":40,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"是否有效",
+                        "height":0,
+                        "id":"9026ade7bf674d7ba0f8175c42f84f4c",
+                        "name":"IsValid",
+                        "singleLine":false,
+                        "sortNum":50,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"排序号",
+                        "height":0,
+                        "id":"5839e1d88d544af48e31124686e1b900",
+                        "name":"SortNum",
+                        "singleLine":false,
+                        "sortNum":60,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"录入时间",
+                        "height":0,
+                        "id":"41d16a64f0c145b79371076c4170db24",
+                        "name":"InputDate",
+                        "singleLine":false,
+                        "sortNum":70,
                         "valid":true,
                         "width":180
                     }
                 ],
                 "formType":"1",
                 "hgap":3,
-                "id":"d73f846dc8d0433fbc1080b433b52d05",
+                "id":"83f1e628ac11446688daeaf22320eb94",
                 "labelGap":5,
-                "name":"RModuleClass_Edit",
-                "sortNum":1080,
+                "name":"ProjectModule_Edit",
+                "sortNum":210,
                 "valid":true,
                 "vgap":5
             },
-            "id":"3e89a1536c844db4b7bf41cf91ba0227",
-            "name":"RModuleClass",
+            "id":"af27f860e69a4f20aa7e4e716fb484e3",
+            "name":"ProjectModule",
             "queryForm":{
                 "colCount":3,
                 "colWidth":180,
@@ -130,10 +199,10 @@
                 "fieldList":[
                     {
                         "display":true,
-                        "displayName":"table内码",
+                        "displayName":"项目内码",
                         "height":0,
-                        "id":"f34b6985e0e94af5ba4ac64d8489ccf0",
-                        "name":"TableId",
+                        "id":"8e60bfed39cc4914963c66d7c5585d49",
+                        "name":"ProjectId",
                         "singleLine":false,
                         "sortNum":10,
                         "valid":true,
@@ -141,10 +210,10 @@
                     },
                     {
                         "display":true,
-                        "displayName":"类内码",
+                        "displayName":"模块内码",
                         "height":0,
-                        "id":"caf519c02e8d4cd9b170a7175370ea1e",
-                        "name":"ClassId",
+                        "id":"f0cbd4eb7ab84dde8a0cf4b1f54d13dc",
+                        "name":"ModuleId",
                         "singleLine":false,
                         "sortNum":20,
                         "valid":true,
@@ -152,10 +221,10 @@
                     },
                     {
                         "display":true,
-                        "displayName":"form内码",
+                        "displayName":"显示名",
                         "height":0,
-                        "id":"28386466072445b4a85cb1b168e0a350",
-                        "name":"FormId",
+                        "id":"5c71a5a924c444799790d083bd85cc51",
+                        "name":"DisplayName",
                         "singleLine":false,
                         "sortNum":30,
                         "valid":true,
@@ -163,38 +232,71 @@
                     },
                     {
                         "display":true,
-                        "displayName":"模块内码",
+                        "displayName":"父模块",
                         "height":0,
-                        "id":"361ea6e07ef04b31bc8568952f7c1ddc",
-                        "name":"ModuleD",
+                        "id":"6fe20899e60144c5bfbf5d10f66cf2d3",
+                        "name":"SuperModuleId",
                         "singleLine":false,
                         "sortNum":40,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"是否有效",
+                        "height":0,
+                        "id":"3485b5b9a56d4cb7abfe95c903c60e8a",
+                        "name":"IsValid",
+                        "singleLine":false,
+                        "sortNum":50,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"排序号",
+                        "height":0,
+                        "id":"33759ca07cc949ec9b2a0cf532953107",
+                        "name":"SortNum",
+                        "singleLine":false,
+                        "sortNum":60,
+                        "valid":true,
+                        "width":180
+                    },
+                    {
+                        "display":true,
+                        "displayName":"录入时间",
+                        "height":0,
+                        "id":"895338bc1d894f0a92bf253a915511ac",
+                        "name":"InputDate",
+                        "singleLine":false,
+                        "sortNum":70,
                         "valid":true,
                         "width":180
                     }
                 ],
                 "formType":"0",
                 "hgap":3,
-                "id":"c66dbb0f0a6f464d80cab2fed9cf838a",
+                "id":"20c2e3d171394253ae92e0ef2ec38e8d",
                 "labelGap":5,
-                "name":"RModuleClass_Query",
-                "sortNum":1080,
+                "name":"ProjectModule_Query",
+                "sortNum":210,
                 "valid":true,
                 "vgap":5
             },
-            "sortNum":1080,
+            "sortNum":210,
             "valid":true,
             "version":"0.0.0"
         };
     }
 
-    var win = new DataWindow(getClass());
-    document.write(win.toString());
+//    var win = new DataWindow(getClass());
+//    document.write(win.toString());
 </script>
 <script type="text/javascript" src="../../main/webapp/js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="../../main/webapp/js/fly.js"></script>
+<script type="text/javascript" src="../../main/webapp/js/fly_easyui.js"></script>
 <script type="text/javascript" src="../../main/webapp/js/jquery.easyui.min-1.2.3.js"></script>
-
-
 
 <script type="text/javascript">
 
@@ -212,7 +314,7 @@
      });*/
     //    $(document).append(genTable(getClassForm()));
     $(document).ready(function() {
-
+        $.simpleWin(getClass());
     });
 </script>
 </body>

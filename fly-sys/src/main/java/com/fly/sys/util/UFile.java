@@ -9,6 +9,7 @@ import java.net.URL;
  * @author weijiancai
  */
 public class UFile {
+    public static File WEB_INF;
     public static File getFileFromClassPath(String path) throws Exception {
         return getFileFromClassPath(path, false);
     }

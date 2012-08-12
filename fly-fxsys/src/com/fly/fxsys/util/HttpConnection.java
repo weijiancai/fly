@@ -66,7 +66,7 @@ public class HttpConnection {
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
 //        conn.connect();
-        String params = String.format("query=%s", JSON.toJSONString(map));
+        String params = String.format("method=query&conditionMap=%s", JSON.toJSONString(map));
         conn.getOutputStream().write(params.getBytes());
         conn.getOutputStream().flush();
         conn.getOutputStream().close();
@@ -94,5 +94,19 @@ public class HttpConnection {
         ois.close();
 
         return (ClassDefine)obj;
+    }
+
+    public static void update(String className, Map<String, Object> valueMap, Map<String, Object> conditionMap, String tableName) throws IOException {
+        URL url = new URL(FxBase.URL + "/" + className + ".class");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        String params = String.format("method=update&valueMap=%s&conditionMap=%s&tableName=%s", JSON.toJSONString(valueMap), JSON.toJSONString(conditionMap), tableName);
+        conn.getOutputStream().write(params.getBytes());
+        conn.getOutputStream().flush();
+        conn.getOutputStream().close();
+        int code = conn.getResponseCode();
+        System.out.println("Response Code = " + code);
+        conn.disconnect();
     }
 }

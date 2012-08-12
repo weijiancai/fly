@@ -6,6 +6,7 @@ import com.fly.sys.module.ModuleDefine;
 import com.fly.sys.module.ModuleManager;
 import com.fly.sys.util.DomUtil;
 import com.fly.sys.util.UFile;
+import com.fly.sys.util.UString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,9 +114,11 @@ public class ProjectManager {
     public static List<ProjectModule> getChildrenModule(String projectId, String superModuleId) {
         List<ProjectModule> list = new ArrayList<ProjectModule>();
 
-        for (ProjectModule module : projectModuleMap.get(projectId)) {
-            if (superModuleId.equals(module.getSuperModuleId())) {
-                list.add(module);
+        if (!UString.isEmpty(projectId)) {
+            for (ProjectModule module : projectModuleMap.get(projectId)) {
+                if (superModuleId.equals(module.getSuperModuleId())) {
+                    list.add(module);
+                }
             }
         }
 

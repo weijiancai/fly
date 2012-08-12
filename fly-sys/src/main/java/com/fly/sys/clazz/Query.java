@@ -1,5 +1,6 @@
 package com.fly.sys.clazz;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.db.meta.DbmsColumn;
@@ -20,7 +21,7 @@ public class Query {
         this.classDefine = classDefine;
     }
 
-    public List<Map<String, Object>> list() {
+    public List<Map<String, Object>> list(Map<String, Object> conditionMap) {
         StringBuilder columnBuffer = new StringBuilder();
         String tableName = "";
         String columnStr = "";
@@ -41,12 +42,23 @@ public class Query {
 
         try {
             JdbcTemplate template = new JdbcTemplate(DBManager.getSysConn());
-            result.addAll(template.queryForList(sql.toLowerCase()));
+            result.addAll(template.queryForList(sql.toLowerCase(), conditionMap));
 //            template.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return result;
+    }
+
+    public void update(Map<String, Object> valueMap, Map<String, Object> conditionMap, String tableName) {
+        try {
+            JdbcTemplate template = new JdbcTemplate(DBManager.getSysConn());
+            template.update(valueMap, conditionMap, tableName);
+            template.commit();
+            template.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -178,6 +178,7 @@ public class ClassRowMapperFactory {
                 field.setId(rs.getString("id"));
                 field.setDisplayName(rs.getString("display_name"));
                 field.setDisplayStyle(rs.getString("display_style"));
+                field.setAlign(rs.getString("align"));
                 field.setColWidth(rs.getInt("col_width"));
                 field.setDisplay("T".equals(rs.getString("is_display")));
                 field.setValid("T".equals(rs.getString("is_valid")));

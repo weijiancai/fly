@@ -29,6 +29,7 @@ public class DBManager {
 
     private static Map<String, DbmsDefine> dbmsNameMap = new HashMap<String, DbmsDefine>();
     private static Map<String, DbmsSchema> schemaNameMap = new HashMap<String, DbmsSchema>();
+    private static Map<String, DbmsTable> tableIdMap = new HashMap<String, DbmsTable>();
     private static Map<String, DbmsTable> tableNameMap = new HashMap<String, DbmsTable>();
     private static Map<String, DbmsColumn> columnNameMap = new HashMap<String, DbmsColumn>();
     private static Map<String, DbmsColumn> columnIdMap = new HashMap<String, DbmsColumn>();
@@ -85,6 +86,7 @@ public class DBManager {
                         // 查询sys_dbms_column
                         sql = "SELECT * FROM sys_dbms_column WHERE table_id=?";
                         for (DbmsTable table : tableList) {
+                            tableIdMap.put(table.getId(), table);
                             tableNameMap.put(table.getNameKey(), table);
 
                             List<DbmsColumn> columnList = template.query(sql, DbmsRowMapperFactory.getDbmsColumn(table), table.getId());
@@ -137,6 +139,7 @@ public class DBManager {
         final List<DbmsTable> tableList = dataSource.getTableList();
         for (DbmsTable dbmsTable : tableList) {
             template.save(DbmsPDBFactory.getDbmsTable(dbmsTable));
+            tableIdMap.put(dbmsTable.getId(), dbmsTable);
             tableNameMap.put(dbmsTable.getNameKey(), dbmsTable);
 
             for (DbmsColumn dbmsColumn : dbmsTable.getColumnList()) {
@@ -215,5 +218,14 @@ public class DBManager {
 
     public static List<DbmsDefine> getDbmsList() {
         return dbmsList;
+    }
+
+    /**
+     * 根据Dbms Table Id 获取DbmsTable信息
+     * @param tableId dbmsTableId
+     * @return 返回DbmsTable信息
+     */
+    public static DbmsTable getDbTableById(String tableId) {
+        return tableIdMap.get(tableId);
     }
 }

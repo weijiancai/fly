@@ -33,22 +33,39 @@ public class JdbcTemplate {
         }
     }
 
-    public List<Map<String, Object>> queryForList(String sql) throws Exception {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
+    public List<Map<String, Object>> queryForList(String sql, Map<String, Object> conditionMap) throws Exception {
+        if (conditionMap == null) {
+            conditionMap = new HashMap<String, Object>();
+        }
+        StringBuilder sb = new StringBuilder();
+        if (!sql.toLowerCase().contains("where")) {
+            sb.append(" WHERE 1=1");
+        }
+        List<String> conditionKeyList = new ArrayList<String>();
+        for (String key : conditionMap.keySet()) {
+            conditionKeyList.add(key);
+            sb.append(" AND ").append(key).append("=?");
+        }
+        System.out.println(sql + sb.toString());
+        PreparedStatement pstmt = conn.prepareStatement(sql + sb.toString());
+        int i = 1;
+        for (String key : conditionKeyList) {
+            pstmt.setObject(i++, conditionMap.get(key));
+        }
+        ResultSet rs = pstmt.executeQuery();
         ResultSetMetaData md = rs.getMetaData();
         int columnCount = md.getColumnCount();
-        System.out.println("------------------------------------------------");
+//        System.out.println("------------------------------------------------");
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> map;
         while (rs.next()) {
             map = new HashMap<String, Object>();
-            for (int i = 1; i <= columnCount; i++) {
+            for (i = 1; i <= columnCount; i++) {
                 Object obj = rs.getObject(i);
                 map.put(md.getColumnLabel(i), obj);
-                System.out.println(obj + "  >> " + md.getColumnLabel(i) + " = " + md.getColumnName(i) + " = " + (obj == null ? "" : obj.getClass().toString()));
+//                System.out.println(obj + "  >> " + md.getColumnLabel(i) + " = " + md.getColumnName(i) + " = " + (obj == null ? "" : obj.getClass().toString()));
             }
-            System.out.println("-------------------------------------------");
+//            System.out.println("-------------------------------------------");
             list.add(map);
         }
         rs.close();

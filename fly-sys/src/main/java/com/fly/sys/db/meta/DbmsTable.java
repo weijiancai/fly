@@ -3,6 +3,7 @@ package com.fly.sys.db.meta;
 import com.fly.sys.clazz.ClassDefine;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -117,6 +118,13 @@ public class DbmsTable implements Serializable {
 
     public void setClassList(List<ClassDefine> classList) {
         this.classList = classList;
+    }
+
+    public void addClassDefine(ClassDefine classDefine) {
+        if (classList == null) {
+            classList = new ArrayList<ClassDefine>();
+        }
+        classList.add(classDefine);
     }
 
     public String getNameKey() {

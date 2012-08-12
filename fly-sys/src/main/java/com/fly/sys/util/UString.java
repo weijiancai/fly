@@ -80,4 +80,8 @@ public class UString {
     public static String firstCharToUpper(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
+
+    public static String toString(Object obj) {
+        return obj == null ? "" : obj.toString();
+    }
 }

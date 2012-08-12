@@ -34,6 +34,10 @@
         <url-pattern>/project</url-pattern>
     </servlet-mapping>
 
+    <listener>
+        <listener-class>com.fly.sys.web.listener.SystemContextListener</listener-class>
+    </listener>
+
     <mime-mapping>
         <extension>jnlp</extension>
         <mime-type>application/x-java-jnlp-file</mime-type>

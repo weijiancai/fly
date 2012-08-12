@@ -10,6 +10,7 @@ public class TableField implements Serializable {
     private String id;
     private String displayName;
     private String displayStyle;
+    private String align;
     private boolean isDisplay;
     private int colWidth;
     private Date inputDate;
@@ -41,6 +42,14 @@ public class TableField implements Serializable {
 
     public void setDisplayStyle(String displayStyle) {
         this.displayStyle = displayStyle;
+    }
+
+    public String getAlign() {
+        return align;
+    }
+
+    public void setAlign(String align) {
+        this.align = align;
     }
 
     public int getColWidth() {

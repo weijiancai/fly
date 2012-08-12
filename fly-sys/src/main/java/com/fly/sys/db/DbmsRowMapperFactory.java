@@ -96,6 +96,8 @@ public class DbmsRowMapperFactory {
                 column.setSortNum(rs.getInt("sort_num"));
                 column.setInputDate(rs.getDate("input_date"));
                 column.setFkColumnId(rs.getString("fk_column_id"));
+                column.setFk("T".equals(rs.getString("is_fk")));
+                column.setPk("T".equals(rs.getString("is_pk")));
                 String codeId = rs.getString("code_id");
                 if (StringUtil.isNotEmpty(codeId)) {
                     column.setCode(CodeManager.getCodeById(codeId));

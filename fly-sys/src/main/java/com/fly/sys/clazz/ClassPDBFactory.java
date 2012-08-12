@@ -119,6 +119,7 @@ public class ClassPDBFactory {
                 map.put("field_id", field.getClassField().getId());
                 map.put("display_name", field.getDisplayName());
                 map.put("display_style", field.getDisplayStyle());
+                map.put("align", field.getAlign());
                 map.put("is_display", field.isDisplay() ? "T" : "F");
                 map.put("col_width", field.getColWidth());
                 map.put("is_valid", field.isValid() ? "T" : "F");

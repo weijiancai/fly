@@ -1,17 +1,16 @@
 package com.fly.fxsys.view;
 
-import com.fly.sys.clazz.ClassField;
+import com.fly.fxsys.util.HttpConnection;
 import com.fly.sys.clazz.ClassForm;
 import com.fly.sys.clazz.FormField;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.util.UString;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,52 +19,22 @@ import java.util.Map;
  * @version 1.0.0
  */
 public class FormView extends BorderPane implements View {
-    public static final int QUERY_FORM = 0;
-    public static final int EDIT_FORM = 1;
-
-    private Button btn_back;
-    private Button btn_query;
-
     private Map<String, Node> fieldNodeMap = new HashMap<String, Node>();
     private Map<String, FormField> fieldMap = new HashMap<String, FormField>();
     private Map<String, FormField> columnNameMap = new HashMap<String, FormField>();
-
-    private EventHandler<ActionEvent> backHandler;
-    private EventHandler<ActionEvent> queryHandler;
+    private Map<String, Object> oldDataMap;
 
     private ClassForm form;
-    private int type;
 
-    public FormView(ClassForm form, int type) {
+    public FormView(ClassForm form) {
         this.form = form;
-        this.type = type;
-        
+
         initUI();
     }
 
     @Override
     public void initUI() {
-        initToolBar();
         initFormGridPane();
-    }
-
-    private void initToolBar() {
-        ToolBar toolBar = new ToolBar();
-        Region region = new Region();
-        HBox.setHgrow(region, Priority.ALWAYS);
-        toolBar.getItems().add(region);
-
-        btn_back = new Button("后退");
-
-        btn_query = new Button("查询");
-
-        if (type == QUERY_FORM) {
-            toolBar.getItems().add(btn_query);
-        } else if (type == EDIT_FORM) {
-            toolBar.getItems().add(btn_back);
-        }
-
-        this.setTop(toolBar);
     }
 
     private void initFormGridPane() {
@@ -83,7 +52,8 @@ public class FormView extends BorderPane implements View {
             if (!field.isDisplay()) { // 不显示
                 continue;
             }
-            columnNameMap.put(field.getClassField().getColumn().getName().replace("_", ""), field);
+            columnNameMap.put(field.getClassField().getName().toLowerCase(), field);
+            fieldMap.put(field.getId(), field);
 
             // 单行
             if (field.isSingleLine()) {
@@ -140,6 +110,7 @@ public class FormView extends BorderPane implements View {
 
     @Override
     public void initUIData(Map<String, Object> data) {
+        oldDataMap = data;
         FormField field;
         Node node;
         Object value;
@@ -157,21 +128,39 @@ public class FormView extends BorderPane implements View {
         }
     }
 
-    public EventHandler<ActionEvent> getBackHandler() {
-        return backHandler;
-    }
+    public void save() throws IOException {
+        Map<String, Object> valueMap = new HashMap<String, Object>();
+        Map<String, Object> newValueMap = new HashMap<String, Object>();
+        String newVal;
+        for (String key : fieldNodeMap.keySet()) {
+            Node node = fieldNodeMap.get(key);
+            if (node instanceof TextField) {
+                newVal = ((TextField) node).getText();
+                FormField formField = fieldMap.get(key);
+                Object oldValue = oldDataMap.get(formField.getClassField().getName().toLowerCase());
+                if (UString.isNotEmpty(newVal) && !newVal.equals(oldValue == null ? "" : oldValue.toString())) {
+                    String columnName = formField.getClassField().getColumn().getName();
+                    valueMap.put(columnName, newVal);
+                    newValueMap.put(formField.getClassField().getName().toLowerCase(), newVal);
+                }
+            }
+        }
 
-    public void setBackHandler(EventHandler<ActionEvent> backHandler) {
-        this.backHandler = backHandler;
-        btn_back.setOnAction(backHandler);
-    }
+        String tableName = null;
+        Map<String, Object> conditionMap = new HashMap<String, Object>();
+        for (String key : fieldMap.keySet()) {
+            FormField field = fieldMap.get(key);
+            DbmsColumn column = field.getClassField().getColumn();
+            if (column.isPk()) {
+                conditionMap.put(column.getName(), oldDataMap.get(field.getClassField().getName().toLowerCase()));
+                tableName = column.getTable().getName();
+            }
+        }
 
-    public EventHandler<ActionEvent> getQueryHandler() {
-        return queryHandler;
-    }
+        // 发送请求，保存数据
+        HttpConnection.update(form.getClassDefine().getName(), valueMap, conditionMap, tableName);
 
-    public void setQueryHandler(EventHandler<ActionEvent> queryHandler) {
-        this.queryHandler = queryHandler;
-        btn_query.setOnAction(queryHandler);
+        // 替换掉旧值
+        oldDataMap.putAll(newValueMap);
     }
 }

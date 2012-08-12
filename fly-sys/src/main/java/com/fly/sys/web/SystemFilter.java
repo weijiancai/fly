@@ -22,13 +22,6 @@ public class SystemFilter implements javax.servlet.Filter {
     }
 
     public void init(FilterConfig config) throws javax.servlet.ServletException {
-        try {
-            DBManager.init();
-            ClassDefLoader.init();
-            ModuleManager.init();
-            ProjectManager.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 }

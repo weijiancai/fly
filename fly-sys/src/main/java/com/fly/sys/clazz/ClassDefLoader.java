@@ -7,9 +7,12 @@ import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsDefine;
 import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.util.Callback;
 import com.fly.sys.util.UString;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +45,7 @@ public class ClassDefLoader {
             if (SysInfo.isClassDefInit()) { // ClassDef 已经初始化
                 String sql = "SELECT * FROM sys_class_define";
                 List<ClassDefine> classList = template.query(sql, ClassRowMapperFactory.getClassDefine());
-                for (ClassDefine clazz : classList) {
+                for (final ClassDefine clazz : classList) {
                     cache.put(clazz.getName().toLowerCase(), clazz);
                     classIdMap.put(clazz.getId(), clazz);
                     // 查询类字段
@@ -88,6 +91,21 @@ public class ClassDefLoader {
 
                     // 查询类Table Query
                     sql = "SELECT * FROM sys_class_table_query WHERE table_id=?";
+
+                    // 查询类，DbmsTable关联表
+                    sql = "SELECT dbms_table_id FROM sys_r_class_table WHERE class_id=?";
+                    final List<DbmsTable> dbmsTableList = new ArrayList<DbmsTable>();
+                    template.query(sql, new Callback<ResultSet>() {
+                        @Override
+                        public void call(ResultSet rs, Object... obj) throws Exception {
+                            DbmsTable dbTable = DBManager.getDbTableById(rs.getString("dbms_table_id"));
+                            if (dbTable != null) {
+                                dbmsTableList.add(dbTable);
+                                dbTable.addClassDefine(clazz);
+                            }
+                        }
+                    }, clazz.getId());
+                    clazz.setDbmsTableList(dbmsTableList);
                 }
             } else {
                 classSortNum = 10;
@@ -116,11 +134,22 @@ public class ClassDefLoader {
     }
 
     private static void initItem() {
-        DbmsColumn column;
+        DbmsColumn column, fkColumn;
+        DbmsTable fkTable;
         for (ClassField field : classFieldIdMap.values()) {
             column = field.getColumn();
             if (null != column && column.isFk()) {
-                field.getClassDef().addItemClassName(UString.tableNameToClassName(column.getTable().getName()));
+                System.out.println(column.getTable().getName() + "." + column.getName() + " --> " + column.isFk());
+                fkColumn = column.getFkColumn();
+                if (null != fkColumn) {
+                    fkTable = fkColumn.getTable();
+                    if (fkTable.getClassList() != null) {
+                        for (ClassDefine clazz : fkTable.getClassList()) {
+                            clazz.addItemClassName(field.getClassDef().getName());
+                            System.out.println(clazz.getName() + "  add Item Class --> " + field.getClassDef().getName());
+                        }
+                    }
+                }
             }
         }
     }
@@ -181,6 +210,7 @@ public class ClassDefLoader {
             tableField.setClassTable(classTable);
             tableField.setClassField(classField);
             tableField.setDisplayName(classField.getFieldDesc());
+            tableField.setAlign("left");
             tableField.setColWidth(getColWidth(classField));
             tableField.setValid(true);
             tableField.setDisplay(true);

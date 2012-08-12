@@ -1,6 +1,6 @@
 package com.fly.sys.config;
 
-import com.fly.common.util.UFile;
+import com.fly.sys.util.UFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +15,9 @@ import java.util.Properties;
  */
 public class SysInfo {
     private static Properties infoProp = new Properties();
-    private static File infoFile;
-    private static final String INFO_FILE_PATH = "/info.xml";
+    private static final File USER_HOME = new File(System.getProperty("user.home"));
+    private static final File DIR_FLY_SYS = new File(USER_HOME, ".flysys");
+    private static final File FILE_SYS_INFO = new File(DIR_FLY_SYS, "/info.xml");
 
     private static boolean isDbmsInit = false;
     private static boolean isClassDefInit = false;
@@ -25,7 +26,7 @@ public class SysInfo {
 
     public static void store() {
         try {
-            infoProp.storeToXML(new FileOutputStream(infoFile), "Sys Info", "UTF-8");
+            infoProp.storeToXML(new FileOutputStream(FILE_SYS_INFO), "Sys Info", "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,18 +69,22 @@ public class SysInfo {
     }
 
     static {
+        // 检出flysys目录是否存在，不存在则创建
+        if (!DIR_FLY_SYS.exists()) {
+            DIR_FLY_SYS.mkdirs();
+        }
+
         // 从类路径中装载系统信息
         try {
-            infoFile = UFile.getFileFromClassPath(INFO_FILE_PATH);
-            if (null == infoFile) {
-                infoFile = new File(new File(UFile.getURI("/")), INFO_FILE_PATH);
+            if (!FILE_SYS_INFO.exists()) {
+                FILE_SYS_INFO.createNewFile();
                 infoProp.setProperty("isDbmsInit", "false");
                 infoProp.setProperty("isClassDefInit", "false");
                 infoProp.setProperty("isProjectDefInit", "false");
                 infoProp.setProperty("isModuleDefInit", "false");
                 store();
             } else {
-                infoProp.loadFromXML(new FileInputStream(infoFile));
+                infoProp.loadFromXML(new FileInputStream(FILE_SYS_INFO));
 
                 String sIsDbmsInit = infoProp.getProperty("isDbmsInit");
                 isDbmsInit = "true".equalsIgnoreCase(sIsDbmsInit);

@@ -112,7 +112,7 @@ public class DataSource {
 
         // 查询外键关系
         sql = "SELECT table_name, column_name, referenced_table_name, referenced_column_name FROM information_schema.KEY_COLUMN_USAGE WHERE table_schema='" + conn.getCatalog() +"'";
-        List<Map<String, Object>> list = template.queryForList(sql);
+        List<Map<String, Object>> list = template.queryForList(sql, null);
         String tableName, columnName, referencedTableName, referencedColumnName;
         DbmsColumn column, refColumn;
         Map<String, Object> valueMap = new HashMap<String, Object>();

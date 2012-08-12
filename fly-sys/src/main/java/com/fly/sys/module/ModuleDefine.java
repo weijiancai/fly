@@ -1,6 +1,7 @@
 package com.fly.sys.module;
 
 import com.fly.sys.clazz.ClassDefine;
+import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.project.ProjectDefine;
 
 import java.io.Serializable;
@@ -82,9 +83,9 @@ public class ModuleDefine implements Serializable {
     }
 
     public ModuleDefine getSuperModule() {
-        /*if (superModule == null) {
+        if (superModule == null) {
             superModule = ModuleManager.getModuleById(superModuleId);
-        }*/
+        }
         return superModule;
     }
 
@@ -101,9 +102,9 @@ public class ModuleDefine implements Serializable {
     }
 
     public ClassDefine getClassDefine() {
-        /*if (classDefine == null) {
+        if (classDefine == null) {
             classDefine = ClassManager.getClassDefineById(classId);
-        }*/
+        }
         return classDefine;
     }
 

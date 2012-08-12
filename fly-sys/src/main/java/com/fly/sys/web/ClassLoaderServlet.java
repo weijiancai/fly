@@ -1,6 +1,7 @@
 package com.fly.sys.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.clazz.Query;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +29,31 @@ public class ClassLoaderServlet extends HttpServlet {
         } else {
             classDefine = ClassManager.getClassDefine(classDefName);
         }
-        if (request.getParameterMap().containsKey("query")) {
-            String params = request.getParameter("query");
+        String method = request.getParameter("method");
+        if ("query".equals(method)) {
+            String params = request.getParameter("conditionMap");
+            Map<String, Object> conditionMap = new HashMap<String, Object>();
+            if (UString.isNotEmpty(params)) {
+                JSONObject jsonObject = JSON.parseObject(params);
+                if (jsonObject != null) {
+                    for (String key : jsonObject.keySet()) {
+                        conditionMap.put(key, jsonObject.get(key));
+                    }
+                    conditionMap.putAll(jsonObject);
+                }
+            }
             Query query = new Query(classDefine);
-            List<Map<String, Object>> list = query.list();
+            List<Map<String, Object>> list = query.list(conditionMap);
             ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
             oos.writeObject(list);
             oos.flush();
             oos.close();
+        } else if ("update".equals(method)) {
+            String values = request.getParameter("valueMap");
+            String conditions = request.getParameter("conditionMap");
+            String tableName = request.getParameter("tableName");
+            Query query = new Query(classDefine);
+            query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
         } else {
 //            response.setContentType("application/json;charset=UTF-8");
 //            response.getWriter().write(JSON.toJSONString(classDefine));

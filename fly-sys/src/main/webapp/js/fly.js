@@ -282,7 +282,7 @@ DataTable.prototype = {
         for(var i = 0; i < this.fieldList.length; i++) {
             var field = this.fieldList[i];
             if(field) {
-                str += '<th>' + field.displayName + '</th>'
+                str += '<th field="' + field.name + '" width="' + field.colWidth + '" align="' + field.align + '">' + field.displayName + '</th>'
             }
         }
 
@@ -292,6 +292,8 @@ DataTable.prototype = {
 
 function TableField(classTableField) {
     this.id = classTableField['id'];
+    this.name = classTableField['name'];
+    this.align = classTableField['align'];
     this.displayName = classTableField['displayName'];
     this.displayStyle = classTableField['displayStyle'];
     this.isDisplay = classTableField['isDisplay'];
