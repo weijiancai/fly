@@ -128,7 +128,7 @@ public class FormView extends BorderPane implements View {
         }
     }
 
-    public void save() throws IOException {
+    public void update() throws IOException {
         Map<String, Object> valueMap = new HashMap<String, Object>();
         Map<String, Object> newValueMap = new HashMap<String, Object>();
         String newVal;
@@ -162,5 +162,23 @@ public class FormView extends BorderPane implements View {
 
         // 替换掉旧值
         oldDataMap.putAll(newValueMap);
+    }
+
+    public Map<String, String> getQueryConditionMap() {
+        Map<String, String> result = new HashMap<String, String>();
+        String conditionVal;
+        for (String key : fieldNodeMap.keySet()) {
+            Node node = fieldNodeMap.get(key);
+            if (node instanceof TextField) {
+                conditionVal = ((TextField) node).getText();
+                FormField formField = fieldMap.get(key);
+                if (UString.isNotEmpty(conditionVal)) {
+                    String columnName = formField.getClassField().getColumn().getName();
+                    result.put(columnName, conditionVal);
+                }
+            }
+        }
+
+        return result;
     }
 }

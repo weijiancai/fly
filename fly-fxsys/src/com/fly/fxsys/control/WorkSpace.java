@@ -28,6 +28,7 @@ public class WorkSpace extends BorderPane {
     private StackPane stackPane;
     private DataGrid tableView;
     private ControlBar controlBar;
+    private FormView queryForm;
 
     private ClassDefine clazz;
     private Map<TabPane, FormView> editFormMap = new HashMap<TabPane, FormView>();
@@ -51,7 +52,7 @@ public class WorkSpace extends BorderPane {
         center.setStyle("-fx-padding:0 5 10 5");
         center.setPrefHeight(800);
 
-        FormView queryForm = new FormView(clazz.getFormList().get(0));
+        queryForm = new FormView(clazz.getFormList().get(0));
         center.getChildren().add(queryForm);
 
         tableView = new DataGrid(clazz.getClassTableList().get(0));
@@ -96,7 +97,7 @@ public class WorkSpace extends BorderPane {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    List<Map<String, Object>> list = HttpConnection.query(clazz.getName(), null);
+                    List<Map<String, Object>> list = HttpConnection.query(clazz.getName(), queryForm.getQueryConditionMap());
                     tableView.setItems(FXCollections.observableList(list));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -122,7 +123,7 @@ public class WorkSpace extends BorderPane {
                     TabPane curTabPane = (TabPane) stackPane.getChildren().get(stackPane.getChildren().size() - 1);
                     FormView editForm = editFormMap.get(curTabPane);
                     try {
-                        editForm.save();
+                        editForm.update();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
