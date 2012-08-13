@@ -10,6 +10,7 @@ function DataClass(classDefine) {
     this.sortNum = classDefine['sortNum'];
 
     this.queryForm = new DataForm(classDefine['queryForm']);
+    this.editForm = new DataForm(classDefine['editForm']);
     this.dataTable = new DataTable(classDefine['classTable']);
 }
 

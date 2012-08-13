@@ -58,7 +58,7 @@ jQuery.simpleWin = function(classDefine) {
     var layout = $(getLayout());
 
     function getLayout() {
-        return getNorth(clazz) + getCenter(clazz);
+        return getNorth(clazz) + getCenter(clazz) + getSouth(clazz);
     }
 
     function getNorth(clazz) {
@@ -67,6 +67,10 @@ jQuery.simpleWin = function(classDefine) {
 
     function getCenter(clazz) {
         return '<div region="center" split="false" border="false">' + clazz.dataTable.toString() + '</div>';
+    }
+
+    function getSouth(clazz) {
+        return '<div region="south" split="false" border="false">' + clazz.editForm.toString() + '</div>';
     }
 
     $('body').addClass('easyui-layout').append(layout).layout();
