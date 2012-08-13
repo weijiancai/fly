@@ -40,7 +40,7 @@ public class ModuleManager {
                 moduleNameMap.put(module.getName(), module);
             }
         } else {
-            List<Map<String, String>> list = DomUtil.toList(UFile.getFileFromClassPath("/system.xml"), "/system/modules/module");
+            List<Map<String, String>> list = DomUtil.toList(UFile.toString("/system.xml"), "/system/modules/module");
             // 插入模块
             template.clearTable("sys_module_define");
 

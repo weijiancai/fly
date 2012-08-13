@@ -1,6 +1,10 @@
 package com.fly.sys.util;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -44,9 +48,9 @@ public class UFile {
     }
 
     public static URL getURL(String path) throws URISyntaxException {
-        URL url = UFile.class.getResource(path);
+        URL url = UFile.class.getClassLoader().getResource(path);
         if (url == null) {
-            url = UFile.class.getClassLoader().getResource(path);
+            url = UFile.class.getResource(path);
         }
 
         if (null != url) {
@@ -54,5 +58,11 @@ public class UFile {
         }
 
         return null;
+    }
+
+    public static String toString(String path) throws URISyntaxException, IOException {
+        URL url = getURL(path);
+
+        return IOUtils.toString(url, "UTF-8");
     }
 }

@@ -48,8 +48,8 @@ public class ProjectManager {
             // 请空表sys_project_define
             template.clearTable("sys_project_define");
 
-            List<Map<String, String>> projectList = DomUtil.toList(UFile.getFileFromClassPath("/system.xml"), "/system/project");
-            List<Map<String, String>> moduleList = DomUtil.toList(UFile.getFileFromClassPath("/system.xml"), "/system/project/modules/module");
+            List<Map<String, String>> projectList = DomUtil.toList(UFile.toString("/system.xml"), "/system/project");
+            List<Map<String, String>> moduleList = DomUtil.toList(UFile.toString("/system.xml"), "/system/project/modules/module");
             // 插入项目
             for (Map<String, String> map : projectList) {
                 ProjectDefine projectDefine = new ProjectDefine();
