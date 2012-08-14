@@ -1,14 +1,21 @@
 package com.fly.fxsys.view;
 
+import com.fly.fxsys.control.IValue;
+import com.fly.fxsys.control.valuectl.VComboBox;
+import com.fly.fxsys.control.valuectl.VPasswordField;
+import com.fly.fxsys.control.valuectl.VTextArea;
+import com.fly.fxsys.control.valuectl.VTextField;
 import com.fly.fxsys.util.HttpConnection;
 import com.fly.sys.clazz.ClassForm;
 import com.fly.sys.clazz.FormField;
 import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.dict.DisplayStyle;
 import com.fly.sys.util.UString;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,7 +26,7 @@ import java.util.Map;
  * @version 1.0.0
  */
 public class FormView extends BorderPane implements View {
-    private Map<String, Node> fieldNodeMap = new HashMap<String, Node>();
+    private Map<String, IValue> fieldNodeMap = new HashMap<String, IValue>();
     private Map<String, FormField> fieldMap = new HashMap<String, FormField>();
     private Map<String, FormField> columnNameMap = new HashMap<String, FormField>();
     private Map<String, Object> oldDataMap;
@@ -44,7 +51,8 @@ public class FormView extends BorderPane implements View {
 
         Label label;
         Region labelGap;
-        TextField textField;
+        VTextField textField;
+        IValue node;
         Region fieldGap;
         int idxRow = 0;
         int idxCol = 0;
@@ -55,6 +63,7 @@ public class FormView extends BorderPane implements View {
             columnNameMap.put(field.getClassField().getName().toLowerCase(), field);
             fieldMap.put(field.getId(), field);
 
+            node = getValueNode(field);
             // 单行
             if (field.isSingleLine()) {
                 idxRow++;
@@ -62,12 +71,8 @@ public class FormView extends BorderPane implements View {
                 labelGap = new Region();
                 labelGap.setPrefWidth(form.getLabelGap());
                 formGrid.add(labelGap, 1, idxRow);
-                textField = new TextField();
-                textField.setPrefHeight(field.getHeight());
-//                textField.setText(field);
-                //tf.setAlignment(Pos.TOP_LEFT);
-                fieldNodeMap.put(field.getId(), textField);
-                formGrid.add(textField, 2, idxRow, form.getColCount() * 4 - 5, 1);
+                fieldNodeMap.put(field.getId(), node);
+                formGrid.add((Node)node, 2, idxRow, form.getColCount() * 4 - 5, 1);
                 idxCol = 0;
                 idxRow++;
 
@@ -81,14 +86,8 @@ public class FormView extends BorderPane implements View {
             labelGap.setPrefWidth(form.getLabelGap());
             formGrid.add(labelGap, idxCol++, idxRow);
 
-            textField = new TextField();
-            textField.setPrefWidth(field.getWidth());
-            /*if (null != data) {
-                textField.setText(data.get(field.getName()) == null ? "" : data.get(field.getName()).toString());
-            }*/
-            fieldNodeMap.put(field.getId(), textField);
-            formGrid.add(textField, idxCol++, idxRow);
-//            tfMap.put(field.getDisplayName(), textField);
+            fieldNodeMap.put(field.getId(), node);
+            formGrid.add((Node)node, idxCol++, idxRow);
 
             if (form.getColCount() == 1) {
                 idxCol = 0;
@@ -108,21 +107,45 @@ public class FormView extends BorderPane implements View {
         this.setCenter(formGrid);
     }
 
+    private IValue getValueNode(FormField field) {
+        IValue node;
+        if (DisplayStyle.TEXT_FIELD == field.getDisplayStyle()) {
+            VTextField textField = new VTextField();
+            textField.setPrefWidth(field.getWidth());
+            node = textField;
+        } else if (DisplayStyle.TEXT_AREA == field.getDisplayStyle()) {
+            VTextArea textArea = new VTextArea();
+            textArea.setPrefHeight(field.getHeight());
+            node = textArea;
+        } else if (DisplayStyle.PASSWORD == field.getDisplayStyle()) {
+            VPasswordField passwordField = new VPasswordField();
+            passwordField.setPrefWidth(field.getWidth());
+            node = passwordField;
+        } else if (DisplayStyle.COMBO_BOX == field.getDisplayStyle()) {
+            VComboBox comboBox = new VComboBox();
+            comboBox.setPrefWidth(field.getWidth());
+            node = comboBox;
+        } else {
+            VTextField textField = new VTextField();
+            textField.setPrefWidth(field.getWidth());
+            node = textField;
+        }
+        return node;
+    }
+
     @Override
     public void initUIData(Map<String, Object> data) {
         oldDataMap = data;
         FormField field;
-        Node node;
+        IValue node;
         Object value;
         for (String key : data.keySet()) {
             field = columnNameMap.get(key);
             if (null != field) {
                 node = fieldNodeMap.get(field.getId());
                 if (null != node) {
-                    if (node instanceof TextField) {
-                        value = data.get(key);
-                        ((TextField) node).setText(value == null ? "" : value.toString());
-                    }
+                    value = data.get(key);
+                    node.setValue(value == null ? "" : value.toString());
                 }
             }
         }
@@ -133,16 +156,14 @@ public class FormView extends BorderPane implements View {
         Map<String, Object> newValueMap = new HashMap<String, Object>();
         String newVal;
         for (String key : fieldNodeMap.keySet()) {
-            Node node = fieldNodeMap.get(key);
-            if (node instanceof TextField) {
-                newVal = ((TextField) node).getText();
-                FormField formField = fieldMap.get(key);
-                Object oldValue = oldDataMap.get(formField.getClassField().getName().toLowerCase());
-                if (UString.isNotEmpty(newVal) && !newVal.equals(oldValue == null ? "" : oldValue.toString())) {
-                    String columnName = formField.getClassField().getColumn().getName();
-                    valueMap.put(columnName, newVal);
-                    newValueMap.put(formField.getClassField().getName().toLowerCase(), newVal);
-                }
+            IValue node = fieldNodeMap.get(key);
+            newVal = node.value();
+            FormField formField = fieldMap.get(key);
+            Object oldValue = oldDataMap.get(formField.getClassField().getName().toLowerCase());
+            if (UString.isNotEmpty(newVal) && !newVal.equals(oldValue == null ? "" : oldValue.toString())) {
+                String columnName = formField.getClassField().getColumn().getName();
+                valueMap.put(columnName, newVal);
+                newValueMap.put(formField.getClassField().getName().toLowerCase(), newVal);
             }
         }
 
@@ -168,14 +189,12 @@ public class FormView extends BorderPane implements View {
         Map<String, String> result = new HashMap<String, String>();
         String conditionVal;
         for (String key : fieldNodeMap.keySet()) {
-            Node node = fieldNodeMap.get(key);
-            if (node instanceof TextField) {
-                conditionVal = ((TextField) node).getText();
-                FormField formField = fieldMap.get(key);
-                if (UString.isNotEmpty(conditionVal)) {
-                    String columnName = formField.getClassField().getColumn().getName();
-                    result.put(columnName, conditionVal);
-                }
+            IValue node = fieldNodeMap.get(key);
+            conditionVal = node.value();
+            FormField formField = fieldMap.get(key);
+            if (UString.isNotEmpty(conditionVal)) {
+                String columnName = formField.getClassField().getColumn().getName();
+                result.put(columnName, conditionVal);
             }
         }
 

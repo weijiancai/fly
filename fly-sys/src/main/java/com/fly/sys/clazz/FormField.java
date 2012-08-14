@@ -1,5 +1,7 @@
 package com.fly.sys.clazz;
 
+import com.fly.sys.dict.DisplayStyle;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,7 +15,7 @@ public class FormField implements Serializable {
     private boolean isDisplay;
     private int width;
     private int height;
-    private String displayStyle;
+    private DisplayStyle displayStyle;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
@@ -61,11 +63,23 @@ public class FormField implements Serializable {
         this.height = height;
     }
 
-    public String getDisplayStyle() {
+    public DisplayStyle getDisplayStyle() {
         return displayStyle;
     }
 
-    public void setDisplayStyle(String displayStyle) {
+    public void setDisplayStyle(int displayStyle) {
+        if (displayStyle == 0) {
+            this.displayStyle = DisplayStyle.TEXT_FIELD;
+        } else if (displayStyle == 1) {
+            this.displayStyle = DisplayStyle.TEXT_AREA;
+        } else if (displayStyle == 2) {
+            this.displayStyle = DisplayStyle.PASSWORD;
+        } else if (displayStyle == 3) {
+            this.displayStyle = DisplayStyle.COMBO_BOX;
+        }
+    }
+
+    public void setDisplayStyle(DisplayStyle displayStyle) {
         this.displayStyle = displayStyle;
     }
 

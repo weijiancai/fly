@@ -16,7 +16,7 @@ public class FormFieldVO {
     private boolean isDisplay;
     private int width;
     private int height;
-    private String displayStyle;
+    private int displayStyle;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
@@ -77,11 +77,11 @@ public class FormFieldVO {
         this.height = height;
     }
 
-    public String getDisplayStyle() {
+    public int getDisplayStyle() {
         return displayStyle;
     }
 
-    public void setDisplayStyle(String displayStyle) {
+    public void setDisplayStyle(int displayStyle) {
         this.displayStyle = displayStyle;
     }
 
@@ -115,7 +115,7 @@ public class FormFieldVO {
         vo.setDisplay(field.isDisplay());
         vo.setName(field.getClassField().getName());
         vo.setDisplayName(field.getDisplayName());
-        vo.setDisplayStyle(field.getDisplayStyle());
+        vo.setDisplayStyle(field.getDisplayStyle().ordinal());
         vo.setHeight(field.getHeight());
         vo.setId(field.getId());
         vo.setInputDate(field.getInputDate());

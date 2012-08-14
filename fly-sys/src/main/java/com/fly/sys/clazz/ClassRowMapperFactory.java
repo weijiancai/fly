@@ -87,7 +87,7 @@ public class ClassRowMapperFactory {
 
                 field.setId(rs.getString("id"));
                 field.setDisplayName(rs.getString("display_name"));
-                field.setDisplayStyle(rs.getString("display_style"));
+                field.setDisplayStyle(rs.getInt("display_style"));
                 field.setHeight(rs.getInt("height"));
                 field.setWidth(rs.getInt("width"));
                 field.setSingleLine("T".equals(rs.getString("is_single_line")));
