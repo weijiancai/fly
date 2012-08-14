@@ -52,7 +52,7 @@ public class WorkSpace extends BorderPane {
         center.setStyle("-fx-padding:0 5 10 5");
         center.setPrefHeight(800);
 
-        queryForm = new FormView(clazz.getFormList().get(0));
+        queryForm = new FormView(clazz.getQueryForm());
         center.getChildren().add(queryForm);
 
         tableView = new DataGrid(clazz.getClassTableList().get(0));
@@ -75,7 +75,7 @@ public class WorkSpace extends BorderPane {
         TabPane tabPane = new TabPane();
         Tab mainTab = new Tab("主表信息");
         tabPane.getTabs().add(mainTab);
-        FormView editForm = new FormView(clazz.getFormList().get(0));
+        FormView editForm = new FormView(clazz.getEditForm());
         editForm.initUIData(superDataGrid.getSelectionModel().getSelectedItem());
         editFormMap.put(tabPane, editForm);
         mainTab.setContent(editForm);

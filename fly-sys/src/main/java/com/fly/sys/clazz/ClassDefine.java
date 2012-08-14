@@ -1,6 +1,7 @@
 package com.fly.sys.clazz;
 
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.vo.FormVO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -199,6 +200,27 @@ public class ClassDefine implements Serializable {
         }
         formList.add(form);
     }
+
+    public ClassForm getEditForm() {
+        for (ClassForm form : this.getFormList()) {
+            if ("1".equals(form.getFormType())) {  // 编辑form
+                return form;
+            }
+        }
+
+        return null;
+    }
+
+    public ClassForm getQueryForm() {
+        for (ClassForm form : this.getFormList()) {
+            if ("0".equals(form.getFormType())) { // 查询form
+                return form;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();

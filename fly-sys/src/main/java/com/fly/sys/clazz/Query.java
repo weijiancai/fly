@@ -53,6 +53,9 @@ public class Query {
 
     public void update(Map<String, Object> valueMap, Map<String, Object> conditionMap, String tableName) {
         try {
+            if (valueMap == null || valueMap.size() == 0) {
+                return;
+            }
             JdbcTemplate template = new JdbcTemplate(DBManager.getSysConn());
             template.update(valueMap, conditionMap, tableName);
             template.commit();

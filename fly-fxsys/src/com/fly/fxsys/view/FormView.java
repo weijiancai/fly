@@ -72,7 +72,7 @@ public class FormView extends BorderPane implements View {
                 labelGap.setPrefWidth(form.getLabelGap());
                 formGrid.add(labelGap, 1, idxRow);
                 fieldNodeMap.put(field.getId(), node);
-                formGrid.add((Node)node, 2, idxRow, form.getColCount() * 4 - 5, 1);
+                formGrid.add((Node)node, 2, idxRow, form.getColCount() * 4 - 3, 1);
                 idxCol = 0;
                 idxRow++;
 

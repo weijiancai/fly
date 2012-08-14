@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +51,8 @@ public class ClassLoaderServlet extends HttpServlet {
             oos.flush();
             oos.close();
         } else if ("update".equals(method)) {
-            String values = request.getParameter("valueMap");
-            String conditions = request.getParameter("conditionMap");
+            String values = decode(request.getParameter("valueMap"));
+            String conditions = decode(request.getParameter("conditionMap"));
             String tableName = request.getParameter("tableName");
             Query query = new Query(classDefine);
             query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
@@ -66,5 +68,13 @@ public class ClassLoaderServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
+    }
+
+    private String decode(String str) throws UnsupportedEncodingException {
+        if (UString.isEmpty(str)) {
+            return str;
+        }
+
+        return URLDecoder.decode(str, "UTF-8");
     }
 }

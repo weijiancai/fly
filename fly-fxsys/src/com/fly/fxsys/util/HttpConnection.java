@@ -8,6 +8,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -99,14 +100,20 @@ public class HttpConnection {
     public static void update(String className, Map<String, Object> valueMap, Map<String, Object> conditionMap, String tableName) throws IOException {
         URL url = new URL(FxBase.URL + "/" + className + ".class");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
-        String params = String.format("method=update&valueMap=%s&conditionMap=%s&tableName=%s", JSON.toJSONString(valueMap), JSON.toJSONString(conditionMap), tableName);
+        String params = String.format("method=update&valueMap=%s&conditionMap=%s&tableName=%s", encode(valueMap), encode(conditionMap), tableName);
         conn.getOutputStream().write(params.getBytes());
         conn.getOutputStream().flush();
         conn.getOutputStream().close();
         int code = conn.getResponseCode();
         System.out.println("Response Code = " + code);
         conn.disconnect();
+    }
+
+    public static String encode(Object obj) throws UnsupportedEncodingException {
+//        return URLEncoder.encode(JSON.toJSONString(obj), "UTF-8");
+        return JSON.toJSONString(obj);
     }
 }

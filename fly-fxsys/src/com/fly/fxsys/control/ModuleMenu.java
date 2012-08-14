@@ -32,10 +32,12 @@ public class ModuleMenu extends BorderPane {
         treeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<ProjectModule>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<ProjectModule>> observableValue, TreeItem<ProjectModule> projectModuleTreeItem, TreeItem<ProjectModule> projectModuleTreeItem1) {
-                ProjectModule module = treeView.getSelectionModel().getSelectedItem().getValue();
-                if (module.getModule().getClassDefine() != null) {
-                    WorkSpace workspace = new WorkSpace(module.getModule().getClassDefine());
-                    desktop.getWorkbench().addWorkspace(workspace);
+                if (treeView.getSelectionModel().getSelectedItem() != null) {
+                    ProjectModule module = treeView.getSelectionModel().getSelectedItem().getValue();
+                    if (module.getModule().getClassDefine() != null) {
+                        WorkSpace workspace = new WorkSpace(module.getModule().getClassDefine());
+                        desktop.getWorkbench().addWorkspace(workspace);
+                    }
                 }
             }
         });
