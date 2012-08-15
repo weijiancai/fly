@@ -6,9 +6,7 @@ import com.fly.sys.clazz.ClassDefine;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -104,9 +102,10 @@ public class HttpConnection {
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
         String params = String.format("method=update&valueMap=%s&conditionMap=%s&tableName=%s", encode(valueMap), encode(conditionMap), tableName);
-        conn.getOutputStream().write(params.getBytes());
-        conn.getOutputStream().flush();
-        conn.getOutputStream().close();
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(conn.getOutputStream(), "UTF-8"));
+        pw.write(params);
+        pw.flush();
+        pw.close();
         int code = conn.getResponseCode();
         System.out.println("Response Code = " + code);
         conn.disconnect();
