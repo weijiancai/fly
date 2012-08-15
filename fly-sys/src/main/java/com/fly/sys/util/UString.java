@@ -6,6 +6,10 @@ package com.fly.sys.util;
 public class UString {
     public static final String EMPTY = "";
 
+    public static String isEmpty(String str, String defaultValue) {
+        return isEmpty(str) ? defaultValue : str;
+    }
+
     public static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
     }
