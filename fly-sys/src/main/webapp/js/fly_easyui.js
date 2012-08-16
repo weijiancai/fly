@@ -42,7 +42,7 @@ function formReset() {
     $_queryForm[0].reset();
 }
 
-
+function initQueryForm() {}
 
 jQuery.simpleWin = function(classDefine) {
     classDefine['queryForm'].fieldset = {};
@@ -76,6 +76,7 @@ jQuery.simpleWin = function(classDefine) {
     $('body').addClass('easyui-layout').append(layout).layout();
 
     $_queryForm = $('#' + clazz.queryForm.id);
+    initQueryForm();
     $_grid = $('#' + clazz.dataTable.id).datagrid({
         title : clazz.cname + '列表',
         url : contextPath + classRequestMapping + '/list',

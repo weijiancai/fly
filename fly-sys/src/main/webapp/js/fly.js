@@ -129,7 +129,7 @@ DataForm.prototype = {
         } else if("1" == this.formType) {
             styleClass = 'editForm';
         }
-        var formStr = '<form id="' + this.name + '" class="' + styleClass + '">';
+        var formStr = '<form id="' + this.id + '" class="' + styleClass + '">';
         if(this.fieldset) {
             formStr += '<fieldset><legend>' + legendStr + '</legend>';
         }
@@ -222,9 +222,9 @@ function getFormInputTd(id, type, width, height, colspan, rowspan) {
         spanStr += ' rowspan="' + rowspan + '"';
     }
     if(spanStr.length > 0) {
-        return '<td' + spanStr + '>' + getFormInput(id, type, width, height) + '</td>';
+        return '<td' + spanStr + '>' + getFormInput(id, id, type, width, height) + '</td>';
     } else {
-        return '<td>' + getFormInput(id, type, width, height) + '</td>';
+        return '<td>' + getFormInput(id, id, type, width, height) + '</td>';
     }
 }
 
@@ -237,7 +237,14 @@ function getLabel(name, labelForId, width) {
     return '<label for="' + labelForId+ '">' + name+ '</label>';
 }
 
-function getFormInput(id, type, width, height) {
+function getFormInput(id, name, type, width, height) {
+    var inputName;
+    if(tableFieldMapping && tableFieldMapping[name]) {
+        inputName = tableFieldMapping[name];
+    } else {
+        inputName = name;
+    }
+
     var styleStr = "";
     if(width) {
         if('100%' == width) {
@@ -251,19 +258,19 @@ function getFormInput(id, type, width, height) {
     }
     if(styleStr.length > 0) {
         if('textarea' == type) {
-            return '<textarea id="' + id + '" type="' + type + '" style="' + styleStr + '"></textarea>';
+            return '<textarea id="' + id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
         } else if('select' == type) {
-            return '<select id="' + id + '" type="' + type + '" style="' + styleStr + '"></select>';
+            return '<select id="' + id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></select>';
         } else {
-            return '<input id="' + id + '" type="' + type + '" style="' + styleStr + '"/>';
+            return '<input id="' + id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"/>';
         }
     } else {
         if('textarea' == type) {
-            return '<textarea id="' + id + '" type="' + type + '"></textarea>';
+            return '<textarea id="' + id + '" type="' + type + '" name="' + inputName + '"></textarea>';
         } else if('select' == type) {
-            return '<select id="' + id + '" type="' + type + '"></select>';
+            return '<select id="' + id + '" type="' + type + '" name="' + inputName + '"></select>';
         }  else {
-            return '<input id="' + id + '" type="' + type + '"/>'
+            return '<input id="' + id + '" type="' + type + '" name="' + inputName + '"/>'
         }
     }
 }
