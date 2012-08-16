@@ -88,5 +88,10 @@ jQuery.simpleWin = function(classDefine) {
         toolbar: tableBar
     });
 
+    // easyui linkButton
+    $('.actionBar a').linkbutton({
+        plain : false
+    });
+
     return this;
 };

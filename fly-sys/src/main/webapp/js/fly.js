@@ -96,7 +96,7 @@ DataForm.prototype = {
                 idxRow++;
                 formGrid.add(getLabelTd(field.displayName, field.name), idxRow, 0);
                 formGrid.add(getGapTd(this.labelGap), idxRow, 1);
-                formGrid.add(getTextFieldTd(field.name, field.width, field.height, this.colCount * 4 - 3), idxRow, 2);
+                formGrid.add(getInputNode(field, this.colCount), idxRow, 2);
                 idxCol = 0;
                 idxRow++;
 
@@ -105,7 +105,7 @@ DataForm.prototype = {
 
             formGrid.add(getLabelTd(field.displayName, field.name), idxRow, idxCol++);
             formGrid.add(getGapTd(this.labelGap), idxRow, idxCol++);
-            formGrid.add(getTextFieldTd(field.name, field.width, field.height), idxRow, idxCol++);
+            formGrid.add(getInputNode(field, this.colCount), idxRow, idxCol++);
 
             if(this.colCount == 1) {
                 idxCol = 0;
@@ -160,7 +160,40 @@ function FormField(fd) {
     this.isValid = fd['valid'];
     this.sortNum = fd['sortNum'];
 }
+var DS_TEXT = 0;
+var DS_TEXT_AREA = 1;
+var DS_PASSWORD = 2;
+var DS_COMBO_BOX = 3;
 
+function getInputNode(field, colCount) {
+    if(DS_TEXT == field.displayStyle) {
+        if(field.isSingleLine) {
+            return getFormInputTd(field.name, 'text', field.width, field.height, colCount * 4 - 3);
+        } else {
+            return getFormInputTd(field.name, 'text', field.width, field.height);
+        }
+    } else if(DS_TEXT_AREA == field.displayStyle) {
+        if(field.isSingleLine) {
+            return getFormInputTd(field.name, 'textarea', field.width, field.height, colCount * 4 - 3);
+        } else {
+            return getFormInputTd(field.name, 'textarea', field.width, field.height);
+        }
+    } else if(DS_PASSWORD == field.displayStyle) {
+        if(field.isSingleLine) {
+            return getFormInputTd(field.name, 'password', field.width, field.height, colCount * 4 - 3);
+        } else {
+            return getFormInputTd(field.name, 'password', field.width, field.height);
+        }
+    } else if(DS_COMBO_BOX == field.displayStyle) {
+        if(field.isSingleLine) {
+            return getFormInputTd(field.name, 'select', field.width, field.height, colCount * 4 - 3);
+        } else {
+            return getFormInputTd(field.name, 'select', field.width, field.height);
+        }
+    }
+
+    return "";
+}
 
 function getGap(width) {
     return '<span style="width:' + width + 'px;display:block;"></span>';
@@ -179,7 +212,7 @@ function getLabelTd(name, labelForId, width) {
     return '<td>' + getLabel(name, labelForId, width)+ '</td>';
 }
 
-function getTextFieldTd(id, width, height, colspan, rowspan) {
+function getFormInputTd(id, type, width, height, colspan, rowspan) {
     var spanStr = "";
     if(colspan) {
         spanStr += ' colspan="' + colspan + '"';
@@ -189,9 +222,9 @@ function getTextFieldTd(id, width, height, colspan, rowspan) {
         spanStr += ' rowspan="' + rowspan + '"';
     }
     if(spanStr.length > 0) {
-        return '<td' + spanStr + '>' + getTextField(id, width, height) + '</td>';
+        return '<td' + spanStr + '>' + getFormInput(id, type, width, height) + '</td>';
     } else {
-        return '<td>' + getTextField(id, width, height) + '</td>';
+        return '<td>' + getFormInput(id, type, width, height) + '</td>';
     }
 }
 
@@ -204,7 +237,7 @@ function getLabel(name, labelForId, width) {
     return '<label for="' + labelForId+ '">' + name+ '</label>';
 }
 
-function getTextField(id, width, height) {
+function getFormInput(id, type, width, height) {
     var styleStr = "";
     if(width) {
         if('100%' == width) {
@@ -217,9 +250,21 @@ function getTextField(id, width, height) {
         styleStr += "height:" + height + "px;";
     }
     if(styleStr.length > 0) {
-        return '<input id="' + id + '" type="text" style="' + styleStr + '"/>'
+        if('textarea' == type) {
+            return '<textarea id="' + id + '" type="' + type + '" style="' + styleStr + '"></textarea>';
+        } else if('select' == type) {
+            return '<select id="' + id + '" type="' + type + '" style="' + styleStr + '"></select>';
+        } else {
+            return '<input id="' + id + '" type="' + type + '" style="' + styleStr + '"/>';
+        }
     } else {
-        return '<input id="' + id + '" type="text"/>'
+        if('textarea' == type) {
+            return '<textarea id="' + id + '" type="' + type + '"></textarea>';
+        } else if('select' == type) {
+            return '<select id="' + id + '" type="' + type + '"></select>';
+        }  else {
+            return '<input id="' + id + '" type="' + type + '"/>'
+        }
     }
 }
 
@@ -235,7 +280,7 @@ ActionBar.prototype = {
         this.actions.push(actionButton);
     },
     toString: function() {
-        var str = '<div style="text-align: center;">';
+        var str = '<div class="actionBar" style="text-align: center;">';
         for(var i = 0; i < this.actions.length; i++) {
             str += this.actions[i].toString();
         }
@@ -253,7 +298,8 @@ function ActionButton(id, name, value, onClick) {
 
 ActionButton.prototype = {
     toString: function() {
-        return '<input type="button" id="' + this.id + '" name="' + this.name + '" value="' + this.value + '" onclick="'+ this.onClick +'()"/>';
+//        return '<input type="button" id="' + this.id + '" name="' + this.name + '" value="' + this.value + '" onclick="'+ this.onClick +'()"/>';
+        return '<a href="#"  id="' + this.id + '" onclick="'+ this.onClick +'()">' + this.value + '</a>';
     }
 };
 
@@ -280,10 +326,16 @@ DataTable.prototype = {
     toString: function() {
         var str = '<table id="' + this.id + '" class="easyui-datagrid"><thead><tr>';
 
+        var fieldName;
         for(var i = 0; i < this.fieldList.length; i++) {
             var field = this.fieldList[i];
             if(field) {
-                str += '<th field="' + field.name + '" width="' + field.colWidth + '" align="' + field.align + '">' + field.displayName + '</th>'
+                if(tableFieldMapping && tableFieldMapping[field.name]) {
+                    fieldName = tableFieldMapping[field.name];
+                } else {
+                    fieldName = field.name;
+                }
+                str += '<th field="' + fieldName + '" width="' + field.colWidth + '" align="' + field.align + '">' + field.displayName + '</th>'
             }
         }
 

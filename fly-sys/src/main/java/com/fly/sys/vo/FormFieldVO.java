@@ -115,7 +115,11 @@ public class FormFieldVO {
         vo.setDisplay(field.isDisplay());
         vo.setName(field.getClassField().getName());
         vo.setDisplayName(field.getDisplayName());
-        vo.setDisplayStyle(field.getDisplayStyle().ordinal());
+        if (field.getDisplayStyle() == null) {
+            vo.setDisplayStyle(0);
+        } else {
+            vo.setDisplayStyle(field.getDisplayStyle().ordinal());
+        }
         vo.setHeight(field.getHeight());
         vo.setId(field.getId());
         vo.setInputDate(field.getInputDate());
