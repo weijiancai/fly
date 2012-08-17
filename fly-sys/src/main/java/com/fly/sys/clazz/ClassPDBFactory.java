@@ -192,6 +192,23 @@ public class ClassPDBFactory {
         };
     }
 
+    public static IPDB getFormFieldAppend(final FormField field) {
+        return new IPDB() {
+            @Override
+            public Map<String, Map<String, Object>> getPDBMap() {
+                Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("form_field_id", field.getId());
+                map.put("query_mode", field.getQueryMode().ordinal());
+
+                result.put("sys_form_field_append", map);
+
+                return result;
+            }
+        };
+    }
+
     public static IPDB getClassQuery(final ClassQuery classQuery) {
         return new IPDB() {
             @Override

@@ -152,7 +152,7 @@ public class ClassDefManager {
     private static List<FormField> getFormFieldList(JdbcTemplate template, final ClassForm classForm) throws Exception {
         final List<FormField> list = new ArrayList<FormField>();
 
-        String sql = "SELECT * FROM sys_class_form_field WHERE form_id=?";
+        String sql = "SELECT * FROM sys_class_form_field a, sys_form_field_append b WHERE a.id=b.form_field_id and form_id=?";
         template.query(sql, new Callback<ResultSet>() {
             @Override
             public void call(ResultSet rs, Object... obj) {
@@ -165,6 +165,7 @@ public class ClassDefManager {
                     field.setHeight(rs.getInt("height"));
                     field.setWidth(rs.getInt("width"));
                     field.setSingleLine("T".equals(rs.getString("is_single_line")));
+                    field.setQueryMode(rs.getInt("query_mode"));
 
                     list.add(field);
                 } catch (Exception e) {

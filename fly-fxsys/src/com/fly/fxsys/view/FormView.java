@@ -9,6 +9,7 @@ import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.query.QueryCondition;
 import com.fly.sys.dict.DataType;
 import com.fly.sys.dict.DisplayStyle;
+import com.fly.sys.dict.QueryMode;
 import com.fly.sys.util.UString;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -203,14 +204,14 @@ public class FormView extends BorderPane implements View {
                 String[] values = node.values();
                 if (values != null && values.length == 2) {
                     if (UString.isNotEmpty(values[0])) {
-                        result.addCondition(column.getName(), ">=", values[0]);
+                        result.addCondition(column.getName(), QueryMode.GREATER_EQUAL, values[0]);
                     }
                     if (UString.isNotEmpty(values[1])) {
-                        result.addCondition(column.getName(), "<", values[1]);
+                        result.addCondition(column.getName(), QueryMode.LESS_THAN, values[1]);
                     }
                 }
             } else {
-                result.addCondition(column.getName(), "=", node.value());
+                result.addCondition(column.getName(), formField.getQueryMode(), node.value());
             }
         }
 

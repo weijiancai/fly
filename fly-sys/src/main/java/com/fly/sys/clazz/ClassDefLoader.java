@@ -7,6 +7,7 @@ import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsDefine;
 import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.dict.QueryMode;
 import com.fly.sys.util.Callback;
 import com.fly.sys.util.UString;
 
@@ -61,7 +62,7 @@ public class ClassDefLoader {
                     List<ClassForm> formList = template.query(sql, ClassRowMapperFactory.getClassForm(clazz), clazz.getId());
                     clazz.setFormList(formList);
                     // 查询类Form字段
-                    sql = "SELECT * FROM sys_class_form_field WHERE form_id=?";
+                    sql = "SELECT * FROM sys_class_form_field a, sys_form_field_append b WHERE a.id=b.form_field_id and form_id=?";
                     for (ClassForm form : formList) {
                         List<FormField> formFieldList = template.query(sql, ClassRowMapperFactory.getFormField(form), form.getId());
                         form.setFieldList(formFieldList);
@@ -317,8 +318,10 @@ public class ClassDefLoader {
             formField.setDisplay(true);
             formField.setSortNum(fieldSortNum += 10);
             formField.setValid(true);
+            formField.setQueryMode(QueryMode.EQUAL);
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
+            template.save(ClassPDBFactory.getFormFieldAppend(formField));
             formFieldList.add(formField);
             classFormFieldIdMap.put(formField.getId(), formField);
         }

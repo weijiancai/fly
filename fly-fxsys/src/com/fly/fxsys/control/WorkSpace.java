@@ -5,6 +5,7 @@ import com.fly.fxsys.view.DataGrid;
 import com.fly.fxsys.view.FormView;
 import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.db.query.QueryCondition;
+import com.fly.sys.dict.QueryMode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -186,7 +187,7 @@ public class WorkSpace extends BorderPane {
                 Object value = superDataGrid.getSelectedItem().get(superDataGrid.getClassFieldByColId(pkId).getName().toLowerCase());
                 if (value != null) {
 //                    conditionMap.put(fkKey, new String[]{value.toString()});
-                    queryCondition.addCondition(fkKey, "=", value.toString());
+                    queryCondition.addCondition(fkKey, QueryMode.EQUAL, value.toString());
                 }
             }
         }

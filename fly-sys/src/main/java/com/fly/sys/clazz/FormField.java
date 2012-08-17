@@ -1,6 +1,7 @@
 package com.fly.sys.clazz;
 
 import com.fly.sys.dict.DisplayStyle;
+import com.fly.sys.dict.QueryMode;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,6 +17,7 @@ public class FormField implements Serializable {
     private int width;
     private int height;
     private DisplayStyle displayStyle;
+    private QueryMode queryMode;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
@@ -81,6 +83,38 @@ public class FormField implements Serializable {
 
     public void setDisplayStyle(DisplayStyle displayStyle) {
         this.displayStyle = displayStyle;
+    }
+
+    public QueryMode getQueryMode() {
+        return queryMode;
+    }
+
+    public void setQueryMode(QueryMode queryMode) {
+        this.queryMode = queryMode;
+    }
+
+    public void setQueryMode(int queryMode) {
+        if (queryMode == 0) {
+            this.queryMode = QueryMode.EQUAL;
+        } else if (queryMode == 1) {
+            this.queryMode = QueryMode.NOT_EQUAL;
+        } else if (queryMode == 2) {
+            this.queryMode = QueryMode.LESS_THAN;
+        } else if (queryMode == 3) {
+            this.queryMode = QueryMode.LEFT_EQUAL;
+        } else if (queryMode == 4) {
+            this.queryMode = QueryMode.GREATER_THAN;
+        } else if (queryMode == 5) {
+            this.queryMode = QueryMode.GREATER_EQUAL;
+        } else if (queryMode == 6) {
+            this.queryMode = QueryMode.BETWEEN;
+        } else if (queryMode == 7) {
+            this.queryMode = QueryMode.LIKE;
+        } else if (queryMode == 9) {
+            this.queryMode = QueryMode.LEFT_LIKE;
+        } else if (queryMode == 10) {
+            this.queryMode = QueryMode.RIGHT_LIKE;
+        }
     }
 
     public ClassForm getClassForm() {

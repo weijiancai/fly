@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.fly.fxsys.control.FxBase;
 import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.db.query.QueryCondition;
+import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +68,7 @@ public class HttpConnection {
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
 //        conn.connect();
-        String params = String.format("method=query&conditions=%s&values=%s", queryCondition.getConditions(), JSON.toJSONString(queryCondition.getValues()));
+        String params = String.format("method=query&conditions=%s&values=%s", encode(queryCondition.getConditions()), encode(queryCondition.getValueList()));
         conn.getOutputStream().write(params.getBytes());
         conn.getOutputStream().flush();
         conn.getOutputStream().close();
@@ -114,6 +116,10 @@ public class HttpConnection {
 
     public static String encode(Object obj) throws UnsupportedEncodingException {
 //        return URLEncoder.encode(JSON.toJSONString(obj), "UTF-8");
-        return JSON.toJSONString(obj);
+        BASE64Encoder encoder = new BASE64Encoder();
+        if (obj instanceof String) {
+            return encoder.encode(((String) obj).getBytes("UTF-8"));
+        }
+        return encoder.encode(JSON.toJSONString(obj).getBytes("UTF-8"));
     }
 }
