@@ -12,7 +12,6 @@ import com.fly.sys.util.UString;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +27,7 @@ public class ClassDefLoader {
 
     public static Map<String, ClassField> classFieldIdMap = new HashMap<String, ClassField>();
     public static Map<String, ClassDefine> classIdMap = new HashMap<String, ClassDefine>();
+    public static Map<String, FormField> classFormFieldIdMap = new HashMap<String, FormField>();
     private static int classSortNum = 10;
 
     /*static {
@@ -65,6 +65,9 @@ public class ClassDefLoader {
                     for (ClassForm form : formList) {
                         List<FormField> formFieldList = template.query(sql, ClassRowMapperFactory.getFormField(form), form.getId());
                         form.setFieldList(formFieldList);
+                        for (FormField field : formFieldList) {
+                            classFormFieldIdMap.put(field.getId(), field);
+                        }
                     }
 
                     // 查询类Query
@@ -229,7 +232,7 @@ public class ClassDefLoader {
         ClassQuery classQuery = new ClassQuery();
         classQuery.setName("default");
         classQuery.setColCount(3);
-        classQuery.setColWidth(180);
+        classQuery.setColWidth(190);
         classQuery.setClassDefine(clazz);
         classQuery.setLabelGap(5);
         classQuery.setFieldGap(15);
@@ -250,7 +253,7 @@ public class ClassDefLoader {
             queryField.setClassField(classField);
             queryField.setDisplayName(classField.getFieldDesc());
             queryField.setOperator("=");
-            queryField.setWidth(180);
+            queryField.setWidth(190);
             queryField.setDisplay(true);
             queryField.setSortNum(fieldSortNum += 10);
             queryField.setValid(true);
@@ -280,11 +283,12 @@ public class ClassDefLoader {
         classForm.setFormType(formType);
         if ("0".equals(formType)) {
             classForm.setName(clazz.getName() + "_Query");
+            classForm.setColWidth(190);
         } else if ("1".equals(formType)) {
             classForm.setName(clazz.getName() + "_Edit");
+            classForm.setColWidth(180);
         }
         classForm.setColCount(3);
-        classForm.setColWidth(180);
         classForm.setClassDefine(clazz);
         classForm.setLabelGap(5);
         classForm.setFieldGap(15);
@@ -305,13 +309,18 @@ public class ClassDefLoader {
             formField.setClassField(classField);
             formField.setDisplayName(classField.getFieldDesc());
             formField.setSingleLine(false);
-            formField.setWidth(180);
+            if ("0".equals(formType)) {
+                formField.setWidth(190);
+            } else {
+                formField.setWidth(180);
+            }
             formField.setDisplay(true);
             formField.setSortNum(fieldSortNum += 10);
             formField.setValid(true);
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
             formFieldList.add(formField);
+            classFormFieldIdMap.put(formField.getId(), formField);
         }
         classForm.setFieldList(formFieldList);
     }

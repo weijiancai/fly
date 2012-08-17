@@ -9,12 +9,24 @@ import javafx.scene.control.TextField;
  */
 public class VTextField extends TextField implements IValue {
     @Override
+    public String[] values() {
+        return new String[]{value()};
+    }
+
+    @Override
     public String value() {
         return getText().trim();
     }
 
     @Override
+    public void setValue(String[] value) {
+        if (value != null && value.length > 0) {
+            setText(value[0]);
+        }
+    }
+
+    @Override
     public void setValue(String value) {
-        setText(value);
+        setValue(new String[]{value});
     }
 }

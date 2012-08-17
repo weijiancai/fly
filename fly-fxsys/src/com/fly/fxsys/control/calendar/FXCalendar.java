@@ -364,7 +364,7 @@ public class FXCalendar extends HBox {
 	}
 
 	/**
-	 * @return the value
+	 * @return the values
 	 */
 	public Date getValue() {
 		return this.value.get();
@@ -372,7 +372,7 @@ public class FXCalendar extends HBox {
 
 	/**
 	 * @param value
-	 *            the value to set
+	 *            the values to set
 	 */
 	public void setValue(Date date) {
 		this.value.set(date);
@@ -389,7 +389,7 @@ public class FXCalendar extends HBox {
 	}
 
 	/**
-	 * Method to clear the value in the calendar.
+	 * Method to clear the values in the calendar.
 	 */
 	public void clear() {
 		setValue(null);

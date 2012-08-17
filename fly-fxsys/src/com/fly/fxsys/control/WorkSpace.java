@@ -4,6 +4,7 @@ import com.fly.fxsys.util.HttpConnection;
 import com.fly.fxsys.view.DataGrid;
 import com.fly.fxsys.view.FormView;
 import com.fly.sys.clazz.ClassDefine;
+import com.fly.sys.db.query.QueryCondition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -97,7 +98,7 @@ public class WorkSpace extends BorderPane {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    List<Map<String, Object>> list = HttpConnection.query(clazz.getName(), queryForm.getQueryConditionMap());
+                    List<Map<String, Object>> list = HttpConnection.query(clazz.getName(), queryForm.getQueryCondition());
                     tableView.setItems(FXCollections.observableList(list));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -151,9 +152,11 @@ public class WorkSpace extends BorderPane {
                 public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldVal, Boolean newVal) {
                     if (newVal) {
                         try {
-                            Map<String, String> conditionMap = new HashMap<String, String>();
-                            addConditionMap(conditionMap, superDataGrid, finalDataGrid);
-                            List<Map<String, Object>> list = HttpConnection.query(finalClassDefine.getName(), conditionMap);
+//                            Map<String, String[]> conditionMap = new HashMap<String, String[]>();
+//                            addConditionMap(conditionMap, superDataGrid, finalDataGrid);
+                            QueryCondition queryCondition = new QueryCondition();
+                            addConditionMap(queryCondition, superDataGrid, finalDataGrid);
+                            List<Map<String, Object>> list = HttpConnection.query(finalClassDefine.getName(), queryCondition);
                             finalDataGrid.setItems(FXCollections.observableList(list));
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -175,14 +178,15 @@ public class WorkSpace extends BorderPane {
         }
     }
 
-    private void addConditionMap(Map<String, String> conditionMap, DataGrid superDataGrid, DataGrid finalDataGrid) {
+    private void addConditionMap(QueryCondition queryCondition, DataGrid superDataGrid, DataGrid finalDataGrid) {
         List<String> pkColumnIds = superDataGrid.getPkColumnIds();
         for (String fkKey : finalDataGrid.getFkColumnMap().keySet()) {
             String pkId = finalDataGrid.getFkColumnMap().get(fkKey);
             if (pkColumnIds.contains(pkId)) {
                 Object value = superDataGrid.getSelectedItem().get(superDataGrid.getClassFieldByColId(pkId).getName().toLowerCase());
                 if (value != null) {
-                    conditionMap.put(fkKey, value.toString());
+//                    conditionMap.put(fkKey, new String[]{value.toString()});
+                    queryCondition.addCondition(fkKey, "=", value.toString());
                 }
             }
         }

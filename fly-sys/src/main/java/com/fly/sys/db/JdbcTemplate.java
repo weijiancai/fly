@@ -73,6 +73,36 @@ public class JdbcTemplate {
         return list;
     }
 
+    public List<Map<String, Object>> queryForList(String sql, String conditions, List values) throws Exception {
+        sql += " where " + conditions;
+
+        System.out.println(sql);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        int i = 1;
+        for (Object obj : values) {
+            pstmt.setObject(i++, obj);
+        }
+        ResultSet rs = pstmt.executeQuery();
+        ResultSetMetaData md = rs.getMetaData();
+        int columnCount = md.getColumnCount();
+        //        System.out.println("------------------------------------------------");
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        Map<String, Object> map;
+        while (rs.next()) {
+            map = new HashMap<String, Object>();
+            for (i = 1; i <= columnCount; i++) {
+                Object obj = rs.getObject(i);
+                map.put(md.getColumnLabel(i), obj);
+                //                System.out.println(obj + "  >> " + md.getColumnLabel(i) + " = " + md.getColumnName(i) + " = " + (obj == null ? "" : obj.getClass().toString()));
+            }
+            //            System.out.println("-------------------------------------------");
+            list.add(map);
+        }
+        rs.close();
+
+        return list;
+    }
+
     public Map<String, Object> queryForMap(String sql, Object... values) throws Exception {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         if (null != values && values.length > 0) {

@@ -3,6 +3,7 @@ package com.fly.fxsys.util;
 import com.alibaba.fastjson.JSON;
 import com.fly.fxsys.control.FxBase;
 import com.fly.sys.clazz.ClassDefine;
+import com.fly.sys.db.query.QueryCondition;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -59,13 +60,13 @@ public class HttpConnection {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Map<String, Object>> query(String className, Map<String, String> map) throws IOException, ClassNotFoundException {
+    public static List<Map<String, Object>> query(String className, QueryCondition queryCondition) throws IOException, ClassNotFoundException {
         URL url = new URL(FxBase.URL + "/" + className + ".class");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
 //        conn.connect();
-        String params = String.format("method=query&conditionMap=%s", JSON.toJSONString(map));
+        String params = String.format("method=query&conditions=%s&values=%s", queryCondition.getConditions(), JSON.toJSONString(queryCondition.getValues()));
         conn.getOutputStream().write(params.getBytes());
         conn.getOutputStream().flush();
         conn.getOutputStream().close();

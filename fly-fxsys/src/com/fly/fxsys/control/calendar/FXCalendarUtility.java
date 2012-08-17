@@ -122,7 +122,7 @@ public class FXCalendarUtility {
 				SHORTEST_WEEK_DAYS[7] = dum;
 			}
 		}
-		return new String[]{"","��","һ","��","��","��","��","��"};
+		return new String[]{"","日","一","二","三","四","五","六"};
 	}
 	
 	public String[] getShortWeekDays(Locale locale){
@@ -137,7 +137,7 @@ public class FXCalendarUtility {
 			}
 			SHORT_WEEK_DAYS[7] = dum;
 		}
-		return new String[]{"","������","����һ","���ڶ�","������","������","������","������"};
+		return new String[]{"","星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
 	}
 	
 	public String[] getWeekDays(Locale locale){
@@ -152,7 +152,7 @@ public class FXCalendarUtility {
 			}
 			WEEK_DAYS[7] = dum;
 		}
-		return new String[]{"","������","����һ","���ڶ�","������","������","������","������"};
+        return new String[]{"","星期日","星期一","星期二","星期三","星期四","星期五","星期六"};
 	}
 	
 	public void resetShortMonths(Locale locale){
@@ -164,7 +164,7 @@ public class FXCalendarUtility {
 		if(SHORT_MONTHS==null || SHORT_MONTHS.length==0){
 			SHORT_MONTHS = getMonthNames("s",locale);
 		}
-		return new String[]{"һ��","����","����","����","����","����","����","����","����","ʮ��","ʮһ��","ʮ����",""};
+		return new String[]{"一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月",""};
 	}
 	
 	public void resetMonths(Locale locale){
@@ -176,7 +176,7 @@ public class FXCalendarUtility {
 		if(MONTHS==null || MONTHS.length==0){
 			MONTHS = getMonthNames(null,locale);
 		}
-		return new String[]{"һ��","����","����","����","����","����","����","����","����","ʮ��","ʮһ��","ʮ����",""};
+        return new String[]{"一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月",""};
 	}
 	
 	private String[] getDayNames(String type, Locale locale){

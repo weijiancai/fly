@@ -23,4 +23,8 @@ public class ClassManager {
     public static ClassDefine getClassDefineById(String classId) {
         return ClassDefLoader.classIdMap.get(classId);
     }
+
+    public static FormField getClassFormFieldById(String formFieldId) {
+        return ClassDefLoader.classFormFieldIdMap.get(formFieldId);
+    }
 }
