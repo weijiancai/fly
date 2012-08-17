@@ -2,6 +2,7 @@ package com.fly.fxsys.control;
 
 import com.fly.fxsys.R;
 import com.fly.fxsys.config.SysInfo;
+import com.fly.fxsys.control.calendar.FXCalendar;
 import com.fly.fxsys.util.HttpConnection;
 import com.fly.sys.project.ProjectDefine;
 import javafx.application.Application;
@@ -55,6 +56,7 @@ public class FxBase extends Application {
 
         scene = new Scene(desktop, 1020, 700);
         setSkin(R.skin.DEFAULT);
+        setCalendarStyle();
         // show stage
         stage.setScene(scene);
         stage.show();
@@ -73,6 +75,10 @@ public class FxBase extends Application {
 
     public void setSkin(String skin) {
         scene.getStylesheets().addAll(R.class.getResource("skin/" + skin + "/" + skin + ".css").toExternalForm());
+    }
+
+    private void setCalendarStyle() {
+        scene.getStylesheets().addAll(FXCalendar.class.getResource("styles/calendar_styles.css").toExternalForm());
     }
 
     /**

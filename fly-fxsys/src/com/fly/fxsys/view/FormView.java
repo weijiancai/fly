@@ -1,14 +1,13 @@
 package com.fly.fxsys.view;
 
 import com.fly.fxsys.control.IValue;
-import com.fly.fxsys.control.valuectl.VComboBox;
-import com.fly.fxsys.control.valuectl.VPasswordField;
-import com.fly.fxsys.control.valuectl.VTextArea;
-import com.fly.fxsys.control.valuectl.VTextField;
+import com.fly.fxsys.control.valuectl.*;
 import com.fly.fxsys.util.HttpConnection;
 import com.fly.sys.clazz.ClassForm;
 import com.fly.sys.clazz.FormField;
 import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.db.query.QueryCondition;
+import com.fly.sys.dict.DataType;
 import com.fly.sys.dict.DisplayStyle;
 import com.fly.sys.util.UString;
 import javafx.scene.Node;
@@ -51,7 +50,6 @@ public class FormView extends BorderPane implements View {
 
         Label label;
         Region labelGap;
-        VTextField textField;
         IValue node;
         Region fieldGap;
         int idxRow = 0;
@@ -109,11 +107,7 @@ public class FormView extends BorderPane implements View {
 
     private IValue getValueNode(FormField field) {
         IValue node;
-        if (DisplayStyle.TEXT_FIELD == field.getDisplayStyle()) {
-            VTextField textField = new VTextField();
-            textField.setPrefWidth(field.getWidth());
-            node = textField;
-        } else if (DisplayStyle.TEXT_AREA == field.getDisplayStyle()) {
+        if (DisplayStyle.TEXT_AREA == field.getDisplayStyle()) {
             VTextArea textArea = new VTextArea();
             textArea.setPrefHeight(field.getHeight());
             node = textArea;
@@ -126,9 +120,21 @@ public class FormView extends BorderPane implements View {
             comboBox.setPrefWidth(field.getWidth());
             node = comboBox;
         } else {
-            VTextField textField = new VTextField();
-            textField.setPrefWidth(field.getWidth());
-            node = textField;
+            if (DataType.DATE == field.getClassField().getColumn().getDataTypeEnum()) {
+                if ("0".equals(field.getClassForm().getFormType())) {
+                    VDateRangeField dateField = new VDateRangeField();
+                    dateField.setPrefWidth(field.getWidth() + 0.0);
+                    node = dateField;
+                } else {
+                    VDateField dateField = new VDateField();
+                    dateField.setDateTextWidth(field.getWidth() + 0.0);
+                    node = dateField;
+                }
+            } else {
+                VTextField textField = new VTextField();
+                textField.setPrefWidth(field.getWidth());
+                node = textField;
+            }
         }
         return node;
     }
@@ -185,16 +191,26 @@ public class FormView extends BorderPane implements View {
         oldDataMap.putAll(newValueMap);
     }
 
-    public Map<String, String> getQueryConditionMap() {
-        Map<String, String> result = new HashMap<String, String>();
-        String conditionVal;
+    public QueryCondition getQueryCondition() {
+        QueryCondition result = new QueryCondition();
+
+        DbmsColumn column;
         for (String key : fieldNodeMap.keySet()) {
             IValue node = fieldNodeMap.get(key);
-            conditionVal = node.value();
             FormField formField = fieldMap.get(key);
-            if (UString.isNotEmpty(conditionVal)) {
-                String columnName = formField.getClassField().getColumn().getName();
-                result.put(columnName, conditionVal);
+            column = formField.getClassField().getColumn();
+            if (DataType.DATE == column.getDataTypeEnum()) {
+                String[] values = node.values();
+                if (values != null && values.length == 2) {
+                    if (UString.isNotEmpty(values[0])) {
+                        result.addCondition(column.getName(), ">=", values[0]);
+                    }
+                    if (UString.isNotEmpty(values[1])) {
+                        result.addCondition(column.getName(), "<", values[1]);
+                    }
+                }
+            } else {
+                result.addCondition(column.getName(), "=", node.value());
             }
         }
 

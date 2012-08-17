@@ -379,7 +379,7 @@ public class BasePane extends Group {
 		footerPane.setPrefWidth(datePicker.getBounds().getWidth());
 		footerPane.setPrefHeight(32);
 		footerPane.getStyleClass().add("fx-calendar-footer");
-		NormalButton todayBtn = new FXCalendarControls().new NormalButton("����");
+		NormalButton todayBtn = new FXCalendarControls().new NormalButton("今天");
 
 		/**
 		 * Event triggering to set the current date of the system.

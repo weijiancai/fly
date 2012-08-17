@@ -1,6 +1,7 @@
 package com.fly.sys.db.meta;
 
 import com.fly.sys.db.DBManager;
+import com.fly.sys.dict.DataType;
 import com.fly.sys.dict.DictCode;
 
 import java.io.Serializable;
@@ -132,6 +133,22 @@ public class DbmsColumn implements Serializable {
 
     public void setDataType(String dataType) {
         this.dataType = dataType;
+    }
+
+    public DataType getDataTypeEnum() {
+        if ("varchar".equals(dataType) || "char".equals(dataType)) {
+            return DataType.STRING;
+        } else if ("int".equals(dataType)) {
+            return DataType.INTEGER;
+        } else if ("datetime".equals(dataType) || "date".equals(dataType) || "timestamp".equals(dataType)) {
+            return DataType.DATE;
+        } else if ("decimal".equals(dataType)) {
+            return DataType.NUMBER;
+        } else if ("double".equals(dataType)) {
+            return DataType.DOUBLE;
+        }
+
+        return DataType.STRING;
     }
 
     public int getMaxLength() {
