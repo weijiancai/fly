@@ -1,13 +1,29 @@
 package com.fly.fxsys.control.valuectl;
 
 import com.fly.fxsys.control.IValue;
+import com.fly.sys.dict.DictCategory;
+import com.fly.sys.dict.DictCode;
+import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
+
+import java.util.List;
 
 /**
  * @author weijiancai
  * @since 1.0.0
  */
-public class VComboBox extends ComboBox implements IValue {
+public class VComboBox extends ComboBox<DictCode> implements IValue {
+    private DictCategory category;
+
+    public VComboBox(DictCategory category) {
+        super();
+        this.category = category;
+        if (category != null) {
+            List<DictCode> list = category.getCodeList();
+            this.setItems(FXCollections.observableArrayList(list));
+        }
+    }
+
     @Override
     public String[] values() {
         return new String[]{value()};
@@ -15,7 +31,8 @@ public class VComboBox extends ComboBox implements IValue {
 
     @Override
     public String value() {
-        return this.getValue() == null ? "" : getValue().toString();
+        DictCode code = this.getValue();
+        return code == null ? "" : code.getValue();
     }
 
     @Override
@@ -24,5 +41,12 @@ public class VComboBox extends ComboBox implements IValue {
 
     @Override
     public void setValue(String value) {
+        if (category != null) {
+            for (DictCode code : this.getItems()) {
+                if (code.getValue().equals(value)) {
+                    this.getSelectionModel().select(code);
+                }
+            }
+        }
     }
 }

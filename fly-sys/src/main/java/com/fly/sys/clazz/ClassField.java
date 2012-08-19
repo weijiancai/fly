@@ -1,6 +1,8 @@
 package com.fly.sys.clazz;
 
 import com.fly.sys.db.meta.DbmsColumn;
+import com.fly.sys.dict.CodeManager;
+import com.fly.sys.dict.DictCategory;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,12 +17,14 @@ public class ClassField implements Serializable {
     private String name;
     private String fieldDesc;
     private String type;
+    private String dzCategoryId;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
 
     private ClassDefine classDef;
     private DbmsColumn column;
+    private DictCategory dictCategory;
 
     public String getId() {
         return id;
@@ -54,6 +58,15 @@ public class ClassField implements Serializable {
         this.type = type;
     }
 
+    public String getDzCategoryId() {
+        return dzCategoryId;
+    }
+
+    public void setDzCategoryId(String dzCategoryId) {
+        this.dzCategoryId = dzCategoryId;
+        this.dictCategory = CodeManager.getDictCategoryById(dzCategoryId);
+    }
+
     public ClassDefine getClassDef() {
         return classDef;
     }
@@ -68,6 +81,17 @@ public class ClassField implements Serializable {
 
     public void setColumn(DbmsColumn column) {
         this.column = column;
+    }
+
+    public DictCategory getDictCategory() {
+        if (dictCategory == null) {
+            return CodeManager.getDictCategoryById(dzCategoryId);
+        }
+        return dictCategory;
+    }
+
+    public void setDictCategory(DictCategory dictCategory) {
+        this.dictCategory = dictCategory;
     }
 
     public Date getInputDate() {

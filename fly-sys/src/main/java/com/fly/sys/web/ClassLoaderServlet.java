@@ -37,17 +37,6 @@ public class ClassLoaderServlet extends HttpServlet {
         if ("query".equals(method)) {
             String conditions = decode(request.getParameter("conditions"));
             String values = decode(request.getParameter("values"));
-            /*String params = request.getParameter("conditionMap");
-            Map<String, Object> conditionMap = new HashMap<String, Object>();
-            if (UString.isNotEmpty(params)) {
-                JSONObject jsonObject = JSON.parseObject(params);
-                if (jsonObject != null) {
-                    for (String key : jsonObject.keySet()) {
-                        conditionMap.put(key, jsonObject.get(key));
-                    }
-                    conditionMap.putAll(jsonObject);
-                }
-            }*/
             Query query = new Query(classDefine);
             List<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
             ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
@@ -57,7 +46,7 @@ public class ClassLoaderServlet extends HttpServlet {
         } else if ("update".equals(method)) {
             String values = decode(request.getParameter("valueMap"));
             String conditions = decode(request.getParameter("conditionMap"));
-            String tableName = decode(request.getParameter("tableName"));
+            String tableName = request.getParameter("tableName");
             Query query = new Query(classDefine);
             query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
         } else {

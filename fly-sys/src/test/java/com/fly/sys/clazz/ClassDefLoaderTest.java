@@ -3,6 +3,7 @@ package com.fly.sys.clazz;
 import com.alibaba.fastjson.JSON;
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.DBManager;
+import com.fly.sys.dict.CodeManager;
 import com.fly.sys.vo.ClassDefineVO;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
@@ -41,12 +42,15 @@ public class ClassDefLoaderTest {
 
     @Test
     public void testInitClassDef() throws Exception {
-        SysInfo.setDbmsInit(false);
-        SysInfo.setClassDefInit(false);
+        SysInfo.setDbmsInit(true);
+        SysInfo.setDictInit(true);
+        SysInfo.setClassDefInit(true);
         DBManager.init();
+        CodeManager.init();
         ClassDefLoader.init();
 
-        ClassDefine classDefine = ClassDefLoader.classIdMap.values().iterator().next();
+//        ClassDefine classDefine = ClassDefLoader.classIdMap.values().iterator().next();
+        ClassDefine classDefine = ClassDefLoader.loadClassDef("TWoTypeInfo".toLowerCase());
 //        System.out.println(Json.toJsonString(classDefine));
         System.out.println(JSON.toJSONString(ClassDefineVO.getInstance(classDefine), true));
     }

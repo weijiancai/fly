@@ -260,10 +260,12 @@ public class JdbcTemplate {
         }
     }
 
-    public void clearTable(String sys_dbms_define) throws SQLException {
-        String sql = "DELETE FROM " + sys_dbms_define;
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.executeUpdate();
+    public void clearTable(String... tables) throws SQLException {
+        for (String table : tables) {
+            String sql = "DELETE FROM " + table;
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+        }
     }
 
     public void update(Map<String, Object> valueMap, Map<String, Object> conditionMap, String tableName) throws Exception {

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project>
+    <dict>
+        <categories>
+            <category name="工单类型列表" sortNum="10">
+                <code name="采购订单" value="cgdd" sortNum="10"/>
+            </category>
+        </categories>
+    </dict>
+</project>

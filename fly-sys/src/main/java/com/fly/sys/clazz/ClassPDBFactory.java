@@ -51,6 +51,7 @@ public class ClassPDBFactory {
                 map.put("name", classField.getName());
                 map.put("col_id", classField.getColumn().getId());
                 map.put("class_id", classField.getClassDef().getId());
+                map.put("dz_category_id", classField.getDzCategoryId());
                 map.put("field_desc", classField.getFieldDesc());
                 map.put("type", classField.getType());
                 map.put("is_valid", classField.isValid() ? "T" : "F");
@@ -176,7 +177,9 @@ public class ClassPDBFactory {
                 map.put("form_id", field.getClassForm().getId());
                 map.put("field_id", field.getClassField().getId());
                 map.put("display_name", field.getDisplayName());
-                map.put("display_style", field.getDisplayStyle());
+                if (field.getDisplayStyle() != null) {
+                    map.put("display_style", field.getDisplayStyle().ordinal());
+                }
                 map.put("is_display", field.isDisplay() ? "T" : "F");
                 map.put("width", field.getWidth());
                 map.put("height", field.getHeight());

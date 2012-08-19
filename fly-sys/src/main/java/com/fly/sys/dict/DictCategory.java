@@ -1,12 +1,13 @@
 package com.fly.sys.dict;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author weijiancai
  */
-public class DictCategory {
+public class DictCategory implements Serializable {
     private String id;
     private String name;
     private boolean isValid;
@@ -61,6 +62,16 @@ public class DictCategory {
 
     public void setCodeList(List<DictCode> codeList) {
         this.codeList = codeList;
+    }
+
+    public String getCodeName(String codeValue) {
+        for (DictCode code : codeList) {
+            if (codeValue.equals(code.getValue())) {
+                return code.getName();
+            }
+        }
+
+        return "";
     }
 
     @Override

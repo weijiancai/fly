@@ -5,6 +5,9 @@ import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsDefine;
 import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.dict.DictCategory;
+import com.fly.sys.dict.DictCode;
+import com.fly.sys.util.UString;
 import com.fly.sys.util.UUIDUtil;
 
 import java.util.Date;
@@ -134,4 +137,53 @@ public class DbmsPDBFactory {
             }
         };
     }
+
+    public static IPDB getDictCategory(final DictCategory category) {
+        return new IPDB() {
+            @Override
+            public Map<String, Map<String, Object>> getPDBMap() {
+                if (UString.isEmpty(category.getId())) {
+                    category.setId(UUIDUtil.getUUID());
+                }
+
+                Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("id", category.getId());
+                map.put("name", category.getName());
+                map.put("is_valid", category.isValid() ? "T" : "F");
+                map.put("input_date", new Date());
+                map.put("sort_num", category.getSortNum());
+
+                result.put("sys_dz_category", map);
+
+                return result;
+            }
+        };
+    }
+
+    public static IPDB getDictCode(final DictCode code) {
+        return new IPDB() {
+            @Override
+            public Map<String, Map<String, Object>> getPDBMap() {
+                code.setId(UUIDUtil.getUUID());
+
+                Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("id", code.getId());
+                map.put("name", code.getName());
+                map.put("value", code.getValue());
+                map.put("category_id", code.getCategory().getId());
+                map.put("is_valid", code.isValid() ? "T" : "F");
+                map.put("input_date", new Date());
+                map.put("sort_num", code.getSortNum());
+
+                result.put("sys_dz_code", map);
+
+                return result;
+            }
+        };
+    }
+
 }

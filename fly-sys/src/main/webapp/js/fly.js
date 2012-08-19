@@ -8,9 +8,10 @@ function DataClass(classDefine) {
     this.version = classDefine['version'];
     this.isValid = classDefine['isValid'];
     this.sortNum = classDefine['sortNum'];
+    this.dictMap = classDefine['dictMap'];
 
-    this.queryForm = new DataForm(classDefine['queryForm']);
-    this.editForm = new DataForm(classDefine['editForm']);
+    this.queryForm = new DataForm(classDefine['queryForm'], this.dictMap);
+    this.editForm = new DataForm(classDefine['editForm'], this.dictMap);
     this.dataTable = new DataTable(classDefine['classTable']);
 }
 
@@ -48,7 +49,7 @@ GridPane.prototype = {
     }
 };
 
-function DataForm(classForm) {
+function DataForm(classForm, dictMap) {
     this.id = classForm['id'];
     this.name = classForm['name'];
     this.formType = classForm['formType'];
@@ -65,9 +66,12 @@ function DataForm(classForm) {
     this.gridPane = new GridPane(this.hgap, this.vgap);
     this.fieldset = classForm['fieldset'];
     this.actionBar = classForm['actionBar'];
+    this.width = 90 * this.colCount + this.colWidth * this.colCount + this.labelGap * this.colCount + (this.fieldGap - 1) * this.colCount;
+    this.height = 0;
 
     for(var i = 0; i < classForm['fieldList'].length; i++) {
-        this.fieldList.push(new FormField(classForm['fieldList'][i]));
+        var formField = classForm['fieldList'][i];
+        this.fieldList.push(new FormField(formField, dictMap));
     }
 
     // 按SortNum排序
@@ -80,6 +84,7 @@ function DataForm(classForm) {
 
 DataForm.prototype = {
     init: function() {
+        this.height = 100;
         var formGrid = this.gridPane;
 
         var idxRow = 0;
@@ -99,6 +104,7 @@ DataForm.prototype = {
                 formGrid.add(getInputNode(field, this.colCount), idxRow, 2);
                 idxCol = 0;
                 idxRow++;
+                this.height += field.height;
 
                 continue;
             }
@@ -119,6 +125,8 @@ DataForm.prototype = {
                 }
             }
         }
+
+        this.height += (idxRow + 1) * 25;
     },
     toString: function() {
         var styleClass = '';
@@ -136,9 +144,11 @@ DataForm.prototype = {
 
         formStr += this.gridPane.toString();
 
+        formStr += '<div class="actionBar" style="text-align: center;">';
         if(this.actionBar) {
             formStr += this.actionBar.toString();
         }
+        formStr += '</div>';
 
         if(this.fieldset) {
             formStr += '</fieldset>';
@@ -147,7 +157,7 @@ DataForm.prototype = {
     }
 };
 
-function FormField(fd) {
+function FormField(fd, dictMap) {
     this.id = fd['id'];
     this.name = fd['name'];
     this.displayName = fd['displayName'];
@@ -159,6 +169,7 @@ function FormField(fd) {
     this.inputDate = fd['inputDate'];
     this.isValid = fd['valid'];
     this.sortNum = fd['sortNum'];
+    this.dictList = dictMap[this.name];
 }
 var DS_TEXT = 0;
 var DS_TEXT_AREA = 1;
@@ -168,27 +179,27 @@ var DS_COMBO_BOX = 3;
 function getInputNode(field, colCount) {
     if(DS_TEXT == field.displayStyle) {
         if(field.isSingleLine) {
-            return getFormInputTd(field.name, 'text', field.width, field.height, colCount * 4 - 3);
+            return getFormInputTd(field, 'text', colCount * 4 - 3);
         } else {
-            return getFormInputTd(field.name, 'text', field.width, field.height);
+            return getFormInputTd(field, 'text');
         }
     } else if(DS_TEXT_AREA == field.displayStyle) {
         if(field.isSingleLine) {
-            return getFormInputTd(field.name, 'textarea', field.width, field.height, colCount * 4 - 3);
+            return getFormInputTd(field, 'textarea', colCount * 4 - 3);
         } else {
-            return getFormInputTd(field.name, 'textarea', field.width, field.height);
+            return getFormInputTd(field, 'textarea');
         }
     } else if(DS_PASSWORD == field.displayStyle) {
         if(field.isSingleLine) {
-            return getFormInputTd(field.name, 'password', field.width, field.height, colCount * 4 - 3);
+            return getFormInputTd(field, 'password', colCount * 4 - 3);
         } else {
-            return getFormInputTd(field.name, 'password', field.width, field.height);
+            return getFormInputTd(field, 'password');
         }
     } else if(DS_COMBO_BOX == field.displayStyle) {
         if(field.isSingleLine) {
-            return getFormInputTd(field.name, 'select', field.width, field.height, colCount * 4 - 3);
+            return getFormInputTd(field, 'select', colCount * 4 - 3);
         } else {
-            return getFormInputTd(field.name, 'select', field.width, field.height);
+            return getFormInputTd(field, 'select');
         }
     }
 
@@ -212,19 +223,19 @@ function getLabelTd(name, labelForId, width) {
     return '<td>' + getLabel(name, labelForId, width)+ '</td>';
 }
 
-function getFormInputTd(id, type, width, height, colspan, rowspan) {
+function getFormInputTd(field, type, colspan, rowspan) {
     var spanStr = "";
     if(colspan) {
         spanStr += ' colspan="' + colspan + '"';
-        width = '100%';
+        field.width = '100%';
     }
     if(rowspan) {
         spanStr += ' rowspan="' + rowspan + '"';
     }
     if(spanStr.length > 0) {
-        return '<td' + spanStr + '>' + getFormInput(id, id, type, width, height) + '</td>';
+        return '<td' + spanStr + '>' + getFormInput(field, type) + '</td>';
     } else {
-        return '<td>' + getFormInput(id, id, type, width, height) + '</td>';
+        return '<td>' + getFormInput(field, type) + '</td>';
     }
 }
 
@@ -237,40 +248,47 @@ function getLabel(name, labelForId, width) {
     return '<label for="' + labelForId+ '">' + name+ '</label>';
 }
 
-function getFormInput(id, name, type, width, height) {
+function getFormInput(field, type) {
     var inputName;
-    if(tableFieldMapping && tableFieldMapping[name]) {
-        inputName = tableFieldMapping[name];
+    if(tableFieldMapping && tableFieldMapping[field.name]) {
+        inputName = tableFieldMapping[field.name];
     } else {
-        inputName = name;
+        inputName = field.name;
     }
 
     var styleStr = "";
-    if(width) {
-        if('100%' == width) {
-            styleStr += "width:" + width + ";";
+    if(field.width) {
+        if('100%' == field.width) {
+            styleStr += "width:" + field.width + ";";
         } else {
-            styleStr += "width:" + width + "px;";
+            styleStr += "width:" + field.width + "px;";
         }
     }
-    if(height) {
-        styleStr += "height:" + height + "px;";
+    if(field.height) {
+        styleStr += "height:" + field.height + "px;";
     }
+    var options = '';
+    if(field.dictList) {
+        for(var i = 0; i < field.dictList.length; i++) {
+           options += '<option value="' + field.dictList[i].value +'">' + field.dictList[i].name+ '</option>'
+        }
+    }
+
     if(styleStr.length > 0) {
         if('textarea' == type) {
-            return '<textarea id="' + id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
+            return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
         } else if('select' == type) {
-            return '<select id="' + id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></select>';
+            return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '">' + options + '</select>';
         } else {
-            return '<input id="' + id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"/>';
+            return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"/>';
         }
     } else {
         if('textarea' == type) {
-            return '<textarea id="' + id + '" type="' + type + '" name="' + inputName + '"></textarea>';
+            return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '"></textarea>';
         } else if('select' == type) {
-            return '<select id="' + id + '" type="' + type + '" name="' + inputName + '"></select>';
+            return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '">' + options + '</select>';
         }  else {
-            return '<input id="' + id + '" type="' + type + '" name="' + inputName + '"/>'
+            return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '"/>'
         }
     }
 }
@@ -287,11 +305,10 @@ ActionBar.prototype = {
         this.actions.push(actionButton);
     },
     toString: function() {
-        var str = '<div class="actionBar" style="text-align: center;">';
+        var str = '';
         for(var i = 0; i < this.actions.length; i++) {
             str += this.actions[i].toString();
         }
-        str += '</div>';
         return str;
     }
 };

@@ -31,8 +31,11 @@ function getCenter(clazz) {
     return '<div region="center" split="false" border="false">' + clazz.dataTable.toString() + '</div>';
 }
 
+var clazz;
 var $_grid;
 var $_queryForm;
+var $_addForm;
+var $_addFormWin;
 
 function formQuery() {
     $_grid.datagrid('reload', $_queryForm.serializeObject());
@@ -44,6 +47,10 @@ function formReset() {
 
 function initQueryForm() {}
 
+function add() {
+    $_addFormWin.window('open');
+}
+
 jQuery.simpleWin = function(classDefine) {
     classDefine['queryForm'].fieldset = {};
     var actionBar = new ActionBar();
@@ -52,17 +59,17 @@ jQuery.simpleWin = function(classDefine) {
     classDefine['queryForm'].actionBar = actionBar;
 
     var tableBar = [];
-    tableBar.push({text : '增加', iconCls : 'icon-add', handler: null});
+    tableBar.push({text : '增加', iconCls : 'icon-add', handler: add});
     tableBar.push('-');
     tableBar.push({text : '修改', iconCls : 'icon-cut', handler: null});
     tableBar.push('-');
     tableBar.push({text : '删除', iconCls : 'icon-remove', handler: null});
 
-    var clazz = new DataClass(classDefine);
+    clazz = new DataClass(classDefine);
     var layout = $(getLayout());
 
     function getLayout() {
-        return getNorth(clazz) + getCenter(clazz);
+        return getNorth(clazz) + getCenter(clazz) + getAddForm();
     }
 
     function getNorth(clazz) {
@@ -73,9 +80,14 @@ jQuery.simpleWin = function(classDefine) {
         return '<div region="center" split="false" border="false">' + clazz.dataTable.toString() + '</div>';
     }
 
+    function getAddForm() {
+        return '<div id="AddFormWin" style="display: block;">' + clazz.editForm.toString() + '</div>';
+    }
+
     $('body').addClass('easyui-layout').append(layout).layout();
 
     $_queryForm = $('#' + clazz.queryForm.id);
+    $_addForm = $('#' + clazz.editForm.id);
     initQueryForm();
     $_grid = $('#' + clazz.dataTable.id).datagrid({
         title : clazz.cname + '列表',
@@ -88,6 +100,21 @@ jQuery.simpleWin = function(classDefine) {
         fit:true,
         toolbar: tableBar
     });
+
+    // add form
+    $_addFormWin = $('#AddFormWin').window({
+        closed:true,
+        title: '添加' + clazz.cname,
+        width: clazz.editForm.width,
+        height: clazz.editForm.height,
+        resizable: true,
+        collapsible:false,
+        minimizable:false,
+        draggable: true
+    });
+    var addFormSubmit = new ActionButton("", "", "提交", "formQuery");
+    var addFormCancel = new ActionButton("", "", "取消", "formQuery");
+    $('#AddFormWin .actionBar').append(addFormSubmit.toString()).append(addFormCancel.toString());
 
     // easyui linkButton
     $('.actionBar a').linkbutton({

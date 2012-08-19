@@ -54,7 +54,7 @@ public class FxBase extends Application {
         // 初始化项目
         initProject();
 
-        scene = new Scene(desktop, 1020, 700);
+        scene = new Scene(desktop, 1220, 730);
         setSkin(R.skin.DEFAULT);
         setCalendarStyle();
         // show stage

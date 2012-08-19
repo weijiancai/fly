@@ -2,6 +2,7 @@ package com.fly.sys.project;
 
 import com.fly.sys.config.SysInfo;
 import com.fly.sys.db.JdbcTemplate;
+import com.fly.sys.dict.CodeManager;
 import com.fly.sys.module.ModuleDefine;
 import com.fly.sys.module.ModuleManager;
 import com.fly.sys.util.DomUtil;
@@ -101,6 +102,10 @@ public class ProjectManager {
 
         template.commit();
         template.close();
+        // 设置数据字典根类别
+        for (ProjectDefine project : projectMap.values()) {
+            project.setRootCategory(CodeManager.rootCategory);
+        }
     }
 
     public static ProjectDefine getProject(String projectName) {

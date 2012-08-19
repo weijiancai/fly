@@ -12,6 +12,7 @@ public class FormFieldVO {
     private String id;
     private String name;
     private String displayName;
+    private String dzCategoryId;
     private boolean isSingleLine;
     private boolean isDisplay;
     private int width;
@@ -43,6 +44,14 @@ public class FormFieldVO {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public String getDzCategoryId() {
+        return dzCategoryId;
+    }
+
+    public void setDzCategoryId(String dzCategoryId) {
+        this.dzCategoryId = dzCategoryId;
     }
 
     public boolean isSingleLine() {
@@ -120,6 +129,7 @@ public class FormFieldVO {
         } else {
             vo.setDisplayStyle(field.getDisplayStyle().ordinal());
         }
+        vo.setDzCategoryId(field.getClassField().getDzCategoryId());
         vo.setHeight(field.getHeight());
         vo.setId(field.getId());
         vo.setInputDate(field.getInputDate());

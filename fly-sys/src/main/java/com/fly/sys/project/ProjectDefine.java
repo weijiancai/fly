@@ -1,6 +1,7 @@
 package com.fly.sys.project;
 
 import com.alibaba.fastjson.JSON;
+import com.fly.sys.dict.DictCategory;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class ProjectDefine implements Serializable {
     private int sortNum;
 
     private List<ProjectModule> moduleList;
+    private DictCategory rootCategory;
 
     public String getId() {
         return id;
@@ -91,6 +93,14 @@ public class ProjectDefine implements Serializable {
 
     public void setModuleList(List<ProjectModule> moduleList) {
         this.moduleList = moduleList;
+    }
+
+    public DictCategory getRootCategory() {
+        return rootCategory;
+    }
+
+    public void setRootCategory(DictCategory rootCategory) {
+        this.rootCategory = rootCategory;
     }
 
     @Override

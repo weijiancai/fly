@@ -10,8 +10,13 @@
         <module name="dbms_table" displayName="数据库表" superModule="dbms_manager" sortNum="30" class="DbmsTable"/>
         <module name="dbms_column" displayName="数据库列" superModule="dbms_manager" sortNum="40" class="DbmsColumn"/>
 
-        <module name="class_manager" displayName="类管理" superModule="sys_manager" sortNum="20"/>
+        <module name="dict_manager" displayName="字典管理" superModule="sys_manager" sortNum="20"/>
+        <module name="dict_category_manager" displayName="字典类别管理" superModule="dict_manager" sortNum="10" class="DzCategory"/>
+        <module name="dict_code_manager" displayName="字典代码管理" superModule="dict_manager" sortNum="20" class="DzCode"/>
+
+        <module name="class_manager" displayName="类管理" superModule="sys_manager" sortNum="30"/>
         <module name="class_define" displayName="类定义" superModule="class_manager" sortNum="10" class="ClassDefine"/>
+
     </modules>
 
     <project name="FLY-SYS" projectDesc="飞翔系统" packageName="com.fly.sys" sortNum="10" projectUrl="http://localhost:8088">
@@ -23,9 +28,55 @@
             <module name="dbms_schema" superModule="dbms_manager"/>
             <module name="dbms_table" superModule="dbms_manager"/>
             <module name="dbms_column" superModule="dbms_manager"/>
-            
+
+            <module name="dict_manager" superModule="sys_manager"/>
+            <module name="dict_category_manager" superModule="dict_manager"/>
+            <module name="dict_code_manager" superModule="dict_manager"/>
+
             <module name="class_manager" superModule="sys_manager"/>
             <module name="class_define" superModule="class_manager"/>
         </modules>
     </project>
+
+    <dict>
+        <categories>
+            <category name="是否选择" sortNum="10">
+                <code name="是" value="T" sortNum="10"/>
+                <code name="否" value="F" sortNum="20"/>
+            </category>
+
+            <category name="数据类型" sortNum="20">
+                <code name="字符串" value="0" sortNum="10"/>
+                <code name="整数" value="1" sortNum="20"/>
+                <code name="小数" value="2" sortNum="30"/>
+                <code name="数字" value="3" sortNum="40"/>
+                <code name="日期" value="4" sortNum="50"/>
+            </category>
+
+            <category name="显示样式" sortNum="30">
+                <code name="文本框" value="0" sortNum="10"/>
+                <code name="文本域" value="1" sortNum="20"/>
+                <code name="密码框" value="2" sortNum="30"/>
+                <code name="下拉框" value="3" sortNum="40"/>
+            </category>
+
+            <category name="查询模式" sortNum="40">
+                <code name="等于" value="0" sortNum="10"/>
+                <code name="不等于" value="1" sortNum="20"/>
+                <code name="小于" value="2" sortNum="30"/>
+                <code name="小于等于" value="3" sortNum="40"/>
+                <code name="大于" value="4" sortNum="50"/>
+                <code name="大于等于" value="5" sortNum="60"/>
+                <code name="在...之间" value="6" sortNum="70"/>
+                <code name="包含..." value="7" sortNum="80"/>
+                <code name="以...开头" value="8" sortNum="90"/>
+                <code name="以...结尾" value="9" sortNum="100"/>
+            </category>
+
+            <category name="表单类型" sortNum="10">
+                <code name="查询表单" value="0" sortNum="10"/>
+                <code name="编辑表单" value="1" sortNum="20"/>
+            </category>
+        </categories>
+    </dict>
 </system>

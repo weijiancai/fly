@@ -23,6 +23,7 @@ public class SysInfo {
     private static boolean isClassDefInit = false;
     private static boolean isProjectDefInit = false;
     private static boolean isModuleDefInit = false;
+    private static boolean isDictInit = false;
 
     public static void store() {
         try {
@@ -68,6 +69,15 @@ public class SysInfo {
         infoProp.setProperty("isModuleDefInit", moduleDefInit + "");
     }
 
+    public static boolean isDictInit() {
+        return isDictInit;
+    }
+
+    public static void setDictInit(boolean dictInit) {
+        isDictInit = dictInit;
+        infoProp.setProperty("isDictInit", dictInit + "");
+    }
+
     static {
         // 检出flysys目录是否存在，不存在则创建
         if (!DIR_FLY_SYS.exists()) {
@@ -82,6 +92,7 @@ public class SysInfo {
                 infoProp.setProperty("isClassDefInit", "false");
                 infoProp.setProperty("isProjectDefInit", "false");
                 infoProp.setProperty("isModuleDefInit", "false");
+                infoProp.setProperty("isDictInit", "false");
                 store();
             } else {
                 infoProp.loadFromXML(new FileInputStream(FILE_SYS_INFO));
@@ -92,6 +103,7 @@ public class SysInfo {
                 isClassDefInit = "true".equalsIgnoreCase(sIsClassDefInit);
                 isProjectDefInit = "true".equalsIgnoreCase(infoProp.getProperty("isProjectDefInit"));
                 isModuleDefInit = "true".equalsIgnoreCase(infoProp.getProperty("isModuleDefInit"));
+                isDictInit = "true".equalsIgnoreCase(infoProp.getProperty("isDictInit"));
             }
         } catch (Exception e) {
             e.printStackTrace();

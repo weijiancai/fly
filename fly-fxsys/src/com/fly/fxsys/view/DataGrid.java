@@ -71,6 +71,9 @@ public class DataGrid extends TableView<Map<String, Object>> implements View {
                         ClassField classField = tableField.getClassField();
                         if (null != classField && classField.getName() != null) {
                             Object value = map.getValue().get(classField.getName().toLowerCase());
+                            if (classField.getDictCategory() != null && value != null && value instanceof String) {
+                                value = classField.getDictCategory().getCodeName(value.toString());
+                            }
                             return new SimpleStringProperty(value == null ? "" : value.toString());
                         }
                         return new SimpleStringProperty("");

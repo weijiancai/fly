@@ -1,11 +1,12 @@
 package com.fly.sys.dict;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author weijiancai
  */
-public class DictCode {
+public class DictCode implements Serializable {
     private String id;
     private String name;
     private String value;
@@ -73,15 +74,6 @@ public class DictCode {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        sb.append("DictCode");
-        sb.append("{id='").append(id).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", value='").append(value).append('\'');
-        sb.append(", isValid=").append(isValid);
-        sb.append(", sortNum=").append(sortNum);
-        sb.append(", inputDate=").append(inputDate);
-        sb.append('}');
-        return sb.toString();
+        return name;
     }
 }

@@ -1,9 +1,11 @@
 package com.fly.sys.vo;
 
 import com.fly.sys.clazz.ClassDefine;
+import com.fly.sys.clazz.ClassField;
 import com.fly.sys.clazz.ClassForm;
+import com.fly.sys.dict.DictCode;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * 类定义 VO 对象
@@ -26,6 +28,8 @@ public class ClassDefineVO {
     private TableVO classTable;
     private FormVO queryForm;
     private FormVO editForm;
+
+    private Map<String, List<DictCodeVO>> dictMap = new HashMap<String, List<DictCodeVO>>();
 
     public String getId() {
         return id;
@@ -131,6 +135,18 @@ public class ClassDefineVO {
         this.editForm = editForm;
     }
 
+    public Map<String, List<DictCodeVO>> getDictMap() {
+        return dictMap;
+    }
+
+    public void setDictMap(Map<String, List<DictCodeVO>> dictMap) {
+        this.dictMap = dictMap;
+    }
+
+    public void addFieldDict(String fieldName, List<DictCodeVO> codeList) {
+        dictMap.put(fieldName, codeList);
+    }
+
     public static ClassDefineVO getInstance(ClassDefine classDefine) {
         ClassDefineVO vo = new ClassDefineVO();
         vo.setAuthor(classDefine.getAuthor());
@@ -153,6 +169,16 @@ public class ClassDefineVO {
         }
         if (classDefine.getClassTableList() != null && classDefine.getClassTableList().size() > 0) {
             vo.setClassTable(TableVO.getInstance(classDefine.getClassTableList().get(0)));
+        }
+
+        for (ClassField field : classDefine.getFieldList()) {
+            if (field.getDictCategory() != null) {
+                List<DictCodeVO> codeList = new ArrayList<DictCodeVO>();
+                for (DictCode code : field.getDictCategory().getCodeList()) {
+                    codeList.add(DictCodeVO.getInstance(code));
+                }
+                vo.addFieldDict(field.getName(), codeList);
+            }
         }
 
         return vo;

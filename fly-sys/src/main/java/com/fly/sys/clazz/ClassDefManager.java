@@ -4,6 +4,7 @@ import com.fly.sys.R;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.db.DataSource;
 import com.fly.sys.db.JdbcTemplate;
+import com.fly.sys.dict.CodeManager;
 import com.fly.sys.util.Callback;
 
 import java.sql.Connection;
@@ -108,6 +109,8 @@ public class ClassDefManager {
                     field.setFieldDesc(rs.getString("field_desc"));
                     field.setName(rs.getString("name"));
                     field.setType(rs.getString("type"));
+                    field.setDzCategoryId(rs.getString("dz_category_id"));
+                    field.setDictCategory(CodeManager.getDictCategoryById(field.getDzCategoryId()));
                     field.setClassDef(classDef);
 
                     list.add(field);

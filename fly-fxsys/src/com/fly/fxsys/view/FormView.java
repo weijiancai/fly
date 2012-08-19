@@ -117,7 +117,7 @@ public class FormView extends BorderPane implements View {
             passwordField.setPrefWidth(field.getWidth());
             node = passwordField;
         } else if (DisplayStyle.COMBO_BOX == field.getDisplayStyle()) {
-            VComboBox comboBox = new VComboBox();
+            VComboBox comboBox = new VComboBox(field.getClassField().getDictCategory());
             comboBox.setPrefWidth(field.getWidth());
             node = comboBox;
         } else {

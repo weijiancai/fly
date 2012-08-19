@@ -2,6 +2,7 @@ package com.fly.sys.web.listener;
 
 import com.fly.sys.clazz.ClassDefLoader;
 import com.fly.sys.db.DBManager;
+import com.fly.sys.dict.CodeManager;
 import com.fly.sys.module.ModuleManager;
 import com.fly.sys.project.ProjectManager;
 import com.fly.sys.util.UFile;
@@ -21,6 +22,7 @@ public class SystemContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         try { // 初始化配置信息
             DBManager.init();
+            CodeManager.init();
             ClassDefLoader.init();
             ModuleManager.init();
             ProjectManager.init();

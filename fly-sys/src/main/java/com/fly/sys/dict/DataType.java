@@ -7,5 +7,24 @@ package com.fly.sys.dict;
  * @since 1.0.0
  */
 public enum DataType {
-    STRING, INTEGER, DOUBLE, NUMBER, DATE
+    /**
+     * 0. 字符串
+     */
+    STRING,
+    /**
+     * 1. 整数
+     */
+    INTEGER,
+    /**
+     * 2. 小数
+     */
+    DOUBLE,
+    /**
+     * 3. 数字类型（包括整数和小数）
+     */
+    NUMBER,
+    /**
+     * 4. 日期类型
+     */
+    DATE
 }

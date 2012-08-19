@@ -3,6 +3,7 @@ package com.fly.sys.clazz;
 import com.fly.sys.R;
 import com.fly.sys.db.DBManager;
 import com.fly.sys.db.RowMapper;
+import com.fly.sys.dict.CodeManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,6 +44,8 @@ public class ClassRowMapperFactory {
                 field.setFieldDesc(rs.getString("field_desc"));
                 field.setName(rs.getString("name"));
                 field.setType(rs.getString("type"));
+                field.setDzCategoryId(rs.getString("dz_category_id"));
+                field.setDictCategory(CodeManager.getDictCategoryById(field.getDzCategoryId()));
                 field.setValid("T".equals(rs.getString("is_valid")));
                 field.setInputDate(rs.getDate("input_date"));
                 field.setSortNum(rs.getInt("sort_num"));

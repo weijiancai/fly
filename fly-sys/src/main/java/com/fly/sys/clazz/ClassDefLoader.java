@@ -7,6 +7,8 @@ import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsDefine;
 import com.fly.sys.db.meta.DbmsSchema;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.dict.CodeManager;
+import com.fly.sys.dict.DisplayStyle;
 import com.fly.sys.dict.QueryMode;
 import com.fly.sys.util.Callback;
 import com.fly.sys.util.UString;
@@ -186,6 +188,7 @@ public class ClassDefLoader {
             field.setType(column.getDataType());
             field.setValid(true);
             field.setSortNum(fieldSortNum += 10);
+            initDzCategory(field);
             // 插入表sys_class_field
             template.save(ClassPDBFactory.getClassField(field));
             fieldList.add(field);
@@ -278,6 +281,22 @@ public class ClassDefLoader {
         classIdMap.put(clazz.getId(), clazz);
     }
 
+    private static void initDzCategory(ClassField field) {
+        if ("DzCategoryId".equalsIgnoreCase(field.getName())) {
+            field.setDzCategoryId(CodeManager.rootCategory.getId());
+        } else if ("displayStyle".equalsIgnoreCase(field.getName())) {
+            field.setDzCategoryId(CodeManager.getDictCategoryByName("显示样式").getId());
+        } else if (field.getName().toLowerCase().startsWith("is")) {
+            field.setDzCategoryId(CodeManager.getDictCategoryByName("是否选择").getId());
+        } else if ("dataType".equalsIgnoreCase(field.getName())) {
+            field.setDzCategoryId(CodeManager.getDictCategoryByName("数据类型").getId());
+        } else if ("queryMode".equalsIgnoreCase(field.getName())) {
+            field.setDzCategoryId(CodeManager.getDictCategoryByName("查询模式").getId());
+        } else if ("formType".equalsIgnoreCase(field.getName())) {
+            field.setDzCategoryId(CodeManager.getDictCategoryByName("表单类型").getId());
+        }
+    }
+
     private static void initClassForm(JdbcTemplate template, ClassDefine clazz, List<ClassField> fieldList, String formType) throws Exception {
         int fieldSortNum;
         ClassForm classForm = new ClassForm();
@@ -319,6 +338,11 @@ public class ClassDefLoader {
             formField.setSortNum(fieldSortNum += 10);
             formField.setValid(true);
             formField.setQueryMode(QueryMode.EQUAL);
+            if ("dzCategoryId".equalsIgnoreCase(classField.getName()) || "displayStyle".equalsIgnoreCase(classField.getName()) ||
+                    "dataType".equalsIgnoreCase(classField.getName()) || "queryMode".equalsIgnoreCase(classField.getName()) ||
+                    classField.getName().toLowerCase().startsWith("is") || "formType".equalsIgnoreCase(classField.getName())) {
+                formField.setDisplayStyle(DisplayStyle.COMBO_BOX);
+            }
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
             template.save(ClassPDBFactory.getFormFieldAppend(formField));
