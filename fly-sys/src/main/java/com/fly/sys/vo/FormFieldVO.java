@@ -21,6 +21,7 @@ public class FormFieldVO {
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
+    private int dataType;
 
     public String getId() {
         return id;
@@ -118,6 +119,14 @@ public class FormFieldVO {
         this.sortNum = sortNum;
     }
 
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+    }
+
     public static FormFieldVO getInstance(FormField field) {
         FormFieldVO vo = new FormFieldVO();
 
@@ -137,6 +146,7 @@ public class FormFieldVO {
         vo.setSortNum(field.getSortNum());
         vo.setValid(field.isValid());
         vo.setWidth(field.getWidth());
+        vo.setDataType(field.getClassField().getColumn().getDataTypeEnum().ordinal());
 
         return vo;
     }

@@ -1,9 +1,28 @@
-.queryForm {
+body {
+    background-color:#DFE8F7;
+}
 
+.queryForm {
+}
+
+.queryForm fieldset {
+    border:1px #aaaaaa solid;
+    background: none repeat scroll 0 0 rgb(238, 238, 255);
+}
+
+.queryForm fieldset legend {
+    color: #15428B;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 15px;
 }
 
 .editForm {
 
+}
+
+.editForm .actionBar {
+    margin-top: 25px;
 }
 
 .gridPane {
@@ -14,6 +33,14 @@
 
 }
 
-.actionBar input {
-    margin-left: 10px;
+.actionBar a {
+    margin-left: 20px;
+}
+
+#AddFormWin, #ModifyFormWin, .north, .center {
+    background-color:#DFE8F7;
+}
+
+#AddFormWin, #ModifyFormWin {
+    min-height: 200px;
 }

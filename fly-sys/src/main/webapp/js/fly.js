@@ -66,7 +66,7 @@ function DataForm(classForm, dictMap) {
     this.gridPane = new GridPane(this.hgap, this.vgap);
     this.fieldset = classForm['fieldset'];
     this.actionBar = classForm['actionBar'];
-    this.width = 90 * this.colCount + this.colWidth * this.colCount + this.labelGap * this.colCount + (this.fieldGap - 1) * this.colCount;
+    this.width = 100 * this.colCount + this.colWidth * this.colCount + this.labelGap * this.colCount + (this.fieldGap - 1) * this.colCount;
     this.height = 0;
 
     for(var i = 0; i < classForm['fieldList'].length; i++) {
@@ -169,6 +169,7 @@ function FormField(fd, dictMap) {
     this.inputDate = fd['inputDate'];
     this.isValid = fd['valid'];
     this.sortNum = fd['sortNum'];
+    this.dataType = fd['dataType'];
     this.dictList = dictMap[this.name];
 }
 var DS_TEXT = 0;
@@ -176,14 +177,11 @@ var DS_TEXT_AREA = 1;
 var DS_PASSWORD = 2;
 var DS_COMBO_BOX = 3;
 
+// 数据类型
+var DT_DATE = 4;
+
 function getInputNode(field, colCount) {
-    if(DS_TEXT == field.displayStyle) {
-        if(field.isSingleLine) {
-            return getFormInputTd(field, 'text', colCount * 4 - 3);
-        } else {
-            return getFormInputTd(field, 'text');
-        }
-    } else if(DS_TEXT_AREA == field.displayStyle) {
+    if(DS_TEXT_AREA == field.displayStyle) {
         if(field.isSingleLine) {
             return getFormInputTd(field, 'textarea', colCount * 4 - 3);
         } else {
@@ -201,9 +199,17 @@ function getInputNode(field, colCount) {
         } else {
             return getFormInputTd(field, 'select');
         }
+    } else {
+        if(DT_DATE == field.dataType) {
+            return getFormInputTd(field, 'date');
+        } else {
+            if(field.isSingleLine) {
+                return getFormInputTd(field, 'text', colCount * 4 - 3);
+            } else {
+                return getFormInputTd(field, 'text');
+            }
+        }
     }
-
-    return "";
 }
 
 function getGap(width) {
@@ -267,14 +273,24 @@ function getFormInput(field, type) {
     if(field.height) {
         styleStr += "height:" + field.height + "px;";
     }
-    var options = '';
+    var options = '<option value=""> </option>';
     if(field.dictList) {
         for(var i = 0; i < field.dictList.length; i++) {
            options += '<option value="' + field.dictList[i].value +'">' + field.dictList[i].name+ '</option>'
         }
     }
 
-    if(styleStr.length > 0) {
+    if('textarea' == type) {
+        return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
+    } else if('select' == type) {
+        return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '">' + options + '</select>';
+    } else if('date' == type) {
+        return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '" class="dateField" readonly="readonly"/>';
+    } else {
+        return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"/>';
+    }
+
+    /*if(styleStr.length > 0) {
         if('textarea' == type) {
             return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
         } else if('select' == type) {
@@ -290,7 +306,7 @@ function getFormInput(field, type) {
         }  else {
             return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '"/>'
         }
-    }
+    }*/
 }
 
 /**

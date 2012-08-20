@@ -42,15 +42,15 @@ public class ClassDefLoaderTest {
 
     @Test
     public void testInitClassDef() throws Exception {
-        SysInfo.setDbmsInit(true);
-        SysInfo.setDictInit(true);
-        SysInfo.setClassDefInit(true);
+        SysInfo.setDbmsInit(false);
+        SysInfo.setDictInit(false);
+        SysInfo.setClassDefInit(false);
         DBManager.init();
         CodeManager.init();
         ClassDefLoader.init();
 
 //        ClassDefine classDefine = ClassDefLoader.classIdMap.values().iterator().next();
-        ClassDefine classDefine = ClassDefLoader.loadClassDef("TWoTypeInfo".toLowerCase());
+        ClassDefine classDefine = ClassDefLoader.loadClassDef("ClassDefine".toLowerCase());
 //        System.out.println(Json.toJsonString(classDefine));
         System.out.println(JSON.toJSONString(ClassDefineVO.getInstance(classDefine), true));
     }
