@@ -91,7 +91,6 @@ public class ClassRowMapperFactory {
                 field.setId(rs.getString("id"));
                 field.setDisplayName(rs.getString("display_name"));
                 field.setDisplayStyle(rs.getInt("display_style"));
-                field.setQueryMode(rs.getInt("query_mode"));
                 field.setHeight(rs.getInt("height"));
                 field.setWidth(rs.getInt("width"));
                 field.setSingleLine("T".equals(rs.getString("is_single_line")));
@@ -101,6 +100,10 @@ public class ClassRowMapperFactory {
                 field.setSortNum(rs.getInt("sort_num"));
                 field.setClassForm(form);
                 field.setClassField(ClassManager.getClassFieldById(rs.getString("field_id")));
+
+                field.setQueryMode(rs.getInt("query_mode"));
+                field.setReadonly("T".equals(rs.getString("is_readonly")));
+                field.setRequired("T".equals(rs.getString("is_required")));
 
                 return field;
             }

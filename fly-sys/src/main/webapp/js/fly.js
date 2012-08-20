@@ -171,6 +171,8 @@ function FormField(fd, dictMap) {
     this.sortNum = fd['sortNum'];
     this.dataType = fd['dataType'];
     this.dictList = dictMap[this.name];
+    this.readonly = fd['readonly'];
+    this.required = fd['required'];
 }
 var DS_TEXT = 0;
 var DS_TEXT_AREA = 1;
@@ -280,33 +282,26 @@ function getFormInput(field, type) {
         }
     }
 
-    if('textarea' == type) {
-        return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
-    } else if('select' == type) {
-        return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '">' + options + '</select>';
-    } else if('date' == type) {
-        return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '" class="dateField" readonly="readonly"/>';
-    } else {
-        return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"/>';
+    var attr = '';
+    var styleClass = '';
+    if(field.readonly) {
+        attr += ' readonly="readonly"';
+    }
+    if(field.required) {
+        attr += ' missingMessage="必填" invalidMessage="请输入"';
+        styleClass += ' required';
     }
 
-    /*if(styleStr.length > 0) {
-        if('textarea' == type) {
-            return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"></textarea>';
-        } else if('select' == type) {
-            return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '">' + options + '</select>';
-        } else {
-            return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"/>';
-        }
+    if('textarea' == type) {
+        return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"></textarea>';
+    } else if('select' == type) {
+        return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '">' + options + '</select>';
+    } else if('date' == type) {
+        styleClass += ' dateField';
+        return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
     } else {
-        if('textarea' == type) {
-            return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '"></textarea>';
-        } else if('select' == type) {
-            return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '">' + options + '</select>';
-        }  else {
-            return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '"/>'
-        }
-    }*/
+        return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
+    }
 }
 
 /**

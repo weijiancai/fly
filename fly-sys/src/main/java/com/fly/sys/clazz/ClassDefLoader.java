@@ -343,6 +343,9 @@ public class ClassDefLoader {
                     classField.getName().toLowerCase().startsWith("is") || "formType".equalsIgnoreCase(classField.getName())) {
                 formField.setDisplayStyle(DisplayStyle.COMBO_BOX);
             }
+            if (!classField.getColumn().isNullable()) {
+                formField.setRequired(true);
+            }
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
             template.save(ClassPDBFactory.getFormFieldAppend(formField));

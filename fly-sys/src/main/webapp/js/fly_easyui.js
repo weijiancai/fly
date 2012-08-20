@@ -49,17 +49,17 @@ function formReset() {
 
 function initQueryForm() {}
 
-function add() {
+function openAddWin() {
     $_addFormWin.window('open');
     clearForm('#AddFormWin form');
 }
 
-function modify() {
+function openModifyWin() {
     var rowData = $_grid.datagrid('getSelected');
     if(rowData) {
         $_modifyFormWin.window('open');
-            clearForm('#ModifyFormWin form');
-            fillForm('#ModifyFormWin form', rowData);
+        clearForm('#ModifyFormWin form');
+        fillForm('#ModifyFormWin form', rowData);
     } else {
         $.messager.show({
             title:'系统提示',
@@ -84,8 +84,46 @@ function addFormCancel() {
     $_addFormWin.window('close');
 }
 
+function addFormSubmit() {
+    if($_addForm.form('validate')) {
+        $.post(contextPath + classRequestMapping + '/add', $_addForm.serializeObject(), addCallback, 'json');
+    }
+}
+
 function modifyFormCancel() {
     $_modifyFormWin.window('close');
+}
+
+function modifyFormSubmit() {
+    if($_modifyForm.form('validate')) {
+        $.post(contextPath + classRequestMapping + '/update', $_modifyForm.serializeObject(), modifyCallback, 'json');
+    }
+}
+
+function addCallback(data) {
+    if (!data.success) {
+        $.messager.alert('系统提示', data.msg, 'warning');
+    } else {
+        $_addFormWin.window('close');
+        $_grid.datagrid('reload', $_queryForm.serializeObject());
+        $.messager.show({
+            title:'提示信息',
+            msg:'添加成功。'
+        });
+    }
+}
+
+function modifyCallback(data) {
+    if (!data.success) {
+        $.messager.alert('系统提示', data.msg, 'warning');
+    } else {
+        $_modifyFormWin.window('close');
+        $_grid.datagrid('reload', $_queryForm.serializeObject());
+        $.messager.show({
+            title:'提示信息',
+            msg:'添加成功。'
+        });
+    }
 }
 
 jQuery.simpleWin = function(classDefine) {
@@ -96,9 +134,9 @@ jQuery.simpleWin = function(classDefine) {
     classDefine['queryForm'].actionBar = actionBar;
 
     var tableBar = [];
-    tableBar.push({text : '增加', iconCls : 'icon-add', handler: add});
+    tableBar.push({text : '增加', iconCls : 'icon-add', handler: openAddWin});
     tableBar.push('-');
-    tableBar.push({text : '修改', iconCls : 'icon-cut', handler: modify});
+    tableBar.push({text : '修改', iconCls : 'icon-cut', handler: openModifyWin});
     tableBar.push('-');
     tableBar.push({text : '删除', iconCls : 'icon-remove', handler: deleteRow});
 
@@ -128,7 +166,6 @@ jQuery.simpleWin = function(classDefine) {
     $('body').addClass('easyui-layout').append(layout).layout();
 
     $_queryForm = $('#' + clazz.queryForm.id);
-    $_addForm = $('#' + clazz.editForm.id);
     initQueryForm();
     $_grid = $('#' + clazz.dataTable.id).datagrid({
         title : clazz.cname + '列表',
@@ -153,7 +190,7 @@ jQuery.simpleWin = function(classDefine) {
         minimizable:false,
         draggable: true
     });
-    var addFormSubmit = new ActionButton("", "", "提交", "formQuery");
+    var addFormSubmit = new ActionButton("", "", "提交", "addFormSubmit");
     var addFormCancel = new ActionButton("", "", "取消", "addFormCancel");
     $('#AddFormWin .actionBar').append(addFormSubmit.toString()).append(addFormCancel.toString());
 
@@ -168,9 +205,12 @@ jQuery.simpleWin = function(classDefine) {
         minimizable:false,
         draggable: true
     });
-    var modifyFormSubmit = new ActionButton("", "", "提交", "formQuery");
+    var modifyFormSubmit = new ActionButton("", "", "提交", "modifyFormSubmit");
     var modifyFormCancel = new ActionButton("", "", "取消", "modifyFormCancel");
     $('#ModifyFormWin .actionBar').append(modifyFormSubmit.toString()).append(modifyFormCancel.toString());
+
+    $_addForm = $('#AddFormWin form').form();
+    $_modifyForm = $('#ModifyFormWin form').form();
 
     // easyui linkButton
     $('.actionBar a').linkbutton({
@@ -180,6 +220,14 @@ jQuery.simpleWin = function(classDefine) {
     // easyui date
     $('.dateField').formatDateYMD();
     $('.datebox input').attr('readonly', true);
+
+    // 验证
+    var required = {
+        required: true,
+        missingMessage: '必填',
+        invalidMessage: '请输入'
+    };
+    $('#AddFormWin form .required, #ModifyFormWin form .required').validatebox(required);
 
     return this;
 };

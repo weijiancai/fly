@@ -204,6 +204,8 @@ public class ClassPDBFactory {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("form_field_id", field.getId());
                 map.put("query_mode", field.getQueryMode().ordinal());
+                map.put("is_readonly", field.isReadonly() ? "T" : "F");
+                map.put("is_required", field.isRequired() ? "T" : "F");
 
                 result.put("sys_form_field_append", map);
 

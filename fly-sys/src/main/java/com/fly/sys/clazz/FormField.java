@@ -17,10 +17,13 @@ public class FormField implements Serializable {
     private int width;
     private int height;
     private DisplayStyle displayStyle;
-    private QueryMode queryMode;
     private Date inputDate;
     private boolean isValid;
     private int sortNum;
+
+    private QueryMode queryMode;
+    private boolean isReadonly;
+    private boolean isRequired;
 
     private ClassForm classForm;
     private ClassField classField;
@@ -163,5 +166,21 @@ public class FormField implements Serializable {
 
     public void setSortNum(int sortNum) {
         this.sortNum = sortNum;
+    }
+
+    public boolean isReadonly() {
+        return isReadonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        isReadonly = readonly;
+    }
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
     }
 }

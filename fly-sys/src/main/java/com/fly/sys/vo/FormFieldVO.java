@@ -23,6 +23,9 @@ public class FormFieldVO {
     private int sortNum;
     private int dataType;
 
+    private boolean isReadonly;
+    private boolean isRequired;
+
     public String getId() {
         return id;
     }
@@ -127,6 +130,22 @@ public class FormFieldVO {
         this.dataType = dataType;
     }
 
+    public boolean isReadonly() {
+        return isReadonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        isReadonly = readonly;
+    }
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
+    }
+
     public static FormFieldVO getInstance(FormField field) {
         FormFieldVO vo = new FormFieldVO();
 
@@ -147,6 +166,8 @@ public class FormFieldVO {
         vo.setValid(field.isValid());
         vo.setWidth(field.getWidth());
         vo.setDataType(field.getClassField().getColumn().getDataTypeEnum().ordinal());
+        vo.setReadonly(field.isReadonly());
+        vo.setRequired(field.isRequired());
 
         return vo;
     }
