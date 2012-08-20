@@ -84,7 +84,11 @@ function DataForm(classForm, dictMap) {
 
 DataForm.prototype = {
     init: function() {
-        this.height = 100;
+        if("0" == this.formType) {
+            this.height = 60;
+        } else {
+            this.height = 100;
+        }
         var formGrid = this.gridPane;
 
         var idxRow = 0;

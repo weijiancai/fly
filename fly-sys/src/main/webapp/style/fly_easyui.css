@@ -1,5 +1,6 @@
 body {
     background-color:#DFE8F7;
+    overflow: hidden; height: 100%;
 }
 
 .queryForm {
@@ -7,7 +8,7 @@ body {
 
 .queryForm fieldset {
     border:1px #aaaaaa solid;
-    background: none repeat scroll 0 0 rgb(238, 238, 255);
+    /*background: none repeat scroll 0 0 rgb(238, 238, 255);*/
 }
 
 .queryForm fieldset legend {
@@ -43,4 +44,24 @@ body {
 
 #AddFormWin, #ModifyFormWin {
     min-height: 200px;
+}
+
+.layout-panel-north {
+    margin-top: 5px;
+}
+.layout-panel-north .panel-title {
+    display: none;
+}
+.layout-panel-north .panel-header {
+    background: none;
+    line-height: 0;
+    padding: 0;
+}
+.layout-panel-north .north{
+    overflow: hidden;
+}
+.panel-tool {
+    position: absolute;
+    right: 20px;
+    top: 25px;
 }

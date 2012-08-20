@@ -71,7 +71,11 @@ function openModifyWin() {
 function deleteRow() {
     var rowData = $_grid.datagrid('getSelected');
     if(rowData) {
-
+        $.messager.confirm('系统提示', '确定要删除这条记录吗？', function(r) {
+            if (r) {
+                $.post(contextPath + classRequestMapping + '/delete' , rowData, deleteCallback, 'json');
+            }
+        });
     } else {
         $.messager.show({
             title:'系统提示',
@@ -121,7 +125,20 @@ function modifyCallback(data) {
         $_grid.datagrid('reload', $_queryForm.serializeObject());
         $.messager.show({
             title:'提示信息',
-            msg:'添加成功。'
+            msg:'修改成功。'
+        });
+    }
+}
+
+function deleteCallback(data) {
+    if (!data.success) {
+        $.messager.alert('系统提示', data.msg, 'warning');
+    } else {
+        $_modifyFormWin.window('close');
+        $_grid.datagrid('reload', $_queryForm.serializeObject());
+        $.messager.show({
+            title:'提示信息',
+            msg:'删除成功。'
         });
     }
 }
@@ -148,7 +165,8 @@ jQuery.simpleWin = function(classDefine) {
     }
 
     function getNorth(clazz) {
-        return '<div class="north" region="north" split="false" border="false">' + clazz.queryForm.toString() + '</div>';
+        return '<div class="north" region="north" split="false" border="false" title="' + clazz.cname+ '查询" style="height:' + clazz.queryForm.height + 'px">' + clazz.queryForm.toString() + '</div>';
+//        return '<div class="north" region="north" split="false" border="false"><div class="panel-tool"><div class="layout-button-up"></div></div>' + clazz.queryForm.toString() + '</div>';
     }
 
     function getCenter(clazz) {
@@ -163,7 +181,12 @@ jQuery.simpleWin = function(classDefine) {
         return '<div id="ModifyFormWin" style="display: block;">' + clazz.editForm.toString() + '</div>';
     }
 
-    $('body').addClass('easyui-layout').append(layout).layout();
+    $('body').addClass('easyui-layout').attr('scroll', 'no').append(layout).layout();
+    $('body').layout('panel','north').panel({
+        onCollapse:function(){
+            $('.layout-expand .panel-title').html('查询条件');
+        }
+    });
 
     $_queryForm = $('#' + clazz.queryForm.id);
     initQueryForm();
