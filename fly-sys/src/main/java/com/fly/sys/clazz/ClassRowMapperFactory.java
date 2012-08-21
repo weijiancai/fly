@@ -104,6 +104,7 @@ public class ClassRowMapperFactory {
                 field.setQueryMode(rs.getInt("query_mode"));
                 field.setReadonly("T".equals(rs.getString("is_readonly")));
                 field.setRequired("T".equals(rs.getString("is_required")));
+                field.setDataType(rs.getInt("data_type"));
 
                 return field;
             }

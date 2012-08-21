@@ -71,7 +71,7 @@ function DataForm(classForm, dictMap) {
 
     for(var i = 0; i < classForm['fieldList'].length; i++) {
         var formField = classForm['fieldList'][i];
-        this.fieldList.push(new FormField(formField, dictMap));
+        this.fieldList.push(new FormField(formField, dictMap, this));
     }
 
     // 按SortNum排序
@@ -103,7 +103,7 @@ DataForm.prototype = {
 
             if(field.isSingleLine) {
                 idxRow++;
-                formGrid.add(getLabelTd(field.displayName, field.name), idxRow, 0);
+                formGrid.add(getLabelTd(field, this.formType), idxRow, 0);
                 formGrid.add(getGapTd(this.labelGap), idxRow, 1);
                 formGrid.add(getInputNode(field, this.colCount), idxRow, 2);
                 idxCol = 0;
@@ -113,7 +113,7 @@ DataForm.prototype = {
                 continue;
             }
 
-            formGrid.add(getLabelTd(field.displayName, field.name), idxRow, idxCol++);
+            formGrid.add(getLabelTd(field, this.formType), idxRow, idxCol++);
             formGrid.add(getGapTd(this.labelGap), idxRow, idxCol++);
             formGrid.add(getInputNode(field, this.colCount), idxRow, idxCol++);
 
@@ -161,7 +161,7 @@ DataForm.prototype = {
     }
 };
 
-function FormField(fd, dictMap) {
+function FormField(fd, dictMap, form) {
     this.id = fd['id'];
     this.name = fd['name'];
     this.displayName = fd['displayName'];
@@ -177,6 +177,7 @@ function FormField(fd, dictMap) {
     this.dictList = dictMap[this.name];
     this.readonly = fd['readonly'];
     this.required = fd['required'];
+    this.form = form;
 }
 var DS_TEXT = 0;
 var DS_TEXT_AREA = 1;
@@ -184,7 +185,14 @@ var DS_PASSWORD = 2;
 var DS_COMBO_BOX = 3;
 
 // 数据类型
+var DT_STRING = 0;
+var DT_INTEGER = 1;
+var DT_DOUBLE = 2;
+var DT_NUMBER = 3;
 var DT_DATE = 4;
+var DT_EMAIL = 5;
+var DT_IP = 6;
+var DT_URL = 7;
 
 function getInputNode(field, colCount) {
     if(DS_TEXT_AREA == field.displayStyle) {
@@ -208,6 +216,18 @@ function getInputNode(field, colCount) {
     } else {
         if(DT_DATE == field.dataType) {
             return getFormInputTd(field, 'date');
+        } else if(DT_DOUBLE == field.dataType) {
+            return getFormInputTd(field, "double");
+        } else if(DT_INTEGER == field.dataType) {
+            return getFormInputTd(field, "int");
+        } else if(DT_NUMBER == field.dataType) {
+            return getFormInputTd(field, "number");
+        } else if(DT_URL == field.dataType) {
+            return getFormInputTd(field, "url");
+        } else if(DT_IP == field.dataType) {
+            return getFormInputTd(field, "ip");
+        } else if(DT_EMAIL == field.dataType) {
+            return getFormInputTd(field, "email");
         } else {
             if(field.isSingleLine) {
                 return getFormInputTd(field, 'text', colCount * 4 - 3);
@@ -231,8 +251,8 @@ function getHGap(colspan, hGap) {
 }
 
 
-function getLabelTd(name, labelForId, width) {
-    return '<td>' + getLabel(name, labelForId, width)+ '</td>';
+function getLabelTd(field, formType) {
+    return '<td>' + getLabel(field, formType)+ '</td>';
 }
 
 function getFormInputTd(field, type, colspan, rowspan) {
@@ -252,12 +272,12 @@ function getFormInputTd(field, type, colspan, rowspan) {
 }
 
 
-function getLabel(name, labelForId, width) {
-    if(width) {
-        return '<label for="' + labelForId+ '" style="width:' + width + 'px;display:block;">' + name+ '</label>';
+function getLabel(field, formType) {
+    if(field.required && formType == "1") {
+        return '<label for="' + field.name+ '" style="display:block;">' + field.displayName+ '<span class="span_required">*</span></label>';
     }
 
-    return '<label for="' + labelForId+ '">' + name+ '</label>';
+    return '<label for="' + field.name+ '">' + field.displayName+ '</label>';
 }
 
 function getFormInput(field, type) {
@@ -273,7 +293,11 @@ function getFormInput(field, type) {
         if('100%' == field.width) {
             styleStr += "width:" + field.width + ";";
         } else {
-            styleStr += "width:" + field.width + "px;";
+            if('date' == type && field.form.formType == "0") {
+                styleStr += "width:" + (field.width/2 - 10) + "px;";
+            } else {
+                styleStr += "width:" + field.width + "px;";
+            }
         }
     }
     if(field.height) {
@@ -300,8 +324,27 @@ function getFormInput(field, type) {
         return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"></textarea>';
     } else if('select' == type) {
         return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '">' + options + '</select>';
-    } else if('date' == type) {
-        styleClass += ' dateField';
+    } else if('date' == type || 'email' == type || 'ip' == type || 'url' == type || 'int' == type || 'double' == type || 'number' == type) {
+        if('date' == type) {
+            styleClass += ' dateField';
+            if(field.form.formType == "0") {
+                return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>&nbsp;至&nbsp;' +
+                    '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
+            }
+        } else if('email' == type) {
+            styleClass += ' email';
+        } else if('ip' == type) {
+            styleClass += ' ip';
+        } else if('url' == type) {
+            styleClass += ' url';
+        } else if('int' == type) {
+            styleClass += ' int';
+        } else if('double' == type) {
+            styleClass += ' double';
+        } else if('number' == type) {
+            styleClass += ' number';
+        }
+
         return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
     } else {
         return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';

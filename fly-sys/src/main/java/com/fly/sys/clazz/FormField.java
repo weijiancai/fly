@@ -24,6 +24,7 @@ public class FormField implements Serializable {
     private QueryMode queryMode;
     private boolean isReadonly;
     private boolean isRequired;
+    private int dataType;
 
     private ClassForm classForm;
     private ClassField classField;
@@ -182,5 +183,13 @@ public class FormField implements Serializable {
 
     public void setRequired(boolean required) {
         isRequired = required;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
     }
 }

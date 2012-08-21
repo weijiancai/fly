@@ -65,3 +65,10 @@ body {
     right: 20px;
     top: 25px;
 }
+
+.span_required {
+    color: red;
+    font-weight: 600;
+    font-size: 12px;
+    margin-left: 3px;
+}

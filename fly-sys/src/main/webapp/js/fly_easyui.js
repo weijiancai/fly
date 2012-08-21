@@ -52,6 +52,8 @@ function initQueryForm() {}
 function openAddWin() {
     $_addFormWin.window('open');
     clearForm('#AddFormWin form');
+    // 第一个input获得焦点
+    $('#AddFormWin form input:first').focus();
 }
 
 function openModifyWin() {
@@ -60,6 +62,8 @@ function openModifyWin() {
         $_modifyFormWin.window('open');
         clearForm('#ModifyFormWin form');
         fillForm('#ModifyFormWin form', rowData);
+        // 第一个input获得焦点
+        $('#ModifyFormWin form input:first').focus();
     } else {
         $.messager.show({
             title:'系统提示',
@@ -166,7 +170,6 @@ jQuery.simpleWin = function(classDefine) {
 
     function getNorth(clazz) {
         return '<div class="north" region="north" split="false" border="false" title="' + clazz.cname+ '查询" style="height:' + clazz.queryForm.height + 'px">' + clazz.queryForm.toString() + '</div>';
-//        return '<div class="north" region="north" split="false" border="false"><div class="panel-tool"><div class="layout-button-up"></div></div>' + clazz.queryForm.toString() + '</div>';
     }
 
     function getCenter(clazz) {
@@ -189,6 +192,8 @@ jQuery.simpleWin = function(classDefine) {
     });
 
     $_queryForm = $('#' + clazz.queryForm.id);
+    // 查询form第一个input获得焦点
+    $('.queryForm input:first').focus();
     initQueryForm();
     $_grid = $('#' + clazz.dataTable.id).datagrid({
         title : clazz.cname + '列表',
@@ -242,7 +247,7 @@ jQuery.simpleWin = function(classDefine) {
 
     // easyui date
     $('.dateField').formatDateYMD();
-    $('.datebox input').attr('readonly', true);
+    $('.datebox input').attr('readonly', true).attr('placeholder', getYMDStr(new Date())); // html5 placeholder
 
     // 验证
     var required = {
@@ -250,7 +255,21 @@ jQuery.simpleWin = function(classDefine) {
         missingMessage: '必填',
         invalidMessage: '请输入'
     };
+    var email = {
+        validType: 'email',
+        missingMessage: '必填',
+        invalidMessage: '请输入正确的email地址，例如fly@172app.com'
+    };
+    var url = {
+        validType: 'url',
+        missingMessage: '必填',
+        invalidMessage: '请输入正确的url地址，例如http://www.172app.com'
+    };
     $('#AddFormWin form .required, #ModifyFormWin form .required').validatebox(required);
+    $('#AddFormWin form .email, #ModifyFormWin form .email').validatebox(email).attr('placeholder', 'fly@172app.com');
+    $('#AddFormWin form .url, #ModifyFormWin form .url').validatebox(url).attr('placeholder', 'http://www.baidu.com');
+
+    $.messager.defaults = {ok: '确定', cancel: '取消'};
 
     return this;
 };
@@ -337,12 +356,7 @@ $.fn.formatDateYMD=function() {
 		showTime:true,
 		formatter : function(date){
 			if (date instanceof Date) {
-				var y = date.getFullYear();
-				var m = date.getMonth() + 1;
-				m = (m<10)?("0"+m):m;
-				var d = date.getDate();
-				d = (d<10)?("0"+d):d;
-				return y + '-' + m + '-' + d ;
+				return getYMDStr(date);
 			}
 			return '';
 		}
@@ -350,3 +364,13 @@ $.fn.formatDateYMD=function() {
 
     return this;
 };
+
+// 获取当前时间年月日的字符串形式 yyyy-mm-dd;
+function getYMDStr(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    m = (m<10)?("0"+m):m;
+    var d = date.getDate();
+    d = (d<10)?("0"+d):d;
+    return y + '-' + m + '-' + d ;
+}

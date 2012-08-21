@@ -346,6 +346,7 @@ public class ClassDefLoader {
             if (!classField.getColumn().isNullable()) {
                 formField.setRequired(true);
             }
+            formField.setDataType(classField.getColumn().getDataTypeEnum().ordinal());
             // 插入表
             template.save(ClassPDBFactory.getFormField(formField));
             template.save(ClassPDBFactory.getFormFieldAppend(formField));

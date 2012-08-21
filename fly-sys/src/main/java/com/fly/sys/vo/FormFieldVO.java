@@ -165,7 +165,7 @@ public class FormFieldVO {
         vo.setSortNum(field.getSortNum());
         vo.setValid(field.isValid());
         vo.setWidth(field.getWidth());
-        vo.setDataType(field.getClassField().getColumn().getDataTypeEnum().ordinal());
+        vo.setDataType(field.getDataType());
         vo.setReadonly(field.isReadonly());
         vo.setRequired(field.isRequired());
 

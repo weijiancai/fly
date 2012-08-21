@@ -206,6 +206,7 @@ public class ClassPDBFactory {
                 map.put("query_mode", field.getQueryMode().ordinal());
                 map.put("is_readonly", field.isReadonly() ? "T" : "F");
                 map.put("is_required", field.isRequired() ? "T" : "F");
+                map.put("data_type", field.getDataType());
 
                 result.put("sys_form_field_append", map);
 

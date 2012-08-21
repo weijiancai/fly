@@ -26,5 +26,17 @@ public enum DataType {
     /**
      * 4. 日期类型
      */
-    DATE
+    DATE,
+    /**
+     * 5. EMAIL
+     */
+    EMAIL,
+    /**
+     * 6. IP
+     */
+    IP,
+    /**
+     * 7. URL
+     */
+    URL
 }
