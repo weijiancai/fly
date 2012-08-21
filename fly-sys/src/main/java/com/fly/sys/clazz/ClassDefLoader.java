@@ -220,7 +220,11 @@ public class ClassDefLoader {
             tableField.setAlign("left");
             tableField.setColWidth(getColWidth(classField));
             tableField.setValid(true);
-            tableField.setDisplay(true);
+            if (classField.getColumn().isPk() || classField.getColumn().isFk()) {
+                tableField.setDisplay(false);
+            } else {
+                tableField.setDisplay(true);
+            }
             tableField.setSortNum(fieldSortNum += 10);
             // 插入表
             template.save(ClassPDBFactory.getTableField(tableField));
@@ -334,7 +338,11 @@ public class ClassDefLoader {
             } else {
                 formField.setWidth(180);
             }
-            formField.setDisplay(true);
+            if (classField.getColumn().isPk() || classField.getColumn().isFk()) {
+                formField.setDisplay(false);
+            } else {
+                formField.setDisplay(true);
+            }
             formField.setSortNum(fieldSortNum += 10);
             formField.setValid(true);
             formField.setQueryMode(QueryMode.EQUAL);
