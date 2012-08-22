@@ -22,7 +22,7 @@ public enum QueryMode {
     /**
      * 3. <=
      */
-    LEFT_EQUAL,
+    LESS_EQUAL,
     /**
      * 4. >
      */

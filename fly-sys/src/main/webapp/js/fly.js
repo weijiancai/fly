@@ -175,10 +175,12 @@ function FormField(fd, dictMap, form) {
     this.sortNum = fd['sortNum'];
     this.dataType = fd['dataType'];
     this.dictList = dictMap[this.name];
+    this.queryMode = fd['queryMode'];
     this.readonly = fd['readonly'];
     this.required = fd['required'];
     this.form = form;
 }
+// 显示风格
 var DS_TEXT = 0;
 var DS_TEXT_AREA = 1;
 var DS_PASSWORD = 2;
@@ -193,6 +195,18 @@ var DT_DATE = 4;
 var DT_EMAIL = 5;
 var DT_IP = 6;
 var DT_URL = 7;
+
+// 查询模式
+var QM_EQUAL = 0;
+var QM_NOT_EQUAL = 1;
+var QM_LESS_THAN = 2;
+var QM_LESS_EQUAL = 3;
+var QM_GREATER_THAN = 4;
+var QM_GREATER_EQUAL = 5;
+var QM_BETWEEN = 6;
+var QM_LIKE = 7;
+var QM_LEFT_LIKE = 8;
+var QM_RIGHT_LIKE = 9;
 
 function getInputNode(field, colCount) {
     if(DS_TEXT_AREA == field.displayStyle) {
@@ -280,6 +294,8 @@ function getLabel(field, formType) {
     return '<label for="' + field.name+ '">' + field.displayName+ '</label>';
 }
 
+var tableFieldMapping = null;
+
 function getFormInput(field, type) {
     var inputName;
     if(tableFieldMapping && tableFieldMapping[field.name]) {
@@ -328,8 +344,8 @@ function getFormInput(field, type) {
         if('date' == type) {
             styleClass += ' dateField';
             if(field.form.formType == "0") {
-                return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>&nbsp;至&nbsp;' +
-                    '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
+                return '<input id="' + field.name + '" type="text" name="D_start' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + QM_GREATER_EQUAL + '"/>&nbsp;至&nbsp;' +
+                    '<input id="' + field.name + '" type="text" name="D_end' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + QM_LESS_THAN + '"/>';
             }
         } else if('email' == type) {
             styleClass += ' email';
@@ -345,10 +361,15 @@ function getFormInput(field, type) {
             styleClass += ' number';
         }
 
-        return '<input id="' + field.name + '" type="text" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
-    } else {
-        return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"/>';
+        type = 'text';
     }
+
+    var queryMode = '';
+    if (field.queryMode == 0) {
+        queryMode = '<a href="#" class="queryMode equal">=</a>';
+    }
+
+    return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + field.queryMode + '"/>' + queryMode;
 }
 
 /**

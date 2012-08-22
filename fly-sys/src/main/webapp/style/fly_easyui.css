@@ -72,3 +72,15 @@ body {
     font-size: 12px;
     margin-left: 3px;
 }
+
+.equal {
+    /*background-image: url("easyui/themes/icons/account.gif");*/
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 900;
+    padding: 1px 4px;
+    color: red;
+    text-decoration: none;
+}

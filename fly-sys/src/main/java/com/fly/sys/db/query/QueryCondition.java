@@ -6,8 +6,6 @@ import com.fly.sys.util.UString;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fly.sys.dict.QueryMode.EQUAL;
-
 /**
  * 查询条件
  *
@@ -56,7 +54,7 @@ public class QueryCondition {
                 return "<>";
             case LESS_THAN:
                 return "<";
-            case LEFT_EQUAL:
+            case LESS_EQUAL:
                 return "<=";
             case GREATER_THAN:
                 return ">";

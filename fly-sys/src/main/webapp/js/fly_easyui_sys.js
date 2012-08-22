@@ -42,7 +42,7 @@ var $_modifyForm;
 var $_modifyFormWin;
 
 function formQuery() {
-    $_grid.datagrid('reload', $_queryForm.serializeObject());
+    $_grid.datagrid('reload', $_queryForm.serializeQueryCondition());
 }
 
 function formReset() {
@@ -115,7 +115,7 @@ function addCallback(data) {
         $.messager.alert('系统提示', data.msg, 'warning');
     } else {
         $_addFormWin.window('close');
-        $_grid.datagrid('reload', $_queryForm.serializeObject());
+        $_grid.datagrid('reload', $_queryForm.serializeQueryCondition());
         $.messager.show({
             title:'提示信息',
             msg:'添加成功。'
@@ -128,7 +128,7 @@ function modifyCallback(data) {
         $.messager.alert('系统提示', data.msg, 'warning');
     } else {
         $_modifyFormWin.window('close');
-        $_grid.datagrid('reload', $_queryForm.serializeObject());
+        $_grid.datagrid('reload', $_queryForm.serializeQueryCondition());
         $.messager.show({
             title:'提示信息',
             msg:'修改成功。'
@@ -141,7 +141,7 @@ function deleteCallback(data) {
         $.messager.alert('系统提示', data.msg, 'warning');
     } else {
         $_modifyFormWin.window('close');
-        $_grid.datagrid('reload', $_queryForm.serializeObject());
+        $_grid.datagrid('reload', $_queryForm.serializeQueryCondition());
         $.messager.show({
             title:'提示信息',
             msg:'删除成功。'
@@ -202,8 +202,8 @@ jQuery.simpleWin = function(classDefine, id) {
     initQueryForm();
     $_grid = $('#' + clazz.dataTable.id).datagrid({
         title : clazz.cname + '列表',
-        url : contextPath + classRequestMapping + '/list',
-        queryParams: $_queryForm.serializeObject(),
+        url : clazz.name + '.class',
+        queryParams: $_queryForm.serializeQueryCondition(),
         pagination : true,
         rownumbers : true,
         singleSelect : true,
@@ -275,6 +275,40 @@ jQuery.simpleWin = function(classDefine, id) {
     $('#AddFormWin form .url, #ModifyFormWin form .url').validatebox(url).attr('placeholder', 'http://www.baidu.com');
 
     $.messager.defaults = {ok: '确定', cancel: '取消'};
+
+    // 查询模式
+//    $('#' + clazz.queryForm.id + ' input[queryMode]').combo().addClass('queryMode');
+    $('#' + clazz.queryForm.id + ' .queryMode').click(function() {
+        var queryMode = $(this).html();
+        if(queryMode == '=') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_NOT_EQUAL);
+            $(this).html('!=');
+        } else if(queryMode == '!=') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_LESS_THAN);
+            $(this).html('<');
+        } else if(queryMode == '&lt;') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_GREATER_THAN);
+            $(this).html('>');
+        } else if(queryMode == '&gt;') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_LESS_EQUAL);
+            $(this).html('<=');
+        } else if(queryMode == '&lt;=') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_GREATER_EQUAL);
+            $(this).html('>=');
+        } else if(queryMode == '&gt;=') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_LIKE);
+            $(this).html('%%');
+        } else if(queryMode == '%%') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_LEFT_LIKE);
+            $(this).html('*%');
+        } else if(queryMode == '*%') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_RIGHT_LIKE);
+            $(this).html('%*');
+        } else if(queryMode == '%*') {
+            $(this).parent().find('input[queryMode]').attr('queryMode', QM_EQUAL);
+            $(this).html('=');
+        }
+    });
 
     return this;
 };
@@ -380,8 +414,8 @@ function getYMDStr(date) {
     return y + '-' + m + '-' + d ;
 }
 
-$.fn.serializeObject = function(){
-    var o = {};
+$.fn.serializeObject = function(obj){
+    var o = obj;
     var a = this.serializeArray();
     $.each(a, function() {
         if (o[this.name]) {
@@ -394,4 +428,86 @@ $.fn.serializeObject = function(){
         }
     });
     return o;
+};
+
+$.fn.serializeQueryCondition = function() {
+    var rselectTextarea = /^(?:select|textarea)/i;
+    var rinput = /^(?:color|date|datetime|datetime-local|email|hidden|month|number|password|range|search|tel|text|time|url|week)$/i;
+    var array = this.map(function(){
+        return this.elements ? jQuery.makeArray( this.elements ) : this;
+    })
+    .filter(function(){
+        return this.name && !this.disabled &&
+            ( this.checked || rselectTextarea.test( this.nodeName ) ||
+                rinput.test( this.type ) );
+    })
+    .map(function( i, elem ){
+        var val = jQuery( this ).val();
+
+        return val == null ?
+            null :
+            jQuery.isArray( val ) ?
+                jQuery.map( val, function( val, i ){
+                    return elem;
+                }) :
+            elem;
+    }).get();
+
+    var result = {method: 'query'};
+    var conditions = ' 1=1 ';
+    var values = [];
+    $.each(array, function() {
+        var name = $(this).attr('name');
+        var value = $.trim($(this).attr('value'));
+        var queryMode = $(this).attr('queryMode');
+        if(name.substring(0, 7) == 'D_start') {
+            name = name.substring(7);
+            queryMode = '>=';
+            if(value.length == 10) {
+                value += ' 00:00:00';
+            }
+        } else if(name.substring(0, 5) == 'D_end') {
+            name = name.substring(5);
+            queryMode = '<';
+            if(value.length == 10) {
+                value += ' 23:59:59';
+            }
+        }
+
+        if(value != '') {
+            if(queryMode == QM_EQUAL) {
+                conditions += ' AND ' + name + ' = ?';
+                values.push(value);
+            } else if(queryMode == QM_NOT_EQUAL) {
+                conditions += ' AND ' + name + ' <> ?';
+                values.push(value);
+            } else if(queryMode == QM_LESS_THAN) {
+                conditions += ' AND ' + name + ' < ?';
+                values.push(value);
+            } else if(queryMode == QM_LESS_EQUAL) {
+                conditions += ' AND ' + name + ' <= ?';
+                values.push(value);
+            } else if(queryMode == QM_GREATER_THAN) {
+                conditions += ' AND ' + name + ' > ?';
+                values.push(value);
+            } else if(queryMode == QM_GREATER_EQUAL) {
+                conditions += ' AND ' + name + ' >= ?';
+                values.push(value);
+            } else if(queryMode == QM_LIKE) {
+                conditions += ' AND ' + name + ' like ' + "'%" + value + "%'";
+            } else if(queryMode == QM_LEFT_LIKE) {
+                conditions += ' AND ' + name + ' like ' + "'" + value + "%'";
+            } else if(queryMode == QM_RIGHT_LIKE) {
+                conditions += ' AND ' + name + ' like ' + "'%" + value + "'";
+            } else {
+                conditions += ' AND ' + name + ' = ?';
+                values.push(value);
+            }
+
+        }
+    });
+
+    result.conditions = conditions;
+    result.values = values;
+    return result;
 };

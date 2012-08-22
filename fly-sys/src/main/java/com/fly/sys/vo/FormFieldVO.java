@@ -23,6 +23,7 @@ public class FormFieldVO {
     private int sortNum;
     private int dataType;
 
+    private int queryMode;
     private boolean isReadonly;
     private boolean isRequired;
 
@@ -130,6 +131,14 @@ public class FormFieldVO {
         this.dataType = dataType;
     }
 
+    public int getQueryMode() {
+        return queryMode;
+    }
+
+    public void setQueryMode(int queryMode) {
+        this.queryMode = queryMode;
+    }
+
     public boolean isReadonly() {
         return isReadonly;
     }
@@ -166,6 +175,8 @@ public class FormFieldVO {
         vo.setValid(field.isValid());
         vo.setWidth(field.getWidth());
         vo.setDataType(field.getDataType());
+
+        vo.setQueryMode(field.getQueryMode().ordinal());
         vo.setReadonly(field.isReadonly());
         vo.setRequired(field.isRequired());
 

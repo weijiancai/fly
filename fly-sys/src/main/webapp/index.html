@@ -5,16 +5,40 @@
     <meta content="text/html;charset=UTF-8" http-equiv="Content-Type">
     <link rel="stylesheet" type="text/css" href="style/easyui/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="style/easyui/themes/icon.css">
-    <script type="text/javascript" src="js/fly.js"></script>
-    <script type="text/javascript" src="js/fly_easyui.js"></script>
+    <link rel="stylesheet" type="text/css" href="style/fly_easyui.css">
     <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
     <script type="text/javascript" src="js/jquery.easyui.min-1.2.3.js"></script>
+    <script type="text/javascript" src="js/fly.js"></script>
+    <script type="text/javascript" src="js/fly_easyui_sys.js"></script>
+    <script type="text/javascript">
+        function openTab(className) {
+            $.post(className + '.class', function(data) {
+                $.simpleWin(data, '#tab');
+            });
+        }
+    </script>
 </head>
 <body class="easyui-layout">
-        <div region="north" title="North Title" split="true" style="height:100px;">north</div>
-        <div region="south" title="South Title" split="true" style="height:100px;">south</div>
-        <div region="east" iconCls="icon-reload" title="East" split="true" style="width:100px;">east</div>
-        <div region="west" split="true" title="West" style="width:100px;">west</div>
-        <div region="center" title="center title" style="padding:5px;background:#eee;">center</div>
+    <!--<div region="north" title="North Title" split="true" style="height:100px;"></div>-->
+    <!--<div region="south" title="South Title" split="true" style="height:100px;"></div>-->
+    <!--<div region="east" iconCls="icon-reload" title="East" split="true" style="width:100px;"></div>-->
+    <div region="west" split="true" title="West" style="width:150px;">
+        <ul id="tt1" class="easyui-tree">
+            <li>
+                <span>系统配置</span>
+                <ul>
+                    <li>
+                        <span><a href="#" onclick="openTab('DzCategory')">数据词典</a></span>
+                    </li>
+                    <li>
+                        <span><a href="#" onclick="openTab('ClassDefine')">类定义</a></span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div region="center" style="padding:5px;background:#eee;">
+        <div id="tab" style="height: 100%"></div>
+    </div>
 </body>
 </html>

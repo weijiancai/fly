@@ -109,7 +109,7 @@ public class TableFieldVO {
         vo.setDisplayName(field.getDisplayName());
         vo.setDisplayStyle(field.getDisplayStyle());
         vo.setId(field.getId());
-        vo.setName(field.getClassField().getName());
+        vo.setName(field.getClassField().getName().toLowerCase());
         vo.setInputDate(field.getInputDate());
         vo.setSortNum(field.getSortNum());
         vo.setValid(field.isValid());

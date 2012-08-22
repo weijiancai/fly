@@ -74,13 +74,15 @@ public class JdbcTemplate {
     }
 
     public List<Map<String, Object>> queryForList(String sql, String conditions, List values) throws Exception {
-        sql += " where " + conditions;
+        sql += conditions == null ? "" : " where "  + conditions;
 
         System.out.println(sql);
         PreparedStatement pstmt = conn.prepareStatement(sql);
         int i = 1;
-        for (Object obj : values) {
-            pstmt.setObject(i++, obj);
+        if (values != null) {
+            for (Object obj : values) {
+                pstmt.setObject(i++, obj);
+            }
         }
         ResultSet rs = pstmt.executeQuery();
         ResultSetMetaData md = rs.getMetaData();

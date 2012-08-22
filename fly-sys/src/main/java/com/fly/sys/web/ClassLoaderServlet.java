@@ -1,11 +1,11 @@
 package com.fly.sys.web;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.clazz.Query;
 import com.fly.sys.util.UString;
+import com.fly.sys.vo.ClassDefineVO;
 import sun.misc.BASE64Decoder;
 
 import javax.servlet.ServletException;
@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +23,11 @@ import java.util.Map;
 public class ClassLoaderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        String userAgent = request.getHeader("USER-AGENT").toLowerCase();
+        boolean isBrowser = userAgent.contains("firefox") || userAgent.contains("msie");
+        if (isBrowser) {
+            response.setContentType("application/json;charset=UTF-8");
+        }
         String classDefName = UString.substringBefore(request.getRequestURI().substring(1), ".class");
         ClassDefine classDefine;
         if ("ProjectModule".equalsIgnoreCase(classDefName)) {
@@ -35,14 +37,22 @@ public class ClassLoaderServlet extends HttpServlet {
         }
         String method = request.getParameter("method");
         if ("query".equals(method)) {
-            String conditions = decode(request.getParameter("conditions"));
-            String values = decode(request.getParameter("values"));
-            Query query = new Query(classDefine);
-            List<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
-            ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
-            oos.writeObject(list);
-            oos.flush();
-            oos.close();
+            if (isBrowser) {
+                String conditions = request.getParameter("conditions");
+                String values = request.getParameter("values");
+                Query query = new Query(classDefine);
+                List<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
+                response.getWriter().write(JSON.toJSONString(list));
+            } else {
+                String conditions = decode(request.getParameter("conditions"));
+                String values = decode(request.getParameter("values"));
+                Query query = new Query(classDefine);
+                List<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
+                ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
+                oos.writeObject(list);
+                oos.flush();
+                oos.close();
+            }
         } else if ("update".equals(method)) {
             String values = decode(request.getParameter("valueMap"));
             String conditions = decode(request.getParameter("conditionMap"));
@@ -50,12 +60,14 @@ public class ClassLoaderServlet extends HttpServlet {
             Query query = new Query(classDefine);
             query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
         } else {
-//            response.setContentType("application/json;charset=UTF-8");
-//            response.getWriter().write(JSON.toJSONString(classDefine));
-            ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
-            oos.writeObject(classDefine);
-            oos.flush();
-            oos.close();
+            if (isBrowser) {
+                response.getWriter().write(JSON.toJSONString(ClassDefineVO.getInstance(classDefine)));
+            } else {
+                ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
+                oos.writeObject(classDefine);
+                oos.flush();
+                oos.close();
+            }
         }
     }
 

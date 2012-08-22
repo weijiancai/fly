@@ -105,7 +105,7 @@ public class FormField implements Serializable {
         } else if (queryMode == 2) {
             this.queryMode = QueryMode.LESS_THAN;
         } else if (queryMode == 3) {
-            this.queryMode = QueryMode.LEFT_EQUAL;
+            this.queryMode = QueryMode.LESS_EQUAL;
         } else if (queryMode == 4) {
             this.queryMode = QueryMode.GREATER_THAN;
         } else if (queryMode == 5) {
