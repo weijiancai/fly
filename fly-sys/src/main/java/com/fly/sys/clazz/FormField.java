@@ -98,27 +98,7 @@ public class FormField implements Serializable {
     }
 
     public void setQueryMode(int queryMode) {
-        if (queryMode == 0) {
-            this.queryMode = QueryMode.EQUAL;
-        } else if (queryMode == 1) {
-            this.queryMode = QueryMode.NOT_EQUAL;
-        } else if (queryMode == 2) {
-            this.queryMode = QueryMode.LESS_THAN;
-        } else if (queryMode == 3) {
-            this.queryMode = QueryMode.LESS_EQUAL;
-        } else if (queryMode == 4) {
-            this.queryMode = QueryMode.GREATER_THAN;
-        } else if (queryMode == 5) {
-            this.queryMode = QueryMode.GREATER_EQUAL;
-        } else if (queryMode == 6) {
-            this.queryMode = QueryMode.BETWEEN;
-        } else if (queryMode == 7) {
-            this.queryMode = QueryMode.LIKE;
-        } else if (queryMode == 9) {
-            this.queryMode = QueryMode.LEFT_LIKE;
-        } else if (queryMode == 10) {
-            this.queryMode = QueryMode.RIGHT_LIKE;
-        }
+        this.queryMode = QueryMode.get(queryMode);
     }
 
     public ClassForm getClassForm() {

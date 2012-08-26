@@ -12,6 +12,7 @@ public class ClassTable implements Serializable {
     private String name;
     private int colWidth;
     private String sql;
+    private String joinSql;
     private boolean isValid;
     private Date inputDate;
     private int sortNum;
@@ -49,6 +50,14 @@ public class ClassTable implements Serializable {
 
     public void setSql(String sql) {
         this.sql = sql;
+    }
+
+    public String getJoinSql() {
+        return joinSql;
+    }
+
+    public void setJoinSql(String joinSql) {
+        this.joinSql = joinSql;
     }
 
     public boolean isValid() {

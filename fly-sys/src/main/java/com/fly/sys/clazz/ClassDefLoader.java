@@ -99,18 +99,8 @@ public class ClassDefLoader {
                     sql = "SELECT * FROM sys_class_table_query WHERE table_id=?";
 
                     // 查询类，DbmsTable关联表
-                    sql = "SELECT dbms_table_id FROM sys_r_class_table WHERE class_id=?";
-                    final List<DbmsTable> dbmsTableList = new ArrayList<DbmsTable>();
-                    template.query(sql, new Callback<ResultSet>() {
-                        @Override
-                        public void call(ResultSet rs, Object... obj) throws Exception {
-                            DbmsTable dbTable = DBManager.getDbTableById(rs.getString("dbms_table_id"));
-                            if (dbTable != null) {
-                                dbmsTableList.add(dbTable);
-                                dbTable.addClassDefine(clazz);
-                            }
-                        }
-                    }, clazz.getId());
+                    sql = "SELECT * FROM sys_r_class_table WHERE class_id=?";
+                    List<RClassDbmsTable> dbmsTableList = template.query(sql, ClassRowMapperFactory.getRClassDbmsTable(), clazz.getId());
                     clazz.setDbmsTableList(dbmsTableList);
                 }
             } else {
@@ -203,6 +193,8 @@ public class ClassDefLoader {
         classTable.setSortNum(classSortNum);
         classTable.setValid(true);
         classTable.setClassDefine(clazz);
+        classTable.setJoinSql(" FROM " + table.getName());
+        classTable.setSql("SELECT " + clazz.getColumnStr() + classTable.getJoinSql());
         template.save(ClassPDBFactory.getClassTable(classTable));
         List<ClassTable> classTableList = new ArrayList<ClassTable>();
         classTableList.add(classTable);
@@ -272,13 +264,18 @@ public class ClassDefLoader {
         classQuery.setQueryFieldList(queryFieldList);
 
         // 插入类-table关联表
-        List<DbmsTable> tableList = new ArrayList<DbmsTable>();
-        tableList.add(table);
+        List<RClassDbmsTable> tableList = new ArrayList<RClassDbmsTable>();
+        RClassDbmsTable cdt = new RClassDbmsTable();
+        cdt.setClassId(clazz.getId());
+        cdt.setDbmsTableId(table.getId());
+        cdt.setPrimary(true);
+        cdt.setJoinSql("FROM " + table.getName());
+        tableList.add(cdt);
         clazz.setDbmsTableList(tableList);
         List<ClassDefine> classList = new ArrayList<ClassDefine>();
         classList.add(clazz);
         table.setClassList(classList);
-        template.save(ClassPDBFactory.getRClassTable(clazz.getId(), table.getId()));
+        template.save(ClassPDBFactory.getRClassTable(cdt));
 
         // 存入缓存
         cache.put(clazz.getName().toLowerCase(), clazz);
@@ -312,7 +309,11 @@ public class ClassDefLoader {
             classForm.setName(clazz.getName() + "_Edit");
             classForm.setColWidth(180);
         }
-        classForm.setColCount(3);
+        if ("ClassForm".equalsIgnoreCase(clazz.getName()) || "ClassFormField".equalsIgnoreCase(clazz.getName())) {
+            classForm.setColCount(1);
+        } else {
+            classForm.setColCount(3);
+        }
         classForm.setClassDefine(clazz);
         classForm.setLabelGap(5);
         classForm.setFieldGap(15);

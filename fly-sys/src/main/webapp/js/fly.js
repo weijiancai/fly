@@ -164,6 +164,7 @@ DataForm.prototype = {
 function FormField(fd, dictMap, form) {
     this.id = fd['id'];
     this.name = fd['name'];
+    this.colName = fd['colName'];
     this.displayName = fd['displayName'];
     this.isSingleLine = fd['singleLine'];
     this.isDisplay = fd['display'];
@@ -174,7 +175,7 @@ function FormField(fd, dictMap, form) {
     this.isValid = fd['valid'];
     this.sortNum = fd['sortNum'];
     this.dataType = fd['dataType'];
-    this.dictList = dictMap[this.name];
+    this.dictList = dictMap[this.colName];
     this.queryMode = fd['queryMode'];
     this.readonly = fd['readonly'];
     this.required = fd['required'];
@@ -301,7 +302,7 @@ function getFormInput(field, type) {
     if(tableFieldMapping && tableFieldMapping[field.name]) {
         inputName = tableFieldMapping[field.name];
     } else {
-        inputName = field.name;
+        inputName = field.colName;
     }
 
     var styleStr = "";
@@ -365,11 +366,44 @@ function getFormInput(field, type) {
     }
 
     var queryMode = '';
-    if (field.queryMode == 0) {
-        queryMode = '<a href="#" class="queryMode equal">=</a>';
+
+    if(field.form.formType == '0') {
+        queryMode = getQueryModeLink(field.queryMode);
     }
 
     return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + field.queryMode + '"/>' + queryMode;
+}
+
+/**
+ * 获得查询模式超链接
+ *
+ * @param queryMode
+ */
+function getQueryModeLink(queryMode) {
+    switch (queryMode) {
+        case 0:
+            return '<a href="#" class="queryMode equal">=</a>';
+        case 1:
+            return '<a href="#" class="queryMode equal">&lt;&gt;</a>';
+        case 2:
+            return '<a href="#" class="queryMode equal">&lt;</a>';
+        case 3:
+            return '<a href="#" class="queryMode equal">&lt;=</a>';
+        case 4:
+            return '<a href="#" class="queryMode equal">&gt;</a>';
+        case 5:
+            return '<a href="#" class="queryMode equal">&gt;=</a>';
+        case 6:
+            return '<a href="#" class="queryMode equal">=</a>';
+        case 7:
+            return '<a href="#" class="queryMode equal">%%</a>';
+        case 8:
+            return '<a href="#" class="queryMode equal">*%</a>';
+        case 9:
+            return '<a href="#" class="queryMode equal">%*</a>';
+        default:
+            return '<a href="#" class="queryMode equal">=</a>';
+    }
 }
 
 /**

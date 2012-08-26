@@ -167,6 +167,7 @@ public class ClassRowMapperFactory {
                 table.setName(rs.getString("name"));
                 table.setColWidth(rs.getInt("col_width"));
                 table.setSql(rs.getString("sql_text"));
+                table.setJoinSql(rs.getString("join_sql"));
                 table.setValid("T".equals(rs.getString("is_valid")));
                 table.setInputDate(rs.getDate("input_date"));
                 table.setSortNum(rs.getInt("sort_num"));
@@ -197,6 +198,22 @@ public class ClassRowMapperFactory {
                 field.setClassField(ClassManager.getClassFieldById(rs.getString("field_id")));
 
                 return field;
+            }
+        };
+    }
+
+    public static RowMapper<RClassDbmsTable> getRClassDbmsTable() {
+        return new RowMapper<RClassDbmsTable>() {
+            @Override
+            public RClassDbmsTable mapRow(ResultSet rs) throws SQLException {
+                RClassDbmsTable table = new RClassDbmsTable();
+
+                table.setClassId(rs.getString("class_id"));
+                table.setDbmsTableId(rs.getString("dbms_table_id"));
+                table.setPrimary("T".equals(rs.getString("is_primary")));
+                table.setJoinSql(rs.getString("join_sql"));
+
+                return table;
             }
         };
     }

@@ -42,7 +42,7 @@ public class ClassDefLoaderTest {
 
     @Test
     public void testInitClassDef() throws Exception {
-        SysInfo.setDbmsInit(false);
+        SysInfo.setDbmsInit(true);
         SysInfo.setDictInit(false);
         SysInfo.setClassDefInit(false);
         DBManager.init();

@@ -73,18 +73,44 @@ public class JdbcTemplate {
         return list;
     }
 
-    public List<Map<String, Object>> queryForList(String sql, String conditions, List values) throws Exception {
-        sql += conditions == null ? "" : " where "  + conditions;
+    public QueryResult<Map<String, Object>> queryForList(String sql, String conditions, List values, int page, int rows) throws Exception {
+        QueryResult<Map<String, Object>> result = new QueryResult<Map<String, Object>>();
 
-        System.out.println(sql);
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+        PreparedStatement pstmt;
+        ResultSet rs;
         int i = 1;
+
+        // 执行count
+        conditions = (conditions == null ? "" : " where "  + conditions);
+        String countSql = "SELECT count(1) " + sql.substring(sql.toLowerCase().indexOf("from")) + conditions;
+        pstmt = conn.prepareStatement(countSql);
         if (values != null) {
             for (Object obj : values) {
                 pstmt.setObject(i++, obj);
             }
         }
-        ResultSet rs = pstmt.executeQuery();
+        rs  = pstmt.executeQuery();
+        if (rs.next()) {
+            result.setTotal(rs.getInt(1));
+        }
+        rs.close();
+        pstmt.close();
+
+        if(page <= 0) {
+            page = 1;
+        }
+        sql += conditions + " limit " + (page -1) * rows + "," + rows;
+
+        System.out.println(sql);
+        pstmt = conn.prepareStatement(sql);
+
+        i = 1;
+        if (values != null) {
+            for (Object obj : values) {
+                pstmt.setObject(i++, obj);
+            }
+        }
+        rs = pstmt.executeQuery();
         ResultSetMetaData md = rs.getMetaData();
         int columnCount = md.getColumnCount();
         //        System.out.println("------------------------------------------------");
@@ -95,14 +121,18 @@ public class JdbcTemplate {
             for (i = 1; i <= columnCount; i++) {
                 Object obj = rs.getObject(i);
                 map.put(md.getColumnLabel(i), obj);
+//                map.put(md.getTableName(i) + "." + md.getColumnName(i), obj);
                 //                System.out.println(obj + "  >> " + md.getColumnLabel(i) + " = " + md.getColumnName(i) + " = " + (obj == null ? "" : obj.getClass().toString()));
             }
             //            System.out.println("-------------------------------------------");
             list.add(map);
         }
         rs.close();
+        pstmt.close();
 
-        return list;
+        result.setRows(list);
+
+        return result;
     }
 
     public Map<String, Object> queryForMap(String sql, Object... values) throws Exception {

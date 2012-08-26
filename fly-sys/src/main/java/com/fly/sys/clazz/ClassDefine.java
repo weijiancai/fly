@@ -1,6 +1,8 @@
 package com.fly.sys.clazz;
 
+import com.fly.sys.db.meta.DbmsColumn;
 import com.fly.sys.db.meta.DbmsTable;
+import com.fly.sys.util.UString;
 import com.fly.sys.vo.FormVO;
 
 import java.io.Serializable;
@@ -28,7 +30,7 @@ public class ClassDefine implements Serializable {
 
     private List<ClassForm> formList;
     private List<ClassField> fieldList;
-    private List<DbmsTable> dbmsTableList;
+    private List<RClassDbmsTable> dbmsTableList;
     private List<ClassTable> classTableList;
     private List<ClassQuery> classQueryList;
 
@@ -162,11 +164,11 @@ public class ClassDefine implements Serializable {
         this.sortNum = sortNum;
     }
 
-    public List<DbmsTable> getDbmsTableList() {
+    public List<RClassDbmsTable> getDbmsTableList() {
         return dbmsTableList;
     }
 
-    public void setDbmsTableList(List<DbmsTable> dbmsTableList) {
+    public void setDbmsTableList(List<RClassDbmsTable> dbmsTableList) {
         this.dbmsTableList = dbmsTableList;
     }
 
@@ -219,6 +221,46 @@ public class ClassDefine implements Serializable {
         }
 
         return null;
+    }
+
+    /**
+     * 获取查询sql语句，不含查询条件
+     *
+     * @return 返回查询sql语句
+     */
+    public String getQuerySql() {
+        if (classTableList != null && classTableList.size() > 0) {
+            return classTableList.get(0).getSql();
+        }
+
+        return "";
+    }
+
+    /**
+     * 根据数据库表名，获取数据库表信息
+     *
+     * @return 返回数据库表信息
+     */
+    public DbmsTable getDbTableByName(String name) {
+        for (RClassDbmsTable cdt : getDbmsTableList()) {
+            if (name.equalsIgnoreCase(cdt.getDbmsTable().getName())) {
+                return cdt.getDbmsTable();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取列字符串信息，例如 表名.列名 别名,表名.列名 别名,表名.列名 别名
+     *
+     * @return 返回列字符串信息
+     */
+    public String getColumnStr() {
+        StringBuilder sb = new StringBuilder();
+        for (ClassField field : getFieldList()) {
+            sb.append(",").append(field.getColumn().getTable().getName()).append(".").append(field.getColumn().getName()).append(" ").append(field.getName().toLowerCase());
+        }
+        return sb.substring(1);
     }
 
     @Override

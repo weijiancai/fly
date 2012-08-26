@@ -28,9 +28,9 @@ public class QueryCondition {
                 if (QueryMode.LIKE == queryMode) {
                     conditions.append(" AND ").append(column).append(operator).append("'%").append(value.toString()).append("%'");
                 } else if (QueryMode.LEFT_LIKE == queryMode) {
-                    conditions.append(" AND ").append(column).append(operator).append("'%").append(value.toString()).append("'");
-                } else if (QueryMode.RIGHT_LIKE == queryMode) {
                     conditions.append(" AND ").append(column).append(operator).append("'").append(value.toString()).append("%'");
+                } else if (QueryMode.RIGHT_LIKE == queryMode) {
+                    conditions.append(" AND ").append(column).append(operator).append("'%").append(value.toString()).append("'");
                 } else {
                     conditions.append(" AND ").append(column).append(operator).append("?");
                     valueList.add(value);

@@ -8,21 +8,33 @@
     <link rel="stylesheet" type="text/css" href="style/fly_easyui.css">
     <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
     <script type="text/javascript" src="js/jquery.easyui.min-1.2.3.js"></script>
-    <script type="text/javascript" src="js/fly.js"></script>
-    <script type="text/javascript" src="js/fly_easyui_sys.js"></script>
+    <!--<script type="text/javascript" src="js/fly.js"></script>
+    <script type="text/javascript" src="js/fly_easyui_sys.js"></script>-->
+    <script type="text/javascript" src="js/const.js"></script>
+    <script type="text/javascript" src="js/layout.js"></script>
+    <script type="text/javascript" src="js/dataObject.js"></script>
+    <script type="text/javascript" src="js/jqfly.js"></script>
+    <script type="text/javascript" src="js/jqsys.js"></script>
+    <script type="text/javascript" src="js/jqfly_easyui.js"></script>
     <script type="text/javascript">
         function openTab(className) {
-            $.post(className + '.class', function(data) {
-                $.simpleWin(data, '#tab');
+            $.post(className + '.class', function(clazz) {
+                $('#TabPane').tabs('add', {
+                    title: clazz.cname,
+                    closable: true,
+                    content: '<div id="' + clazz.name + 'Tab" style="height: 100%"></div>'
+                });
+
+//                $.simpleWin(clazz, '#' + clazz.name + 'Tab');
+                $('#' + clazz.name + 'Tab').baseWin({classDef:clazz});
             });
         }
     </script>
 </head>
-<body class="easyui-layout">
+<body class="easyui-layout" style="background-color: rgb(224, 236, 249);">
     <!--<div region="north" title="North Title" split="true" style="height:100px;"></div>-->
     <!--<div region="south" title="South Title" split="true" style="height:100px;"></div>-->
-    <!--<div region="east" iconCls="icon-reload" title="East" split="true" style="width:100px;"></div>-->
-    <div region="west" split="true" title="West" style="width:150px;">
+    <div title="FLY 系统" region="west" split="true" style="width:150px;background-color: rgb(224, 236, 249);">
         <ul id="tt1" class="easyui-tree">
             <li>
                 <span>系统配置</span>
@@ -38,7 +50,24 @@
         </ul>
     </div>
     <div region="center" style="padding:5px;background:#eee;">
-        <div id="tab" style="height: 100%"></div>
+        <div id="TabPane" class="easyui-tabs" style="height: 100%;background-color: rgb(224, 236, 249);" fit="true" border="false">
+            <div title="欢迎使用" style="padding: 20px;background-color:#e0ecf9;" id="home"></div>
+        </div>
     </div>
+
+    <div region="east" title="属性配置" split="false" style="width:380px;background-color: rgb(224, 236, 249);">
+        <div class="queryForm">
+            <fieldset>
+                <legend>表单属性</legend>
+                <div id="MasterDiv" style="height:400px;"></div>
+            </fieldset>
+            <fieldset>
+                <legend>表单字段属性</legend>
+                <div id="ItemDiv" style="height: 400px;"></div>
+            </fieldset>
+        </div>
+    </div>
+
+    <div id="QueryFormWin"></div>
 </body>
 </html>

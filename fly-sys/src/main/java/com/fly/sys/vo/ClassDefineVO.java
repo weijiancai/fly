@@ -177,7 +177,7 @@ public class ClassDefineVO {
                 for (DictCode code : field.getDictCategory().getCodeList()) {
                     codeList.add(DictCodeVO.getInstance(code));
                 }
-                vo.addFieldDict(field.getName(), codeList);
+                vo.addFieldDict(field.getName().toLowerCase(), codeList);
             }
         }
 

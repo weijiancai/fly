@@ -1,6 +1,7 @@
 package com.fly.sys.vo;
 
 import com.fly.sys.clazz.FormField;
+import com.fly.sys.db.meta.DbmsColumn;
 
 import java.util.Date;
 
@@ -26,6 +27,8 @@ public class FormFieldVO {
     private int queryMode;
     private boolean isReadonly;
     private boolean isRequired;
+
+    private String colName;
 
     public String getId() {
         return id;
@@ -155,11 +158,19 @@ public class FormFieldVO {
         isRequired = required;
     }
 
+    public String getColName() {
+        return colName;
+    }
+
+    public void setColName(String colName) {
+        this.colName = colName;
+    }
+
     public static FormFieldVO getInstance(FormField field) {
         FormFieldVO vo = new FormFieldVO();
 
         vo.setDisplay(field.isDisplay());
-        vo.setName(field.getClassField().getName());
+        vo.setName(field.getClassField().getName().toLowerCase());
         vo.setDisplayName(field.getDisplayName());
         if (field.getDisplayStyle() == null) {
             vo.setDisplayStyle(0);
@@ -179,6 +190,9 @@ public class FormFieldVO {
         vo.setQueryMode(field.getQueryMode().ordinal());
         vo.setReadonly(field.isReadonly());
         vo.setRequired(field.isRequired());
+
+        DbmsColumn column = field.getClassField().getColumn();
+        vo.setColName(column.getTable().getName() + "." + column.getName());
 
         return vo;
     }

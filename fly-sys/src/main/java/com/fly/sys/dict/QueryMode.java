@@ -47,4 +47,31 @@ public enum QueryMode {
      * 9. LIKE '%*'
      */
     RIGHT_LIKE
+    ;
+
+    public static QueryMode get(int queryMode) {
+        if (queryMode == 0) {
+            return QueryMode.EQUAL;
+        } else if (queryMode == 1) {
+            return QueryMode.NOT_EQUAL;
+        } else if (queryMode == 2) {
+            return QueryMode.LESS_THAN;
+        } else if (queryMode == 3) {
+            return QueryMode.LESS_EQUAL;
+        } else if (queryMode == 4) {
+            return QueryMode.GREATER_THAN;
+        } else if (queryMode == 5) {
+            return QueryMode.GREATER_EQUAL;
+        } else if (queryMode == 6) {
+            return QueryMode.BETWEEN;
+        } else if (queryMode == 7) {
+            return QueryMode.LIKE;
+        } else if (queryMode == 8) {
+            return QueryMode.LEFT_LIKE;
+        } else if (queryMode == 9) {
+            return QueryMode.RIGHT_LIKE;
+        }
+
+        return QueryMode.EQUAL;
+    }
 }

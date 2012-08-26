@@ -1,10 +1,17 @@
 package com.fly.sys.web;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.fly.sys.clazz.ClassDefine;
 import com.fly.sys.clazz.ClassManager;
 import com.fly.sys.clazz.Query;
+import com.fly.sys.db.QueryResult;
+import com.fly.sys.db.query.QueryCondition;
+import com.fly.sys.dict.QueryMode;
 import com.fly.sys.util.UString;
+import com.fly.sys.vo.AjaxResultVO;
 import com.fly.sys.vo.ClassDefineVO;
 import sun.misc.BASE64Decoder;
 
@@ -39,26 +46,86 @@ public class ClassLoaderServlet extends HttpServlet {
         if ("query".equals(method)) {
             if (isBrowser) {
                 String conditions = request.getParameter("conditions");
-                String values = request.getParameter("values");
-                Query query = new Query(classDefine);
-                List<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
-                response.getWriter().write(JSON.toJSONString(list));
+                int page = 1;
+                int rows = 20;
+                try {
+                    page = Integer.parseInt(request.getParameter("page"));
+                    rows = Integer.parseInt(request.getParameter("rows"));
+                } catch (NumberFormatException e) {
+//                    e.printStackTrace();
+                }
+                if (UString.isNotEmpty(conditions)) {
+                    JSONArray array = JSON.parseArray(conditions);
+                    JSONObject object;
+                    QueryCondition queryCondition = new QueryCondition();
+                    for (int i = 0; i < array.size(); i++) {
+                        object = array.getJSONObject(i);
+                        queryCondition.addCondition(object.getString("name"), QueryMode.get(object.getIntValue("queryMode")), object.getString("value"));
+                    }
+                    Query query = new Query(classDefine);
+                    QueryResult<Map<String, Object>> queryResult = query.list(queryCondition.getConditions(), queryCondition.getValueList(), page, rows);
+                    response.getWriter().write(JSON.toJSONString(queryResult, SerializerFeature.WriteDateUseDateFormat));
+                } else {
+                    response.getWriter().write("[]");
+                }
             } else {
                 String conditions = decode(request.getParameter("conditions"));
                 String values = decode(request.getParameter("values"));
                 Query query = new Query(classDefine);
-                List<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
+                QueryResult<Map<String, Object>> list = query.list(conditions, JSON.parseArray(values));
                 ObjectOutputStream oos = new ObjectOutputStream(response.getOutputStream());
-                oos.writeObject(list);
+                oos.writeObject(list.getRows());
                 oos.flush();
                 oos.close();
             }
         } else if ("update".equals(method)) {
-            String values = decode(request.getParameter("valueMap"));
-            String conditions = decode(request.getParameter("conditionMap"));
-            String tableName = request.getParameter("tableName");
-            Query query = new Query(classDefine);
-            query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
+            if (isBrowser) {
+                String values = request.getParameter("values");
+                if (UString.isNotEmpty(values)) {
+                    Query query = new Query(classDefine);
+                    try {
+                        query.update(JSON.parseObject(values), "update");
+                        writeJsonObject(response, new AjaxResultVO(true));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        writeJsonObject(response, new AjaxResultVO(false, e.getMessage()));
+                    }
+                }
+            } else {
+                String values = decode(request.getParameter("valueMap"));
+                String conditions = decode(request.getParameter("conditionMap"));
+                String tableName = request.getParameter("tableName");
+                Query query = new Query(classDefine);
+                query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
+            }
+        } else if ("save".equals(method)) {
+            if (isBrowser) {
+                String values = request.getParameter("values");
+                if (UString.isNotEmpty(values)) {
+                    Query query = new Query(classDefine);
+                    try {
+                        query.update(JSON.parseObject(values), "save");
+                        writeJsonObject(response, new AjaxResultVO(true));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        writeJsonObject(response, new AjaxResultVO(false, e.getMessage()));
+                    }
+                }
+            }
+        } else if ("delete".equals(method)) {
+            if (isBrowser) {
+                String values = request.getParameter("rowData");
+                if (UString.isNotEmpty(values)) {
+                    Query query = new Query(classDefine);
+                    try {
+                        query.update(JSON.parseObject(values), "delete");
+                        writeJsonObject(response, new AjaxResultVO(true));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        writeJsonObject(response, new AjaxResultVO(false, e.getMessage()));
+                    }
+                }
+            }
         } else {
             if (isBrowser) {
                 response.getWriter().write(JSON.toJSONString(ClassDefineVO.getInstance(classDefine)));
@@ -79,5 +146,9 @@ public class ClassLoaderServlet extends HttpServlet {
 //        return URLDecoder.decode(str, "UTF-8");
         BASE64Decoder decoder = new BASE64Decoder();
         return new String(decoder.decodeBuffer(str), "UTF-8");
+    }
+
+    private void writeJsonObject(HttpServletResponse response, Object obj) throws IOException {
+        response.getWriter().write(JSON.toJSONString(obj));
     }
 }

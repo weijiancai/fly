@@ -96,7 +96,7 @@ function addFormCancel() {
 
 function addFormSubmit() {
     if($_addForm.form('validate')) {
-        $.post(contextPath + classRequestMapping + '/add', $_addForm.serializeObject(), addCallback, 'json');
+        $.post(clazz.name + '.class', $_addForm.serializeObject(), addCallback, 'json');
     }
 }
 
@@ -430,10 +430,10 @@ $.fn.serializeObject = function(obj){
     return o;
 };
 
-$.fn.serializeQueryCondition = function() {
+$.fn.serializeElementArray = function() {
     var rselectTextarea = /^(?:select|textarea)/i;
     var rinput = /^(?:color|date|datetime|datetime-local|email|hidden|month|number|password|range|search|tel|text|time|url|week)$/i;
-    var array = this.map(function(){
+    return this.map(function(){
         return this.elements ? jQuery.makeArray( this.elements ) : this;
     })
     .filter(function(){
@@ -450,64 +450,89 @@ $.fn.serializeQueryCondition = function() {
                 jQuery.map( val, function( val, i ){
                     return elem;
                 }) :
-            elem;
+                elem;
     }).get();
+};
+
+$.fn.serializeQueryCondition = function() {
+    var array = $(this).serializeElementArray();
 
     var result = {method: 'query'};
-    var conditions = ' 1=1 ';
-    var values = [];
+    var conditions = [];
     $.each(array, function() {
         var name = $(this).attr('name');
         var value = $.trim($(this).attr('value'));
-        var queryMode = $(this).attr('queryMode');
+        var queryMode = parseInt($(this).attr('queryMode'));
         if(name.substring(0, 7) == 'D_start') {
             name = name.substring(7);
-            queryMode = '>=';
+            queryMode = QM_GREATER_EQUAL;
             if(value.length == 10) {
                 value += ' 00:00:00';
             }
         } else if(name.substring(0, 5) == 'D_end') {
             name = name.substring(5);
-            queryMode = '<';
+            queryMode = QM_LESS_THAN;
             if(value.length == 10) {
                 value += ' 23:59:59';
             }
         }
-
         if(value != '') {
-            if(queryMode == QM_EQUAL) {
-                conditions += ' AND ' + name + ' = ?';
-                values.push(value);
-            } else if(queryMode == QM_NOT_EQUAL) {
-                conditions += ' AND ' + name + ' <> ?';
-                values.push(value);
-            } else if(queryMode == QM_LESS_THAN) {
-                conditions += ' AND ' + name + ' < ?';
-                values.push(value);
-            } else if(queryMode == QM_LESS_EQUAL) {
-                conditions += ' AND ' + name + ' <= ?';
-                values.push(value);
-            } else if(queryMode == QM_GREATER_THAN) {
-                conditions += ' AND ' + name + ' > ?';
-                values.push(value);
-            } else if(queryMode == QM_GREATER_EQUAL) {
-                conditions += ' AND ' + name + ' >= ?';
-                values.push(value);
-            } else if(queryMode == QM_LIKE) {
-                conditions += ' AND ' + name + ' like ' + "'%" + value + "%'";
-            } else if(queryMode == QM_LEFT_LIKE) {
-                conditions += ' AND ' + name + ' like ' + "'" + value + "%'";
-            } else if(queryMode == QM_RIGHT_LIKE) {
-                conditions += ' AND ' + name + ' like ' + "'%" + value + "'";
-            } else {
-                conditions += ' AND ' + name + ' = ?';
-                values.push(value);
-            }
-
+            var object = {name: name, queryMode: queryMode, value: value};
+            conditions.push(object);
         }
     });
 
-    result.conditions = conditions;
-    result.values = values;
+    result.conditions = toJsonStr(conditions);
+
     return result;
 };
+
+function toJsonStr(object) {
+    var type = typeof object;
+    if ('object' == type) {
+        if (Array == object.constructor) type = 'array';
+        else if (RegExp == object.constructor) type = 'regexp';
+        else type = 'object';
+    }
+    switch (type) {
+        case 'undefined':
+        case 'unknown':
+            return '';
+            break;
+        case 'function':
+        case 'boolean':
+        case 'regexp':
+            return object.toString();
+            break;
+        case 'number':
+            return isFinite(object) ? object.toString() : 'null';
+            break;
+        case 'string':
+            return '"' +
+                object.replace(/(\\|\")/g, "\\$1").replace(/\n|\r|\t/g,
+                    function() {
+                        var a = arguments[0];
+                        return (a == '\n') ? '\\n': (a == '\r') ? '\\r': (a == '\t') ? '\\t': ""
+                    }) + '"';
+            break;
+        case 'object':
+            if (object === null) return 'null';
+            var results = [];
+            for (var property in object) {
+                var value = toJsonStr(object[property]);
+                if (value !== undefined) results.push(toJsonStr(property) + ':' + value);
+            }
+            return '{' + results.join(',') + '}';
+            break;
+        case 'array':
+            results = [];
+            for (var i = 0; i < object.length; i++) {
+                value = toJsonStr(object[i]);
+                if (value !== undefined) results.push(value);
+            }
+            return '[' + results.join(',') + ']';
+            break;
+    }
+
+    return '';
+}

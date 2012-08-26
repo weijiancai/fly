@@ -65,15 +65,17 @@ public class ClassPDBFactory {
         };
     }
 
-    public static IPDB getRClassTable(final String classId, final String tableId) {
+    public static IPDB getRClassTable(final RClassDbmsTable rcdt) {
         return new IPDB() {
             @Override
             public Map<String, Map<String, Object>> getPDBMap() {
                 Map<String, Map<String, Object>> result = new HashMap<String, Map<String, Object>>();
 
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put("class_id", classId);
-                map.put("dbms_table_id", tableId);
+                map.put("class_id", rcdt.getClassId());
+                map.put("dbms_table_id", rcdt.getDbmsTableId());
+                map.put("is_primary", rcdt.isPrimary() ? "T" : "F");
+                map.put("join_sql", rcdt.getJoinSql());
 
                 result.put("sys_r_class_table", map);
 
@@ -94,6 +96,8 @@ public class ClassPDBFactory {
                 map.put("id", table.getId());
                 map.put("class_id", table.getClassDefine().getId());
                 map.put("name", table.getName());
+                map.put("sql_text", table.getSql());
+                map.put("join_sql", table.getJoinSql());
                 map.put("col_width", table.getColWidth());
                 map.put("is_valid", table.isValid() ? "T" : "F");
                 map.put("input_date", new Date());

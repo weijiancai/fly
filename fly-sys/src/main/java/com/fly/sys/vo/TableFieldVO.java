@@ -1,6 +1,7 @@
 package com.fly.sys.vo;
 
 import com.fly.sys.clazz.TableField;
+import com.fly.sys.db.meta.DbmsColumn;
 
 import java.util.Date;
 
@@ -109,6 +110,8 @@ public class TableFieldVO {
         vo.setDisplayName(field.getDisplayName());
         vo.setDisplayStyle(field.getDisplayStyle());
         vo.setId(field.getId());
+        DbmsColumn column = field.getClassField().getColumn();
+//        vo.setName(column.getTable().getName() + "." + column.getName());
         vo.setName(field.getClassField().getName().toLowerCase());
         vo.setInputDate(field.getInputDate());
         vo.setSortNum(field.getSortNum());

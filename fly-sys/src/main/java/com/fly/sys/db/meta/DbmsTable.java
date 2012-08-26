@@ -130,4 +130,33 @@ public class DbmsTable implements Serializable {
     public String getNameKey() {
         return getSchema().getNameKey() + "." + getName();
     }
+
+    /**
+     * 获取列字符串信息，例如 表名.列名,表名.列名,表名.列名
+     *
+     * @return 返回列字符串信息
+     */
+    public String getColumnStr() {
+        StringBuilder sb = new StringBuilder();
+        for (DbmsColumn column : getColumnList()) {
+            sb.append(",").append(getName()).append(".").append(column.getName());
+        }
+        return sb.substring(1);
+    }
+
+    /**
+     * 获取数据库表的主键列表
+     *
+     * @return 返回主键列表
+     */
+    public List<DbmsColumn> getPkColumn() {
+        List<DbmsColumn> result = new ArrayList<DbmsColumn>();
+        for (DbmsColumn column : getColumnList()) {
+            if (column.isPk()) {
+                result.add(column);
+            }
+        }
+
+        return result;
+    }
 }
