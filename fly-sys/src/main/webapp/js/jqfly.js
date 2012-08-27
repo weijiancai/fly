@@ -203,6 +203,9 @@
      * 填充form数据
      */
     $.fillForm = function(formId, data, editForm) {
+        if(!data) {
+            return;
+        }
         var objForm = $(formId)[0];
         if(objForm == null || objForm == undefined) return false;
         var elements = objForm.elements;

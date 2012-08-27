@@ -42,7 +42,7 @@ body {
     margin-left: 20px;
 }
 
-.addFormWin, .modifyFormWin, .lookFormWin, .north, .center, .easyui-layout .window-body {
+.addFormWin, .modifyFormWin, .lookFormWin, .north, .center, .easyui-layout, .window-body, .easyui-accordion, #MasterDiv {
     background-color:#DFE8F7;
 }
 

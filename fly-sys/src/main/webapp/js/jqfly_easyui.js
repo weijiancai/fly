@@ -45,10 +45,6 @@
         var modifyFormCancelId = classDefine.name + "ModifyFormCancel";
         var dataGridToolBarId = classDefine.name + 'DataGridToolBar';
 
-        /*if($('#' + addFormWinId).length > 0 || $('#' + modifyFormWinId).length > 0 || $('#' + lookFormWinId).length > 0 || $('#' + addFormSubmitId).length > 0 || $('#' + dataGridToolBarId).length > 0) {
-            return this;
-        }*/
-
         classDefine['queryForm'].fieldset = {};
         var actionBar = new ActionBar();
         actionBar.add(new ActionButton(formQueryId, "查询"));
@@ -58,12 +54,6 @@
         var clazz = new DataClass(classDefine);
 
         var tableBar = [];
-
-        /*tableBar.push({text : '增加', iconCls : 'icon-add', handler: option.openAddWin});
-        tableBar.push('-');
-        tableBar.push({text : '修改', iconCls : 'icon-cut', handler: option.openModifyWin});
-        tableBar.push('-');
-        tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.deleteRow});*/
 
         // easy ui布局
         if(!$(this).hasClass('easyui-layout')) {
@@ -283,6 +273,7 @@
                 var dateInput = $(this).parent().find('span.datebox input');
                 if(dateInput.length > 0) {
                     dateInput.validatebox(required);
+                    dateInput.attr('id', $(this).attr('id'));
                 }
             } else {
                 $(this).validatebox(required);

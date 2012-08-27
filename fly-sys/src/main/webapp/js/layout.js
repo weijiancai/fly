@@ -166,15 +166,15 @@ function getFormInput(field, type) {
     }
 
     if('textarea' == type) {
-        return '<textarea id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"></textarea>';
+        return '<textarea id="' + field.id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '"></textarea>';
     } else if('select' == type) {
-        return '<select id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '">' + options + '</select>';
+        return '<select id="' + field.id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '">' + options + '</select>';
     } else if('date' == type || 'email' == type || 'ip' == type || 'url' == type || 'int' == type || 'double' == type || 'number' == type) {
         if('date' == type) {
             styleClass += ' dateField';
             if(field.form.formType == "0") {
-                return '<input id="' + field.name + '" type="text" name="D_start' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + QM_GREATER_EQUAL + '"/>&nbsp;至&nbsp;' +
-                    '<input id="' + field.name + '" type="text" name="D_end' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + QM_LESS_THAN + '"/>';
+                return '<input id="' + field.id + '" type="text" name="D_start' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + QM_GREATER_EQUAL + '"/>&nbsp;至&nbsp;' +
+                    '<input id="' + field.id + '" type="text" name="D_end' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + QM_LESS_THAN + '"/>';
             }
         } else if('email' == type) {
             styleClass += ' email';
@@ -199,7 +199,7 @@ function getFormInput(field, type) {
         queryMode = getQueryModeLink(field.queryMode);
     }
 
-    return '<input id="' + field.name + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + field.queryMode + '"/>' + queryMode;
+    return '<input id="' + field.id + '" type="' + type + '" name="' + inputName + '" style="' + styleStr + '"' + attr + ' class="' + styleClass + '" queryMode="' + field.queryMode + '"/>' + queryMode;
 }
 
 /**

@@ -11,7 +11,8 @@ custom = {
             {text : '字段信息', iconCls : 'icon-add', handler: fieldHandler},
             {text : '查询表单', iconCls : 'icon-add', handler: queryFormHandler},
             {text : '编辑表单', iconCls : 'icon-add', handler: editFormHandler},
-            {text : '数据表格', iconCls : 'icon-add', handler: dataGridHandler}
+            {text : '数据表格', iconCls : 'icon-add', handler: dataGridHandler},
+            {text : '预览', iconCls : 'icon-add', handler: previewClassDef}
         ]
     }
 };
@@ -25,7 +26,7 @@ $(function() {
     $('body').append('<div id="QueryFormWin" style="height: 100%"></div>');
 
     $.post('ClassField.class', function(clazz) {
-        ClassField = clazz;
+        ClassField = new DataClass(clazz);
     });
     $.post('ClassForm.class', function(clazz) {
         ClassForm = new DataClass(clazz);
@@ -48,7 +49,7 @@ function fieldHandler(masterClazz) {
 
         var $_fieldWin = $('#FieldWin').window({
             closed:true,
-            title: '字段信息',
+            title: rowData.cname + '字段信息',
             resizable: true,
             collapsible:false,
             minimizable:false,
@@ -93,11 +94,10 @@ function queryFormHandler(masterClazz) {
 
             var $_fieldWin = $('#QueryFormWin').window({
                 closed:true,
-                title: '查询表单信息',
+                title: rowData.cname + '查询表单信息',
                 resizable: true,
                 collapsible:false,
                 minimizable:false,
-                maximizable:false,
                 draggable: true,
                 left: masterClazz.baseWin.offset().left,
                 top: masterClazz.baseWin.offset().top,
@@ -106,6 +106,18 @@ function queryFormHandler(masterClazz) {
             });
 
             $_fieldWin.window('open');
+
+            $_fieldWin.find('form input').click(function() {
+                var id = $(this).attr('id');
+                if(id && id.length > 0) {
+                    queryCondition = new QueryCondition();
+                    queryCondition.addCondition('id', QM_EQUAL, id);
+
+                    $.post('ClassFormField.class', queryCondition.toString(), function(data) {
+                        $.fillForm('#ItemDiv form', data.rows[0], ClassFormField.editForm);
+                    });
+                }
+            });
         });
     } else {
         $.messager.show({
@@ -114,10 +126,115 @@ function queryFormHandler(masterClazz) {
         });
     }
 }
-function editFormHandler() {
+function editFormHandler(masterClazz) {
+    var rowData = masterClazz.datagrid.datagrid('getSelected');
+        if(rowData) {
+            $('#MasterDiv').html(ClassForm.editForm.toString());
+            $('#ItemDiv').html(ClassFormField.editForm.toString());
+            var queryCondition = new QueryCondition();
+            queryCondition.addCondition('class_id', QM_EQUAL, rowData.id);
+            queryCondition.addCondition('form_type', QM_EQUAL, '1');
 
+            $.post('ClassForm.class', queryCondition.toString(), function(data) {
+                $.fillForm('#MasterDiv form', data.rows[0], ClassForm.editForm);
+            });
+
+            $('#TabPane').tabs('add', {
+                title: rowData.cname,
+                closable: true,
+                content: '<div id="' + rowData.name + 'Tab" style="height: 100%"></div>'
+            });
+
+            $.post(rowData.name + '.class', function(clazz) {
+                $('#' + clazz.name + 'Tab').baseWin({
+                    classDef: clazz,
+                    showDataGrid: false,
+                    showAddForm: false,
+                    showModifyForm: false,
+                    showLookForm: false,
+                    showDeleteForm: false
+                });
+
+                /*var $_fieldWin = $('#QueryFormWin').window({
+                    closed:true,
+                    title: rowData.cname + '查询表单信息',
+                    resizable: true,
+                    collapsible:false,
+                    minimizable:false,
+                    draggable: true,
+                    left: masterClazz.baseWin.offset().left,
+                    top: masterClazz.baseWin.offset().top,
+                    width: masterClazz.baseWin.width(),
+                    height: masterClazz.baseWin.height()
+                });
+
+                $_fieldWin.window('open');*/
+
+                $('#' + clazz.name + 'Tab').find('form input').click(function() {
+                    var id = $(this).attr('id');
+                    if(id && id.length > 0) {
+                        queryCondition = new QueryCondition();
+                        queryCondition.addCondition('id', QM_EQUAL, id);
+
+                        $.post('ClassFormField.class', queryCondition.toString(), function(data) {
+                            $.fillForm('#ItemDiv form', data.rows[0], ClassFormField.editForm);
+                        });
+                    }
+                });
+            });
+        } else {
+            $.messager.show({
+                title:'系统提示',
+                msg:'请先选择行。'
+            });
+        }
 }
 
 function dataGridHandler() {
 
+}
+
+function previewClassDef(masterClazz) {
+    var rowData = masterClazz.datagrid.datagrid('getSelected');
+    if(rowData) {
+        $('#ClassFieldDiv').html(ClassField.editForm.toString());
+        $('#MasterDiv').html(ClassForm.editForm.toString());
+        $('#ItemDiv').html(ClassFormField.editForm.toString());
+        var queryCondition = new QueryCondition();
+        queryCondition.addCondition('class_id', QM_EQUAL, rowData.id);
+        queryCondition.addCondition('form_type', QM_EQUAL, '1');
+
+        $.post('ClassForm.class', queryCondition.toString(), function(data) {
+            $.fillForm('#MasterDiv form', data.rows[0], ClassForm.editForm);
+        });
+
+        $('#TabPane').tabs('add', {
+            title: rowData.cname,
+            closable: true,
+            content: '<div id="' + rowData.name + 'Tab" style="height: 100%"></div>'
+        });
+
+        $.post(rowData.name + '.class', function(clazz) {
+            $('#' + clazz.name + 'Tab').baseWin({
+                classDef: clazz
+            });
+
+            $('#' + clazz.name + 'Tab').find('form input').click(function() {
+                var id = $(this).attr('id');
+                if(id && id.length > 0) {
+                    queryCondition = new QueryCondition();
+                    queryCondition.addCondition('id', QM_EQUAL, id);
+
+                    $.post('ClassFormField.class', queryCondition.toString(), function(data) {
+                        $.fillForm('#ItemDiv form', data.rows[0], ClassFormField.editForm);
+                    });
+                }
+            });
+        });
+    } else {
+        $.messager.show({
+            title:'系统提示',
+            msg:'请先选择行。'
+        });
+    }
 }

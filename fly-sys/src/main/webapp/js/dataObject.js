@@ -68,7 +68,7 @@ function DataForm(classForm, dictMap) {
 DataForm.prototype = {
     init: function() {
         if("0" == this.formType) {
-            this.height = 60;
+            this.height = 70;
         } else {
             this.height = 100;
         }

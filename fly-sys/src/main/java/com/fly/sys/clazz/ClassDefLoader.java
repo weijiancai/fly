@@ -10,11 +10,9 @@ import com.fly.sys.db.meta.DbmsTable;
 import com.fly.sys.dict.CodeManager;
 import com.fly.sys.dict.DisplayStyle;
 import com.fly.sys.dict.QueryMode;
-import com.fly.sys.util.Callback;
 import com.fly.sys.util.UString;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -305,12 +303,16 @@ public class ClassDefLoader {
         if ("0".equals(formType)) {
             classForm.setName(clazz.getName() + "_Query");
             classForm.setColWidth(190);
+            if ("ClassDefine".equalsIgnoreCase(clazz.getName())) {
+                classForm.setColWidth(160);
+            }
         } else if ("1".equals(formType)) {
             classForm.setName(clazz.getName() + "_Edit");
             classForm.setColWidth(180);
         }
-        if ("ClassForm".equalsIgnoreCase(clazz.getName()) || "ClassFormField".equalsIgnoreCase(clazz.getName())) {
+        if ("ClassField".equalsIgnoreCase(clazz.getName()) || "ClassForm".equalsIgnoreCase(clazz.getName()) || "ClassFormField".equalsIgnoreCase(clazz.getName())) {
             classForm.setColCount(1);
+            classForm.setColWidth(150);
         } else {
             classForm.setColCount(3);
         }
