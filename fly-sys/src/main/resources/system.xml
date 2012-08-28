@@ -79,20 +79,4 @@
             </category>
         </categories>
     </dict>
-
-    <classes>
-        <class name="ClassDefine">
-            <queryForm>
-                <field name="SuperClass" display="false"/>
-                <field name="ClassDesc" display="false"/>
-                <field name="SortNum" display="false"/>
-                <field name="Name" queryMode="like"/>
-                <field name="Cname" queryMode="like"/>
-            </queryForm>
-            <editForm/>
-            <table>
-                <field name="Id" display="false"/>
-            </table>
-        </class>
-    </classes>
 </system>

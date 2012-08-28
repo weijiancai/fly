@@ -10,8 +10,13 @@ import com.fly.sys.db.meta.DbmsTable;
 import com.fly.sys.dict.CodeManager;
 import com.fly.sys.dict.DisplayStyle;
 import com.fly.sys.dict.QueryMode;
+import com.fly.sys.util.DomUtil;
+import com.fly.sys.util.UFile;
 import com.fly.sys.util.UString;
+import org.jdom.Element;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,6 +130,8 @@ public class ClassDefLoader {
 
         // 初始化明细
         initItem();
+        // 从配置文件中初始化类配置信息
+        initClassDefFromConfig();
     }
 
     private static void initItem() {
@@ -390,5 +397,12 @@ public class ClassDefLoader {
      */
     public static ClassDefine loadClassDef(String className) {
         return cache.get(className.toLowerCase());
+    }
+
+    public static void initClassDefFromConfig() throws Exception {
+        List<Element> list = DomUtil.getList(UFile.toString("/project.xml"), "/project/classes/class");
+        for (Element element : list) {
+            System.out.println(element.getAttributeValue("name"));
+        }
     }
 }

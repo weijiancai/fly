@@ -17,6 +17,10 @@ import java.util.Map;
  * @author weijiancai
  */
 public class DomUtil {
+    @SuppressWarnings("unchecked")
+    public static List<Element> getList(String fileContent, String xpathStr) throws Exception {
+        return (List<Element>)XPath.newInstance(xpathStr).selectNodes(getDocument(fileContent));
+    }
 
     public static List<Map<String, String>> toList(String fileContent, String xpathStr) throws Exception {
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
