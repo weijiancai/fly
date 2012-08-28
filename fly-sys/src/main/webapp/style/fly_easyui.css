@@ -9,6 +9,7 @@ body {
 .queryForm fieldset {
     border:1px #aaaaaa solid;
     /*background: none repeat scroll 0 0 rgb(238, 238, 255);*/
+    margin: 5px 0;
 }
 
 .queryForm fieldset legend {
@@ -42,7 +43,7 @@ body {
     margin-left: 20px;
 }
 
-.addFormWin, .modifyFormWin, .lookFormWin, .north, .center, .easyui-layout, .window-body, .easyui-accordion, #MasterDiv {
+.addFormWin, .modifyFormWin, .lookFormWin, .north, .center, .easyui-layout, .window-body, .easyui-accordion, #MasterDiv, .window .window-body {
     background-color:#DFE8F7;
 }
 

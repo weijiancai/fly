@@ -5,6 +5,8 @@
  * Date: 2012-8-23 11:57
  */
 (function($) {
+    $.messager.defaults = {ok: '确定', cancel: '取消'};
+
     /**
      * 查询表单
      *

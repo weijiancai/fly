@@ -37,3 +37,20 @@ var QM_RIGHT_LIKE = 9;
 var tableFieldMapping = null;
 
 var custom = {}; // 自定义实现
+
+// 验证信息
+var CK_REQUIRED = {
+    required: true,
+    missingMessage: '必填',
+    invalidMessage: '请输入'
+};
+var CK_EMAIL = {
+    validType: 'email',
+    missingMessage: '必填',
+    invalidMessage: '请输入正确的email地址，例如fly@172app.com'
+};
+var CK_URL = {
+    validType: 'url',
+    missingMessage: '必填',
+    invalidMessage: '请输入正确的url地址，例如http://www.172app.com'
+};

@@ -27,59 +27,59 @@
             onSubmitForModifyWin: modifyFormSubmit, // 修改窗口 提交按钮事件
             onCancelForModifyWin: modifyFormCancel, // 修改窗口 取消按钮事件
             modifyCallback: modifyCallback,  // 修改窗口 提交按钮事件回调函数
-            deleteRow: deleteRow,  // 删除一行记录
+            openDeleteWin: deleteRow,  // 删除一行记录
             deleteCallback: deleteCallback, // 删除一行记录 回调函数
-            prepQuery: prepQuery  // 查询之前调用此函数
+            prepQuery: null  // 查询之前调用此函数
         };
         option = $.extend(defaults, option);
 
         var classDefine = option.classDef;
         var addFormWinId = classDefine.name + 'AddFormWin';
         var modifyFormWinId = classDefine.name + 'ModifyFormWin';
-        var lookFormWinId = classDefine.name + 'LookFormWin';
-        var formQueryId = classDefine.name + 'FormQuery';
-        var formResetId = classDefine.name + 'FormReset';
         var addFormSubmitId = classDefine.name + "AddFormSubmit";
         var addFormCancelId = classDefine.name + "AddFormCancel";
         var modifyFormSubmitId = classDefine.name + "ModifyFormSubmit";
         var modifyFormCancelId = classDefine.name + "ModifyFormCancel";
-        var dataGridToolBarId = classDefine.name + 'DataGridToolBar';
-
-        classDefine['queryForm'].fieldset = {};
-        var actionBar = new ActionBar();
-        actionBar.add(new ActionButton(formQueryId, "查询"));
-        actionBar.add(new ActionButton(formResetId, "重置"));
-        classDefine['queryForm'].actionBar = actionBar;
+        var queryForm;
+        var dataTable;
 
         var clazz = new DataClass(classDefine);
 
-        var tableBar = [];
 
         // easy ui布局
         if(!$(this).hasClass('easyui-layout')) {
             $(this).addClass('easyui-layout');
             if(option.showQueryForm) {  // 头部区域 查询条件
-                $(this).append(getNorth());
+                var north = $('<div class="north" region="north" split="false" border="false" title="' + clazz.cname+ '查询"></div>');
+                $(this).append(north);
+                queryForm = north.queryForm({dataClass:clazz,onQuery:option.onQuery,prepQuery:option.prepQuery});
             }
             if(option.showDataGrid) {
-                $(this).append(getCenter());
+                var center = $('<div region="center" split="false" border="false" style="width:100%;height:100%;"></div>');
+                $(this).append(center);
+                dataTable = center.dataTable({
+                    dataClass: clazz,
+                    openAddWin: option.openAddWin,
+                    openModifyWin: option.openModifyWin,
+                    openDeleteWin: option.openDeleteWin,
+                    queryParams: queryForm.getQueryParams(),
+                    lookWin: {
+                        top: queryForm.form.offset().top,
+                        left: queryForm.form.offset().left,
+                        width: $(this).width() + 20,
+                        height: $(this).height()
+                    }
+                });
             } else {
                 $(this).append('<div region="center" split="false" border="false"></div>');
             }
             if(option.showAddForm) {
                 $(this).append(getAddForm());
-                tableBar.push({text : '增加', iconCls : 'icon-add', handler: option.openAddWin});
             }
             if(option.showModifyForm) {
                 $(this).append(getModifyForm());
-                tableBar.push({text : '修改', iconCls : 'icon-cut', handler: option.openModifyWin});
             }
-            if(option.showLookForm) {
-                $(this).append(getLookForm());
-            }
-            if(option.showDeleteForm) {
-                tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.deleteRow});
-            }
+
             $(this).layout();
 
             if(option.showQueryForm) {
@@ -89,39 +89,6 @@
                     }
                 });
             }
-
-            // 插入自定义信息
-            if(custom[clazz.name] && custom[clazz.name]['gridToolBar']) {
-                var tb = custom[clazz.name]['gridToolBar'];
-                for(var i = 0; i < tb.length; i++) {
-//                tableBar.push('-');
-                    tableBar.push(tb[i]);
-                }
-            }
-
-            // dataGridToolBar
-            var handler;
-            for(i = 0; i < tableBar.length; i++) {
-                if(tableBar[i] == '-') {
-                    $('#' + dataGridToolBarId).append('<div class="datagrid-btn-separator"></div>');
-                } else {
-                    $('#' + dataGridToolBarId).append('<div class="datagrid-btn-separator"></div>');
-                    handler = tableBar[i]['handler'];
-                    var $a = $('<a href="javascript:void(0)" style="float: left;" class="l-btn l-btn-plain"><span class="l-btn-left"><span class="l-btn-text ' + tableBar[i]['iconCls'] + '" style="padding-left: 20px;">' + tableBar[i]['text'] + '</span></span></a>')
-                        .bind('click', {handler: handler, clazz: clazz}, function(obj) {
-                            toolBarHandler(obj.data.handler, obj.data.clazz);
-                        });
-                    $('#' + dataGridToolBarId).append($a);
-                }
-            }
-        }
-
-        function getNorth() {
-            return '<div class="north" region="north" split="false" border="false" title="' + clazz.cname+ '查询" style="height:' + clazz.queryForm.height + 'px">' + clazz.queryForm.toString() + '</div>';
-        }
-
-        function getCenter() {
-            return '<div class="center" region="center" split="false" border="false"><div id="' + dataGridToolBarId + '"></div>' + clazz.dataTable.toString() + '</div>';
         }
 
         function getAddForm() {
@@ -132,10 +99,6 @@
             return '<div id="' + modifyFormWinId + '" style="display: none;" class="modifyFormWin">' + clazz.editForm.toString() + '</div>';
         }
 
-        function getLookForm() {
-            return '<div id="' + lookFormWinId + '" style="display: none;" class="lookFormWin">' + clazz.editForm.toString() + '</div>';
-        }
-
         var $_queryForm;
         var $_grid;
         var $_addFormWin;
@@ -143,35 +106,11 @@
         var $_lookFormWin;
         var $_addForm;
         var $_modifyForm;
-        if(option.showQueryForm) {
-            $_queryForm = $('#' + clazz.queryForm.id);
-            // 查询form第一个input获得焦点
-            $('.queryForm input:first').focus();
-            // 注册查询、重置事件
-            $('#' + formQueryId).click(option.onQuery);
-            $('#' + formResetId).click(option.onReset);
-            // easyui linkButton
-            $_queryForm.find('div.actionBar a').linkbutton({plain : false});
-            // easyui date
-            $_queryForm.find('input.dateField').formatDateYMD();
-            $_queryForm.find('div.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
+        if(option.showQueryForm && north) {
+            $_queryForm = north.find('form');
         }
-
         if(option.showDataGrid) {
-            $_grid = $('#' + clazz.dataTable.id).datagrid({
-                title : clazz.cname + '列表',
-                url : clazz.name + '.class',
-                queryParams: getQueryParams(),
-                pagination : true,
-                rownumbers : true,
-                singleSelect : true,
-                striped:true,
-                fit:true,
-                toolbar: '#' + dataGridToolBarId,
-                onDblClickRow:function(index, row) {
-                    openLookWin(row);
-                }
-            });
+            $_grid = dataTable.grid;
         }
 
         // add form
@@ -224,70 +163,28 @@
             $_modifyFormWin.find('div.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
         }
 
-        // look form
-        if(option.showLookForm) {
-            $_lookFormWin = $('#' + lookFormWinId).window({
-                closed:true,
-                title: '查看' + clazz.cname,
-                resizable: false,
-                collapsible:false,
-                minimizable:false,
-                maximizable:false,
-                draggable: false,
-                left: $(this).offset().left,
-                top: $(this).offset().top,
-                width: $(this).width(),
-                height: $(this).height()
-            });
-            // easyui date
-            $_lookFormWin.find('input.dateField').formatDateYMD();
-        }
-
         // 获取查询参数
-        function getQueryParams() {
+        /*function getQueryParams() {
             var result = $_queryForm.serializeForm(clazz, 'query');
             option.prepQuery(result);
             result.conditions = $.toJsonStr(result.conditions);
             result.values = $.toJsonStr(result.values);
             return result;
-        }
+        }*/
 
-        // 验证
-        var required = {
-            required: true,
-            missingMessage: '必填',
-            invalidMessage: '请输入'
-        };
-        var email = {
-            validType: 'email',
-            missingMessage: '必填',
-            invalidMessage: '请输入正确的email地址，例如fly@172app.com'
-        };
-        var url = {
-            validType: 'url',
-            missingMessage: '必填',
-            invalidMessage: '请输入正确的url地址，例如http://www.172app.com'
-        };
         $('#' + addFormWinId + ' form .required, #' + modifyFormWinId + ' form .required').each(function() {
             if($(this).css('display') == 'none') { // 针对easyui日期控件，设置required验证
                 var dateInput = $(this).parent().find('span.datebox input');
                 if(dateInput.length > 0) {
-                    dateInput.validatebox(required);
+                    dateInput.validatebox(CK_REQUIRED);
                     dateInput.attr('id', $(this).attr('id'));
                 }
             } else {
-                $(this).validatebox(required);
+                $(this).validatebox(CK_REQUIRED);
             }
         });
-        $('#' + addFormWinId + ' form .email, #' + modifyFormWinId + ' form .email').validatebox(email).attr('placeholder', 'fly@172app.com');
-        $('#' + addFormWinId + ' form .url, #' + modifyFormWinId + ' form .url').validatebox(url).attr('placeholder', 'http://www.baidu.com');
-
-
-        $.messager.defaults = {ok: '确定', cancel: '取消'};
-
-        // 查询模式
-        $('#' + clazz.queryForm.id + ' .queryMode').click(changeQueryMode);
-
+        $('#' + addFormWinId + ' form .email, #' + modifyFormWinId + ' form .email').validatebox(CK_EMAIL).attr('placeholder', 'fly@172app.com');
+        $('#' + addFormWinId + ' form .url, #' + modifyFormWinId + ' form .url').validatebox(CK_URL).attr('placeholder', 'http://www.baidu.com');
 
         // 查询
         function formQuery() {
@@ -397,6 +294,180 @@
                 });
             }
         }
+
+        clazz.dataClass = clazz;
+        clazz.baseWin = $(this);
+        clazz.datagrid = $_grid;
+
+        return this;
+    };
+
+    $.fn.queryForm = function(option) {
+        var defaults = {
+            dataClass: null,  // 类定义信息
+            onQuery: formQuery,  // 查询事件
+            onReset: formReset,  //查询表单重置
+            prepQuery: null  // 查询之前调用此函数
+        };
+        option = $.extend(defaults, option);
+
+        var clazz = option.dataClass;
+        var formQueryId = clazz.name + 'FormQuery';
+        var formResetId = clazz.name + 'FormReset';
+
+        clazz.queryForm.fieldset = {};
+        var actionBar = new ActionBar();
+        actionBar.add(new ActionButton(formQueryId, "查询"));
+        actionBar.add(new ActionButton(formResetId, "重置"));
+        clazz.queryForm.actionBar = actionBar;
+        // 增加查询表单
+        $(this).append(clazz.queryForm.toString());
+
+        var $_queryForm = $(this).find('form');
+        // 查询form第一个input获得焦点
+        $_queryForm.find('input:first').focus();
+        // 注册查询、重置事件
+        $('#' + formQueryId).click(option.onQuery);
+        $('#' + formResetId).click(option.onReset);
+        // easyui linkButton
+        $_queryForm.find('div.actionBar a').linkbutton({plain : false});
+        // easyui date
+        $_queryForm.find('input.dateField').formatDateYMD();
+        $_queryForm.find('span.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
+
+        function formQuery() {}
+        function formReset() {
+            $_queryForm[0].reset();
+        }
+
+        // 查询模式
+        $('#' + clazz.queryForm.id + ' .queryMode').click(changeQueryMode);
+
+        return {
+            form: $_queryForm,
+            getQueryParams: function () {
+                var result = $_queryForm.serializeForm(clazz, 'query');
+                if(option.prepQuery) {
+                    option.prepQuery(result);
+                }
+                result.conditions = $.toJsonStr(result.conditions);
+                result.values = $.toJsonStr(result.values);
+                return result;
+            }
+        };
+    };
+
+    $.fn.dataTable = function(option) {
+        var defaults = {
+            dataClass: null,  // 类定义信息
+            showAddForm: true,  // 是否显示添加表单
+            showModifyForm: true,  // 是否显示修改表单
+            showDeleteForm: true,  // 是否显示删除表单
+            showLookForm: true,  // 是否显示查看表单
+            openAddWin: openAddWin,  // 打开添加窗口
+            openModifyWin: openModifyWin,  // 打开修改窗口
+            openDeleteWin: openDeleteWin,  // 打开删除窗口
+            queryParams: '',  // 查询参数
+            lookWin: {
+                left: $(this).offset().left,
+                top: $(this).offset().top,
+                width: $(this).width() + 20,
+                height: $(this).height()
+            }
+        };
+
+        option = $.extend(defaults, option);
+
+        var clazz = option.dataClass;
+        var tableBar = [];
+        var dataGridToolBarId = clazz.name + 'DataGridToolBar';
+        var lookFormWinId = clazz.name + 'LookFormWin';
+        var $_lookFormWin;
+        var $_toolBar = $('<div id="' + dataGridToolBarId + '"></div>');
+
+        // 增加数据表格
+        $(this).append($_toolBar).append(clazz.dataTable.toString());
+
+        // look form
+        if(option.showLookForm) {
+            $_lookFormWin = $('<div id="' + lookFormWinId + '" style="display: none;" class="lookFormWin">' + clazz.editForm.toString() + '</div>');
+            $(this).append($_lookFormWin);
+            $_lookFormWin.window({
+                closed:true,
+                title: '查看' + clazz.cname,
+                resizable: false,
+                collapsible:false,
+                minimizable:false,
+                maximizable:false,
+                draggable: false,
+                left: option.lookWin.left,
+                top: option.lookWin.top,
+                width: option.lookWin.width,
+                height: option.lookWin.height
+            });
+            // easyui date
+            $_lookFormWin.find('form input.dateField').formatDateYMD();
+        }
+
+        if(option.showAddForm) {
+//            $(this).append(getAddForm());
+            tableBar.push({text : '增加', iconCls : 'icon-add', handler: option.openAddWin});
+        }
+        if(option.showModifyForm) {
+//            $(this).append(getModifyForm());
+            tableBar.push({text : '修改', iconCls : 'icon-cut', handler: option.openModifyWin});
+        }
+        if(option.showLookForm) {
+//            $(this).append(getLookForm());
+        }
+        if(option.showDeleteForm) {
+            tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.deleteRow});
+        }
+
+        // 插入自定义DataGrid Toolbar信息
+        if(custom[clazz.name] && custom[clazz.name]['gridToolBar']) {
+            var tb = custom[clazz.name]['gridToolBar'];
+            for(var i = 0; i < tb.length; i++) {
+                tableBar.push(tb[i]);
+            }
+        }
+
+        // dataGridToolBar
+        var handler;
+        for(i = 0; i < tableBar.length; i++) {
+            if(tableBar[i] == '-') {
+                $_toolBar.append('<div class="datagrid-btn-separator"></div>');
+            } else {
+                $_toolBar.append('<div class="datagrid-btn-separator"></div>');
+                handler = tableBar[i]['handler'];
+                var $a = $('<a href="javascript:void(0)" style="float: left;" class="l-btn l-btn-plain"><span class="l-btn-left"><span class="l-btn-text ' + tableBar[i]['iconCls'] + '" style="padding-left: 20px;">' + tableBar[i]['text'] + '</span></span></a>')
+                    .bind('click', {handler: handler, clazz: clazz}, function(obj) {
+                        toolBarHandler(obj.data.handler, obj.data.clazz);
+                    });
+                $_toolBar.append($a);
+            }
+        }
+
+        var $_grid = $('#' + clazz.dataTable.id).datagrid({
+            title : clazz.cname + '列表',
+            url : clazz.name + '.class',
+            queryParams: option.queryParams,
+            pagination : true,
+            rownumbers : true,
+            singleSelect : true,
+            striped:true,
+            fit:true,
+            toolbar: '#' + dataGridToolBarId,
+            onDblClickRow:function(index, row) {
+                if(option.showLookForm) {
+                    openLookWin(row);
+                }
+            }
+        });
+
+        function openAddWin() {}
+        function openModifyWin() {}
+        function openDeleteWin() {}
         // 打开查看窗口
         function openLookWin(rowData) {
             $('#' + lookFormWinId).css('display', 'block');
@@ -406,49 +477,46 @@
                 $.fillForm('#' + lookFormWinId + ' form', rowData, clazz.editForm);
             }
         }
-        // 查询之前调用此函数，可以改变查询条件
-        function prepQuery(queryParams) {}
-        // 改变查询模式
-        function changeQueryMode() {
-            var queryMode = $(this).html();
-            if(queryMode == '=') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_NOT_EQUAL);
-                $(this).html('!=');
-            } else if(queryMode == '!=') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_LESS_THAN);
-                $(this).html('<');
-            } else if(queryMode == '&lt;') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_GREATER_THAN);
-                $(this).html('>');
-            } else if(queryMode == '&gt;') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_LESS_EQUAL);
-                $(this).html('<=');
-            } else if(queryMode == '&lt;=') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_GREATER_EQUAL);
-                $(this).html('>=');
-            } else if(queryMode == '&gt;=') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_LIKE);
-                $(this).html('%%');
-            } else if(queryMode == '%%') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_LEFT_LIKE);
-                $(this).html('*%');
-            } else if(queryMode == '*%') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_RIGHT_LIKE);
-                $(this).html('%*');
-            } else if(queryMode == '%*') {
-                $(this).parent().find('input[queryMode]').attr('queryMode', QM_EQUAL);
-                $(this).html('=');
-            }
-        }
 
-        clazz.dataClass = clazz;
-        clazz.baseWin = $(this);
-        clazz.datagrid = $_grid;
-
-        return this;
+        return {
+            grid: $_grid
+        };
     }
 })(jQuery);
 
 function toolBarHandler(func, clazz) {
     func(clazz);
+}
+
+// 改变查询模式
+function changeQueryMode() {
+    var queryMode = $(this).html();
+    if(queryMode == '=') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_NOT_EQUAL);
+        $(this).html('!=');
+    } else if(queryMode == '!=') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_LESS_THAN);
+        $(this).html('<');
+    } else if(queryMode == '&lt;') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_GREATER_THAN);
+        $(this).html('>');
+    } else if(queryMode == '&gt;') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_LESS_EQUAL);
+        $(this).html('<=');
+    } else if(queryMode == '&lt;=') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_GREATER_EQUAL);
+        $(this).html('>=');
+    } else if(queryMode == '&gt;=') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_LIKE);
+        $(this).html('%%');
+    } else if(queryMode == '%%') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_LEFT_LIKE);
+        $(this).html('*%');
+    } else if(queryMode == '*%') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_RIGHT_LIKE);
+        $(this).html('%*');
+    } else if(queryMode == '%*') {
+        $(this).parent().find('input[queryMode]').attr('queryMode', QM_EQUAL);
+        $(this).html('=');
+    }
 }
