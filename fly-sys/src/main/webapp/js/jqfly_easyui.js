@@ -17,6 +17,7 @@
             showModifyForm: true,  // 是否显示修改表单
             showDeleteForm: true,  // 是否显示删除表单
             showLookForm: true,  // 是否显示查看表单
+            showQueryMode: true,  // 是否显示查询模式
             onQuery: formQuery,  // 查询事件
             onReset: formReset,  //查询表单重置
             openAddWin: openAddWin,  // 打开添加窗口
@@ -42,60 +43,59 @@
         var clazz = new DataClass(classDefine);
 
         // easy ui布局
-        if(!$(this).hasClass('easyui-layout')) {
-            $(this).addClass('easyui-layout');
-            if(option.showQueryForm) {  // 头部区域 查询条件
-                var north = $('<div class="north" region="north" split="false" border="false" title="' + clazz.cname+ '查询"></div>');
-                $(this).append(north);
-                queryForm = north.queryForm({dataClass:clazz,onQuery:option.onQuery,prepQuery:option.prepQuery});
-            }
-            if(option.showDataGrid) {
-                var center = $('<div region="center" split="false" border="false" style="width:100%;height:100%;"></div>');
-                $(this).append(center);
-                dataTable = center.dataTable({
-                    dataClass: clazz,
-                    openAddWin: option.openAddWin,
-                    openModifyWin: option.openModifyWin,
-                    openDeleteWin: option.openDeleteWin,
-                    queryParams: queryForm.getQueryParams(),
-                    lookWin: {
-                        top: queryForm.form.offset().top,
-                        left: queryForm.form.offset().left,
-                        width: $(this).width() + 20,
-                        height: $(this).height()
-                    }
-                });
-            } else {
-                $(this).append('<div region="center" split="false" border="false"></div>');
-            }
-            if(option.showAddForm) {
-                addForm = $(this).dataForm({
-                    dataClass: clazz,
-                    onSubmit: option.onSubmitForAddWin,
-                    onCancel: option.onCancelForAddWin,
-                    onCallback: option.addCallback,
-                    type: 'add'
-                });
-            }
-            if(option.showModifyForm) {
-                modifyForm = $(this).dataForm({
-                    dataClass: clazz,
-                    onSubmit: option.onSubmitForModifyWin,
-                    onCancel: option.onCancelForModifyWin,
-                    onCallback: option.modifyCallback,
-                    type: 'update'
-                });
-            }
+        $(this).addClass('easyui-layout');
+        if(option.showQueryForm) {  // 头部区域 查询条件
+            var north = $('<div class="north" region="north" split="false" border="false" title="' + clazz.cname+ '查询"></div>');
+            $(this).append(north);
+            queryForm = north.queryForm({dataClass:clazz,onQuery:option.onQuery,prepQuery:option.prepQuery,showQueryMode: option.showQueryMode});
+        }
+        if(option.showDataGrid) {
+            var center = $('<div region="center" split="false" border="false" style="width:100%;height:100%;"></div>');
+            $(this).append(center);
+            dataTable = center.dataTable({
+                dataClass: clazz,
+                openAddWin: option.openAddWin,
+                openModifyWin: option.openModifyWin,
+                openDeleteWin: option.openDeleteWin,
+                queryParams: queryForm.getQueryParams(),
+                url: clazz.name + '.class',
+                lookWin: {
+                    top: queryForm.form.offset().top,
+                    left: queryForm.form.offset().left,
+                    width: $(this).width() + 20,
+                    height: $(this).height()
+                }
+            });
+        } else {
+            $(this).append('<div region="center" split="false" border="false"></div>');
+        }
+        if(option.showAddForm) {
+            addForm = $(this).dataForm({
+                dataClass: clazz,
+                onSubmit: option.onSubmitForAddWin,
+                onCancel: option.onCancelForAddWin,
+                onCallback: option.addCallback,
+                type: 'add'
+            });
+        }
+        if(option.showModifyForm) {
+            modifyForm = $(this).dataForm({
+                dataClass: clazz,
+                onSubmit: option.onSubmitForModifyWin,
+                onCancel: option.onCancelForModifyWin,
+                onCallback: option.modifyCallback,
+                type: 'update'
+            });
+        }
 
-            $(this).layout();
+        $(this).layout();
 
-            if(option.showQueryForm) {
-                $(this).layout('panel','north').panel({
-                    onCollapse:function(){
-                        $('.layout-expand .panel-title').html('查询条件');
-                    }
-                });
-            }
+        if(option.showQueryForm) {
+            $(this).layout('panel','north').panel({
+                onCollapse:function(){
+                    $('.layout-expand .panel-title').html('查询条件');
+                }
+            });
         }
 
         var $_grid;
@@ -186,6 +186,7 @@
             dataClass: null,  // 类定义信息
             onQuery: null,  // 查询事件
             onReset: formReset,  //查询表单重置
+            showQueryMode: true,  // 是否显示查询模式
             prepQuery: null  // 查询之前调用此函数
         };
         option = $.extend(defaults, option);
@@ -195,6 +196,7 @@
         var formResetId = clazz.name + 'FormReset';
 
         clazz.queryForm.fieldset = {};
+        clazz.queryForm.showQueryMode = option.showQueryMode;
         var actionBar = new ActionBar();
         actionBar.add(new ActionButton(formQueryId, "查询"));
         actionBar.add(new ActionButton(formResetId, "重置"));
@@ -219,7 +221,9 @@
         }
 
         // 查询模式
-        $('#' + clazz.queryForm.id + ' .queryMode').click(changeQueryMode);
+        if(option.showQueryMode) {
+            $('#' + clazz.queryForm.id + ' .queryMode').click(changeQueryMode);
+        }
 
         return {
             form: $_queryForm,
@@ -340,6 +344,7 @@
             openAddWin: null,  // 打开添加窗口
             openModifyWin: null,  // 打开修改窗口
             openDeleteWin: null,  // 打开删除窗口
+            url: '',
             queryParams: '',  // 查询参数
             lookWin: {
                 left: $(this).offset().left,
@@ -389,7 +394,7 @@
             tableBar.push({text : '修改', iconCls : 'icon-cut', handler: option.openModifyWin});
         }
         if(option.showDeleteForm) {
-            tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.deleteRow});
+            tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.openDeleteWin});
         }
 
         // 插入自定义DataGrid Toolbar信息
@@ -418,7 +423,7 @@
 
         var $_grid = $('#' + clazz.dataTable.id).datagrid({
             title : clazz.cname + '列表',
-            url : clazz.name + '.class',
+            url : option.url,
             queryParams: option.queryParams,
             pagination : true,
             rownumbers : true,

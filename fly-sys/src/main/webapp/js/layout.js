@@ -195,7 +195,7 @@ function getFormInput(field, type) {
 
     var queryMode = '';
 
-    if(field.form.formType == '0') {
+    if(field.form.formType == '0' && field.form.showQueryMode) {
         queryMode = getQueryModeLink(field.queryMode);
     }
 

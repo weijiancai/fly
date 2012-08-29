@@ -50,6 +50,7 @@ function DataForm(classForm, dictMap) {
     this.height = 0;
     this.fieldMap = {};
     this.hiddenList = []; // 隐藏域列表
+    this.showQueryMode = true;
 
     for(var i = 0; i < classForm['fieldList'].length; i++) {
         var formField = classForm['fieldList'][i];
@@ -61,8 +62,6 @@ function DataForm(classForm, dictMap) {
     this.fieldList.sort(function(a, b) {
         return a.sortNum - b.sortNum;
     });
-    // 初始化
-    this.init();
 }
 
 DataForm.prototype = {
@@ -117,6 +116,9 @@ DataForm.prototype = {
         this.height += (idxRow + 1) * 25;
     },
     toString: function() {
+        // 初始化
+        this.init();
+
         var styleClass = '';
         var legendStr = '';
         if("0" == this.formType) {
