@@ -54,4 +54,9 @@ public class ClassDefLoaderTest {
 //        System.out.println(Json.toJsonString(classDefine));
         System.out.println(JSON.toJSONString(ClassDefineVO.getInstance(classDefine), true));
     }
+
+    @Test
+    public void testInitClassDefFromConfig() throws Exception {
+        ClassDefLoader.initClassDefFromConfig();
+    }
 }
