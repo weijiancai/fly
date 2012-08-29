@@ -56,7 +56,7 @@
             }).get();
     };
 
-    $.fn.serializeForm = function(classDef, method) {
+    $.fn.serializeForm = function(classDef, method, isConvertToJsonStr) {
         var array = $(this).serializeElementArray();
 
         var result = {method: method};
@@ -84,7 +84,7 @@
                 if('query' == method) {
                     var object = {name: classDef.colNameMap[name], queryMode: queryMode, value: value};
                     conditions.push(object);
-                } else if('save' == method || 'update' == method) {
+                } else if('add' == method || 'update' == method) {
                     colName = classDef.colNameMap[name];
                     tableName = colName.split('.')[0];
                     if(values[tableName]) {
@@ -98,8 +98,8 @@
             }
         });
 
-        result.conditions = conditions;
-        result.values = values;
+        result.conditions = isConvertToJsonStr ? $.toJsonStr(conditions) : conditions;
+        result.values = isConvertToJsonStr ? $.toJsonStr(values) : values;
 
         return result;
     };

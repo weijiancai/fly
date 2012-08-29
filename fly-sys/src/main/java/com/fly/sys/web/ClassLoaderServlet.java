@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -98,7 +97,7 @@ public class ClassLoaderServlet extends HttpServlet {
                 Query query = new Query(classDefine);
                 query.update(JSON.parseObject(values), JSON.parseObject(conditions), tableName);
             }
-        } else if ("save".equals(method)) {
+        } else if ("add".equals(method)) {
             if (isBrowser) {
                 String values = request.getParameter("values");
                 if (UString.isNotEmpty(values)) {

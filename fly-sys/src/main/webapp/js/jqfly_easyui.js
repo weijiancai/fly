@@ -20,12 +20,12 @@
             onQuery: formQuery,  // 查询事件
             onReset: formReset,  //查询表单重置
             openAddWin: openAddWin,  // 打开添加窗口
-            onSubmitForAddWin: addFormSubmit, // 添加窗口 提交按钮事件
-            onCancelForAddWin: addFormCancel,  // 添加窗口 取消按钮事件
+            onSubmitForAddWin: null, // 添加窗口 提交按钮事件
+            onCancelForAddWin: null,  // 添加窗口 取消按钮事件
             addCallback: addCallback,   // 添加窗口 提交按钮事件回调函数
             openModifyWin: openModifyWin,  // 打开修改窗口
-            onSubmitForModifyWin: modifyFormSubmit, // 修改窗口 提交按钮事件
-            onCancelForModifyWin: modifyFormCancel, // 修改窗口 取消按钮事件
+            onSubmitForModifyWin: null, // 修改窗口 提交按钮事件
+            onCancelForModifyWin: null, // 修改窗口 取消按钮事件
             modifyCallback: modifyCallback,  // 修改窗口 提交按钮事件回调函数
             openDeleteWin: deleteRow,  // 删除一行记录
             deleteCallback: deleteCallback, // 删除一行记录 回调函数
@@ -34,17 +34,12 @@
         option = $.extend(defaults, option);
 
         var classDefine = option.classDef;
-        var addFormWinId = classDefine.name + 'AddFormWin';
-        var modifyFormWinId = classDefine.name + 'ModifyFormWin';
-        var addFormSubmitId = classDefine.name + "AddFormSubmit";
-        var addFormCancelId = classDefine.name + "AddFormCancel";
-        var modifyFormSubmitId = classDefine.name + "ModifyFormSubmit";
-        var modifyFormCancelId = classDefine.name + "ModifyFormCancel";
         var queryForm;
+        var addForm;
+        var modifyForm;
         var dataTable;
 
         var clazz = new DataClass(classDefine);
-
 
         // easy ui布局
         if(!$(this).hasClass('easyui-layout')) {
@@ -74,10 +69,22 @@
                 $(this).append('<div region="center" split="false" border="false"></div>');
             }
             if(option.showAddForm) {
-                $(this).append(getAddForm());
+                addForm = $(this).dataForm({
+                    dataClass: clazz,
+                    onSubmit: option.onSubmitForAddWin,
+                    onCancel: option.onCancelForAddWin,
+                    onCallback: option.addCallback,
+                    type: 'add'
+                });
             }
             if(option.showModifyForm) {
-                $(this).append(getModifyForm());
+                modifyForm = $(this).dataForm({
+                    dataClass: clazz,
+                    onSubmit: option.onSubmitForModifyWin,
+                    onCancel: option.onCancelForModifyWin,
+                    onCallback: option.modifyCallback,
+                    type: 'update'
+                });
             }
 
             $(this).layout();
@@ -91,189 +98,58 @@
             }
         }
 
-        function getAddForm() {
-            return '<div id="' + addFormWinId + '" style="display: none;" class="addFormWin">' + clazz.editForm.toString() + '</div>';
-        }
-
-        function getModifyForm() {
-            return '<div id="' + modifyFormWinId + '" style="display: none;" class="modifyFormWin">' + clazz.editForm.toString() + '</div>';
-        }
-
-        var $_queryForm;
         var $_grid;
-        var $_addFormWin;
-        var $_modifyFormWin;
-        var $_lookFormWin;
-        var $_addForm;
-        var $_modifyForm;
-        if(option.showQueryForm && north) {
-            $_queryForm = north.find('form');
-        }
+
         if(option.showDataGrid) {
             $_grid = dataTable.grid;
         }
 
-        // add form
-        if(option.showAddForm) {
-            $_addFormWin = $('#' + addFormWinId).window({
-                closed:true,
-                title: '添加' + clazz.cname,
-                width: clazz.editForm.width,
-                height: clazz.editForm.height,
-                resizable: true,
-                collapsible:false,
-                minimizable:false,
-                draggable: true
-            });
-            var addFSubmit = new ActionButton(addFormSubmitId, "提交");
-            var addFCancel = new ActionButton(addFormCancelId, "取消");
-            $('#' + addFormWinId + ' .actionBar').append(addFSubmit.toString()).append(addFCancel.toString());
-            $('#' + addFormSubmitId).click(option.onSubmitForAddWin);
-            $('#' + addFormCancelId).click(option.onCancelForAddWin);
-            $_addForm = $('#' + addFormWinId + ' form').form();
-            // easyui linkButton
-            $_addFormWin.find('div.actionBar a').linkbutton({plain : false});
-            // easyui date
-            $_addFormWin.find('input.dateField').formatDateYMD();
-            $_addFormWin.find('div.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
-        }
-
-        // modify form
-        if(option.showModifyForm) {
-            $_modifyFormWin = $('#' + modifyFormWinId).window({
-                closed:true,
-                title: '修改' + clazz.cname,
-                width: clazz.editForm.width,
-                height: clazz.editForm.height,
-                resizable: true,
-                collapsible:false,
-                minimizable:false,
-                draggable: true
-            });
-            var mfSubmit = new ActionButton(modifyFormSubmitId, "提交");
-            var mfCancel = new ActionButton(modifyFormCancelId, "取消");
-            $('#' + modifyFormWinId + ' .actionBar').append(mfSubmit.toString()).append(mfCancel.toString());
-            $('#' + modifyFormSubmitId).click(option.onSubmitForModifyWin);
-            $('#' + modifyFormCancelId).click(option.onCancelForModifyWin);
-            $_modifyForm = $('#' + modifyFormWinId + ' form').form();
-            // easyui linkButton
-            $_modifyFormWin.find('div.actionBar a').linkbutton({plain : false});
-            // easyui date
-            $_modifyFormWin.find('input.dateField').formatDateYMD();
-            $_modifyFormWin.find('div.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
-        }
-
-        // 获取查询参数
-        /*function getQueryParams() {
-            var result = $_queryForm.serializeForm(clazz, 'query');
-            option.prepQuery(result);
-            result.conditions = $.toJsonStr(result.conditions);
-            result.values = $.toJsonStr(result.values);
-            return result;
-        }*/
-
-        $('#' + addFormWinId + ' form .required, #' + modifyFormWinId + ' form .required').each(function() {
-            if($(this).css('display') == 'none') { // 针对easyui日期控件，设置required验证
-                var dateInput = $(this).parent().find('span.datebox input');
-                if(dateInput.length > 0) {
-                    dateInput.validatebox(CK_REQUIRED);
-                    dateInput.attr('id', $(this).attr('id'));
-                }
-            } else {
-                $(this).validatebox(CK_REQUIRED);
-            }
-        });
-        $('#' + addFormWinId + ' form .email, #' + modifyFormWinId + ' form .email').validatebox(CK_EMAIL).attr('placeholder', 'fly@172app.com');
-        $('#' + addFormWinId + ' form .url, #' + modifyFormWinId + ' form .url').validatebox(CK_URL).attr('placeholder', 'http://www.baidu.com');
-
         // 查询
         function formQuery() {
-            $_grid.datagrid('reload', getQueryParams());
+            $_grid.datagrid('reload', queryForm.getQueryParams());
         }
         // 重置
         function formReset() {
-            $_queryForm[0].reset();
+            queryForm.form[0].reset();
         }
         // 打开添加窗口
         function openAddWin() {
-            $('#' + addFormWinId).css('display', 'block');
-            $_addFormWin.window('open');
-            $.clearForm('#AddFormWin form');
-            // 第一个input获得焦点
-            $('#' + addFormWinId + ' form input:first').focus();
-        }
-        // 添加窗口 提交按钮事件
-        function addFormSubmit() {
-            if($_addForm.form('validate')) {
-                $.post(clazz.name + '.class', $_addForm.serializeForm(clazz, 'save'), option.addCallback, 'json');
-            }
-        }
-        // 添加窗口 取消按钮事件
-        function addFormCancel() {
-            $_addFormWin.window('close');
+            addForm.open();
         }
         // 添加窗口 提交按钮事件 回调函数
         function addCallback(data) {
-            if (!data.success) {
-                $.messager.alert('系统提示', data.msg, 'warning');
-            } else {
-                $_addFormWin.window('close');
-                $_grid.datagrid('reload', getQueryParams());
-                $.messager.show({
-                    title:'提示信息',
-                    msg:'添加成功。'
-                });
-            }
+            formCallback(data, addForm, "添加成功。");
         }
         // 打开修改窗口
         function openModifyWin() {
-            $('#' + modifyFormWinId).css('display', 'block');
-            var rowData = $_grid.datagrid('getSelected');
-            if(rowData) {
-                $_modifyFormWin.window('open');
-                $.clearForm('#' + modifyFormWinId + ' form');
-                $.fillForm('#' + modifyFormWinId + ' form', rowData, clazz.editForm);
-                // 第一个input获得焦点
-                $('#' + modifyFormWinId + ' form input:first').focus();
-            } else {
-                $.messager.show({
-                    title:'系统提示',
-                    msg:'请先选择要修改的行。'
-                });
-            }
+            openWin(function(rowData) {
+                modifyForm.open(rowData);
+            }, '请先选择要修改的行。');
         }
-        // 修改窗口 提交按钮事件
-        function modifyFormSubmit() {
-            if($_modifyForm.form('validate')) {
-                $.post(clazz.name + '.class', $_modifyForm.serializeForm(clazz, 'update'), option.modifyCallback, 'json');
-            }
-        }
-        // 修改窗口 取消按钮事件
-        function modifyFormCancel() {
-            $_modifyFormWin.window('close');
-        }
+
         // 修改窗口 提交按钮事件 回调函数
         function modifyCallback(data) {
-            if (!data.success) {
-                $.messager.alert('系统提示', data.msg, 'warning');
-            } else {
-                $_modifyFormWin.window('close');
-                $_grid.datagrid('reload', getQueryParams());
-                $.messager.show({
-                    title:'提示信息',
-                    msg:'修改成功。'
-                });
-            }
+            formCallback(data, modifyForm, "修改成功。");
         }
         // 删除一行记录
         function deleteRow() {
-            var rowData = $_grid.datagrid('getSelected');
-            if(rowData) {
+            openWin(function(rowData) {
                 $.messager.confirm('系统提示', '确定要删除这条记录吗？', function(r) {
                     if (r) {
                         $.post(clazz.name + '.class', {method:'delete',rowData:$.toJsonStr(rowData)}, option.deleteCallback, 'json');
                     }
                 });
+            }, '请先选择要删除的行。');
+        }
+        // 删除一行记录 回调函数
+        function deleteCallback(data) {
+            formCallback(data, null, "删除成功。");
+        }
+        // 打开窗口
+        function openWin(callback, errorMsg) {
+            var rowData = $_grid.datagrid('getSelected');
+            if(rowData) {
+                callback(rowData);
             } else {
                 $.messager.show({
                     title:'系统提示',
@@ -281,16 +157,18 @@
                 });
             }
         }
-        // 删除一行记录 回调函数
-        function deleteCallback(data) {
+        // 表单提交， 回调函数
+        function formCallback(data, form, successMsg) {
             if (!data.success) {
                 $.messager.alert('系统提示', data.msg, 'warning');
             } else {
-                $_modifyFormWin.window('close');
-                $_grid.datagrid('reload', getQueryParams());
+                if(form) {
+                    form.close();
+                }
+                $_grid.datagrid('reload', queryForm.getQueryParams());
                 $.messager.show({
                     title:'提示信息',
-                    msg:'删除成功。'
+                    msg: successMsg
                 });
             }
         }
@@ -302,10 +180,11 @@
         return this;
     };
 
+    // 查询表单
     $.fn.queryForm = function(option) {
         var defaults = {
             dataClass: null,  // 类定义信息
-            onQuery: formQuery,  // 查询事件
+            onQuery: null,  // 查询事件
             onReset: formReset,  //查询表单重置
             prepQuery: null  // 查询之前调用此函数
         };
@@ -335,7 +214,6 @@
         $_queryForm.find('input.dateField').formatDateYMD();
         $_queryForm.find('span.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
 
-        function formQuery() {}
         function formReset() {
             $_queryForm[0].reset();
         }
@@ -357,6 +235,101 @@
         };
     };
 
+    // 数据表单： 增加、修改
+    $.fn.dataForm = function(option) {
+        var defaults = {
+            dataClass: null,
+            onSubmit: formSubmit,  // 表单提交
+            onCancel: formCancel, // 表单取消
+            onCallback: formCancel, // 表单提交后的回调函数
+            type: 'add'  // 表单类型，add 增加表单， edit 编辑表单
+        };
+
+        option = extend(defaults, option);
+        var clazz = option.dataClass;
+        var addFormWinId = clazz.name + 'AddFormWin';
+        var addFormSubmitId = clazz.name + "AddFormSubmit";
+        var addFormCancelId = clazz.name + "AddFormCancel";
+        var modifyFormWinId = clazz.name + 'ModifyFormWin';
+        var modifyFormSubmitId = clazz.name + "ModifyFormSubmit";
+        var modifyFormCancelId = clazz.name + "ModifyFormCancel";
+        var formWinId = addFormWinId;
+        var formTitle = '添加';
+        var formSubmitId = addFormSubmitId;
+        var formCancelId = addFormCancelId;
+
+        if(option.type == 'add') {
+            formWinId = addFormWinId;
+            formTitle = '添加';
+            formSubmitId = addFormSubmitId;
+            formCancelId = addFormCancelId;
+        } else if(option.type == 'update') {
+            formWinId = modifyFormWinId;
+            formTitle = '修改';
+            formSubmitId = modifyFormSubmitId;
+            formCancelId = modifyFormCancelId;
+        }
+
+        var actionBar = new ActionBar();
+        actionBar.add(new ActionButton(formSubmitId, "提交"));
+        actionBar.add(new ActionButton(formCancelId, "取消"));
+        clazz.editForm.actionBar = actionBar;
+
+        $(this).append('<div id="' + formWinId + '" style="display: none;">' + clazz.editForm.toString() + '</div>');
+
+        var $_form = $('#' + formWinId + ' form').form();
+
+        var $_formWin = $('#' + formWinId).window({
+            closed:true,
+            title: formTitle + clazz.cname,
+            width: clazz.editForm.width,
+            height: clazz.editForm.height,
+            resizable: true,
+            collapsible:false,
+            minimizable:false,
+            draggable: true
+        });
+
+        $('#' + formSubmitId).click(option.onSubmit);
+        $('#' + formCancelId).click(option.onCancel);
+
+        // easyui linkButton
+        $_formWin.find('div.actionBar a').linkbutton({plain : false});
+        // easyui date
+        $_formWin.find('input.dateField').formatDateYMD();
+        $_formWin.find('div.datebox input').attr('placeholder', $.getYMDStr(new Date())); // html5 placeholder
+
+        // 验证
+        addFormValidator(formWinId);
+
+        // 表单窗口 提交按钮事件
+        function formSubmit() {
+            if($_form.form('validate')) {
+                $.post(clazz.name + '.class', $_form.serializeForm(clazz, option.type, true), option.onCallback, 'json');
+            }
+        }
+        // 窗口 取消按钮事件
+        function formCancel() {
+            $_formWin.window('close');
+        }
+
+        return {
+            form: $_form,
+            open: function (data) { // 打开添加窗口
+                $('#' + formWinId).css('display', 'block');
+                $_formWin.window('open');
+                $.clearForm('#' + formWinId + ' form');
+                $.fillForm('#' + formWinId + ' form', data, clazz.editForm);
+                // 第一个input获得焦点
+                $('#' + formWinId + ' form input:first').focus();
+            },
+            close: function() { // 关掉窗口
+                $_formWin.window('close');
+            }
+        }
+    };
+
+    // 数据表格
     $.fn.dataTable = function(option) {
         var defaults = {
             dataClass: null,  // 类定义信息
@@ -364,9 +337,9 @@
             showModifyForm: true,  // 是否显示修改表单
             showDeleteForm: true,  // 是否显示删除表单
             showLookForm: true,  // 是否显示查看表单
-            openAddWin: openAddWin,  // 打开添加窗口
-            openModifyWin: openModifyWin,  // 打开修改窗口
-            openDeleteWin: openDeleteWin,  // 打开删除窗口
+            openAddWin: null,  // 打开添加窗口
+            openModifyWin: null,  // 打开修改窗口
+            openDeleteWin: null,  // 打开删除窗口
             queryParams: '',  // 查询参数
             lookWin: {
                 left: $(this).offset().left,
@@ -410,15 +383,10 @@
         }
 
         if(option.showAddForm) {
-//            $(this).append(getAddForm());
             tableBar.push({text : '增加', iconCls : 'icon-add', handler: option.openAddWin});
         }
         if(option.showModifyForm) {
-//            $(this).append(getModifyForm());
             tableBar.push({text : '修改', iconCls : 'icon-cut', handler: option.openModifyWin});
-        }
-        if(option.showLookForm) {
-//            $(this).append(getLookForm());
         }
         if(option.showDeleteForm) {
             tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.deleteRow});
@@ -465,9 +433,6 @@
             }
         });
 
-        function openAddWin() {}
-        function openModifyWin() {}
-        function openDeleteWin() {}
         // 打开查看窗口
         function openLookWin(rowData) {
             $('#' + lookFormWinId).css('display', 'block');
@@ -481,7 +446,7 @@
         return {
             grid: $_grid
         };
-    }
+    };
 })(jQuery);
 
 function toolBarHandler(func, clazz) {
@@ -519,4 +484,30 @@ function changeQueryMode() {
         $(this).parent().find('input[queryMode]').attr('queryMode', QM_EQUAL);
         $(this).html('=');
     }
+}
+
+// 添加表单验证信息
+function addFormValidator(id) {
+    $('#' + id + ' form .required').each(function() {
+        if($(this).css('display') == 'none') { // 针对easyui日期控件，设置required验证
+            var dateInput = $(this).parent().find('span.datebox input');
+            if(dateInput.length > 0) {
+                dateInput.validatebox(CK_REQUIRED);
+                dateInput.attr('id', $(this).attr('id'));
+            }
+        } else {
+            $(this).validatebox(CK_REQUIRED);
+        }
+    });
+    $('#' + id + ' form .email').validatebox(CK_EMAIL).attr('placeholder', 'fly@172app.com');
+    $('#' + id + ' form .url').validatebox(CK_URL).attr('placeholder', 'http://www.baidu.com');
+}
+
+function extend(src, dest) {
+    for(var property in dest) {
+        if(dest[property]) {
+            src[property] = dest[property];
+        }
+    }
+    return src;
 }
