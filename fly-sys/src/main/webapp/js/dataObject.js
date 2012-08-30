@@ -215,6 +215,9 @@ ActionButton.prototype = {
 };
 
 function DataTable(classTable) {
+    if(!classTable) {
+        return;
+    }
     this.id = classTable['id'];
     this.name = classTable['name'];
     this.colWidth = classTable['colWidth'];

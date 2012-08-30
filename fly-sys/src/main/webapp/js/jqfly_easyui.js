@@ -20,17 +20,18 @@
             showQueryMode: true,  // 是否显示查询模式
             onQuery: formQuery,  // 查询事件
             onReset: formReset,  //查询表单重置
-            openAddWin: openAddWin,  // 打开添加窗口
+            openAddWin: null,  // 打开添加窗口
             onSubmitForAddWin: null, // 添加窗口 提交按钮事件
             onCancelForAddWin: null,  // 添加窗口 取消按钮事件
-            addCallback: addCallback,   // 添加窗口 提交按钮事件回调函数
+            addCallback: null,   // 添加窗口 提交按钮事件回调函数
             openModifyWin: openModifyWin,  // 打开修改窗口
             onSubmitForModifyWin: null, // 修改窗口 提交按钮事件
             onCancelForModifyWin: null, // 修改窗口 取消按钮事件
             modifyCallback: modifyCallback,  // 修改窗口 提交按钮事件回调函数
             openDeleteWin: deleteRow,  // 删除一行记录
             deleteCallback: deleteCallback, // 删除一行记录 回调函数
-            prepQuery: null  // 查询之前调用此函数
+            prepQuery: null,  // 查询之前调用此函数
+            queryParams: null // dataGrid查询参数
         };
         option = $.extend(defaults, option);
 
@@ -57,8 +58,8 @@
                 openAddWin: option.openAddWin,
                 openModifyWin: option.openModifyWin,
                 openDeleteWin: option.openDeleteWin,
-                queryParams: queryForm.getQueryParams(),
-                url: clazz.name + '.class',
+                addCallback: option.addCallback,
+                queryParams: getQueryParams(),
                 lookWin: {
                     top: queryForm.form.offset().top,
                     left: queryForm.form.offset().left,
@@ -68,24 +69,6 @@
             });
         } else {
             $(this).append('<div region="center" split="false" border="false"></div>');
-        }
-        if(option.showAddForm) {
-            addForm = $(this).dataForm({
-                dataClass: clazz,
-                onSubmit: option.onSubmitForAddWin,
-                onCancel: option.onCancelForAddWin,
-                onCallback: option.addCallback,
-                type: 'add'
-            });
-        }
-        if(option.showModifyForm) {
-            modifyForm = $(this).dataForm({
-                dataClass: clazz,
-                onSubmit: option.onSubmitForModifyWin,
-                onCancel: option.onCancelForModifyWin,
-                onCallback: option.modifyCallback,
-                type: 'update'
-            });
         }
 
         $(this).layout();
@@ -103,22 +86,17 @@
         if(option.showDataGrid) {
             $_grid = dataTable.grid;
         }
-
+        // 获得查询参数
+        function getQueryParams() {
+            return option.queryParams ? option.queryParams(queryForm) : queryForm.getQueryParams();
+        }
         // 查询
         function formQuery() {
-            $_grid.datagrid('reload', queryForm.getQueryParams());
+            $_grid.datagrid('reload', getQueryParams());
         }
         // 重置
         function formReset() {
             queryForm.form[0].reset();
-        }
-        // 打开添加窗口
-        function openAddWin() {
-            addForm.open();
-        }
-        // 添加窗口 提交按钮事件 回调函数
-        function addCallback(data) {
-            formCallback(data, addForm, "添加成功。");
         }
         // 打开修改窗口
         function openModifyWin() {
@@ -126,7 +104,6 @@
                 modifyForm.open(rowData);
             }, '请先选择要修改的行。');
         }
-
         // 修改窗口 提交按钮事件 回调函数
         function modifyCallback(data) {
             formCallback(data, modifyForm, "修改成功。");
@@ -157,25 +134,10 @@
                 });
             }
         }
-        // 表单提交， 回调函数
-        function formCallback(data, form, successMsg) {
-            if (!data.success) {
-                $.messager.alert('系统提示', data.msg, 'warning');
-            } else {
-                if(form) {
-                    form.close();
-                }
-                $_grid.datagrid('reload', queryForm.getQueryParams());
-                $.messager.show({
-                    title:'提示信息',
-                    msg: successMsg
-                });
-            }
-        }
 
         clazz.dataClass = clazz;
         clazz.baseWin = $(this);
-        clazz.datagrid = $_grid;
+        clazz.dataTalbe = $_grid;
 
         return this;
     };
@@ -344,7 +306,9 @@
             openAddWin: null,  // 打开添加窗口
             openModifyWin: null,  // 打开修改窗口
             openDeleteWin: null,  // 打开删除窗口
-            url: '',
+            onSubmitForAddWin: null, // 添加窗口 提交按钮事件
+            onCancelForAddWin: null,  // 添加窗口 取消按钮事件
+            url: null,
             queryParams: '',  // 查询参数
             lookWin: {
                 left: $(this).offset().left,
@@ -387,11 +351,27 @@
             $_lookFormWin.find('form input.dateField').formatDateYMD();
         }
 
+        var addForm;
+        var modifyForm;
         if(option.showAddForm) {
-            tableBar.push({text : '增加', iconCls : 'icon-add', handler: option.openAddWin});
+            tableBar.push({text : '增加', iconCls : 'icon-add', handler: openAddWin});
+            addForm = $(this).dataForm({
+                dataClass: clazz,
+                onSubmit: option.onSubmitForAddWin,
+                onCancel: option.onCancelForAddWin,
+                onCallback: option.addCallback,
+                type: 'add'
+            });
         }
         if(option.showModifyForm) {
-            tableBar.push({text : '修改', iconCls : 'icon-cut', handler: option.openModifyWin});
+            tableBar.push({text : '修改', iconCls : 'icon-cut', handler: openAddWin});
+            modifyForm = $(this).dataForm({
+                dataClass: clazz,
+                onSubmit: option.onSubmitForModifyWin,
+                onCancel: option.onCancelForModifyWin,
+                onCallback: option.modifyCallback,
+                type: 'update'
+            });
         }
         if(option.showDeleteForm) {
             tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.openDeleteWin});
@@ -423,7 +403,7 @@
 
         var $_grid = $('#' + clazz.dataTable.id).datagrid({
             title : clazz.cname + '列表',
-            url : option.url,
+            url : getUrl(),
             queryParams: option.queryParams,
             pagination : true,
             rownumbers : true,
@@ -437,7 +417,22 @@
                 }
             }
         });
-
+        // 打开添加窗口
+        function openAddWin() {
+            if(option.openAddWin) {
+                option.openAddWin();
+            } else {
+                addForm.open();
+            }
+        }
+        // 添加窗口 提交按钮事件 回调函数
+        function addCallback(data) {
+            formCallback(data, addForm, "添加成功。");
+        }
+        // 获取url
+        function getUrl() {
+            return option.url ? option.url : clazz.name + '.class';
+        }
         // 打开查看窗口
         function openLookWin(rowData) {
             $('#' + lookFormWinId).css('display', 'block');
@@ -515,4 +510,20 @@ function extend(src, dest) {
         }
     }
     return src;
+}
+
+// 表单提交， 回调函数
+function formCallback(data, form, successMsg) {
+    if (!data.success) {
+        $.messager.alert('系统提示', data.msg, 'warning');
+    } else {
+        if(form) {
+            form.close();
+        }
+        $_grid.datagrid('reload', getQueryParams());
+        $.messager.show({
+            title:'提示信息',
+            msg: successMsg
+        });
+    }
 }

@@ -26,7 +26,7 @@ $(function() {
     $('body').append('<div id="QueryFormWin" style="height: 100%"></div>');
 
     $.post('ClassField.class', function(clazz) {
-        ClassField = new DataClass(clazz);
+        ClassField = clazz;
     });
     $.post('ClassForm.class', function(clazz) {
         ClassForm = new DataClass(clazz);
@@ -37,14 +37,17 @@ $(function() {
 });
 
 function fieldHandler(masterClazz) {
-    var rowData = masterClazz.datagrid.datagrid('getSelected');
+    var rowData = masterClazz.dataTalbe.datagrid('getSelected');
     if(rowData) {
-        $('#FieldWin').baseWin({
-            classDef: ClassField,
-            showQueryForm: false,
+        var queryCondition = new QueryCondition();
+        queryCondition.addCondition('class_id', QM_EQUAL, rowData.id);
+        $('#FieldWin').dataTable({
+            dataClass: new DataClass(ClassField),
+            /*showQueryForm: false,
             prepQuery: function(params) {
                 params.conditions.push({name: 'class_id', queryMode: QM_EQUAL, value: rowData.id});
-            }
+            }*/
+            queryParams: queryCondition.toString()
         });
 
         var $_fieldWin = $('#FieldWin').window({
