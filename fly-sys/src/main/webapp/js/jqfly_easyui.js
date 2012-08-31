@@ -24,12 +24,12 @@
             onSubmitForAddWin: null, // 添加窗口 提交按钮事件
             onCancelForAddWin: null,  // 添加窗口 取消按钮事件
             addCallback: null,   // 添加窗口 提交按钮事件回调函数
-            openModifyWin: openModifyWin,  // 打开修改窗口
+            openModifyWin: null,  // 打开修改窗口
             onSubmitForModifyWin: null, // 修改窗口 提交按钮事件
             onCancelForModifyWin: null, // 修改窗口 取消按钮事件
-            modifyCallback: modifyCallback,  // 修改窗口 提交按钮事件回调函数
-            openDeleteWin: deleteRow,  // 删除一行记录
-            deleteCallback: deleteCallback, // 删除一行记录 回调函数
+            modifyCallback: null,  // 修改窗口 提交按钮事件回调函数
+            openDeleteWin: null,  // 删除一行记录
+            deleteCallback: null, // 删除一行记录 回调函数
             prepQuery: null,  // 查询之前调用此函数
             queryParams: null // dataGrid查询参数
         };
@@ -37,8 +37,6 @@
 
         var classDefine = option.classDef;
         var queryForm;
-        var addForm;
-        var modifyForm;
         var dataTable;
 
         var clazz = new DataClass(classDefine);
@@ -59,7 +57,7 @@
                 openModifyWin: option.openModifyWin,
                 openDeleteWin: option.openDeleteWin,
                 addCallback: option.addCallback,
-                queryParams: getQueryParams(),
+                queryForm: queryForm,
                 lookWin: {
                     top: queryForm.form.offset().top,
                     left: queryForm.form.offset().left,
@@ -97,42 +95,6 @@
         // 重置
         function formReset() {
             queryForm.form[0].reset();
-        }
-        // 打开修改窗口
-        function openModifyWin() {
-            openWin(function(rowData) {
-                modifyForm.open(rowData);
-            }, '请先选择要修改的行。');
-        }
-        // 修改窗口 提交按钮事件 回调函数
-        function modifyCallback(data) {
-            formCallback(data, modifyForm, "修改成功。");
-        }
-        // 删除一行记录
-        function deleteRow() {
-            openWin(function(rowData) {
-                $.messager.confirm('系统提示', '确定要删除这条记录吗？', function(r) {
-                    if (r) {
-                        $.post(clazz.name + '.class', {method:'delete',rowData:$.toJsonStr(rowData)}, option.deleteCallback, 'json');
-                    }
-                });
-            }, '请先选择要删除的行。');
-        }
-        // 删除一行记录 回调函数
-        function deleteCallback(data) {
-            formCallback(data, null, "删除成功。");
-        }
-        // 打开窗口
-        function openWin(callback, errorMsg) {
-            var rowData = $_grid.datagrid('getSelected');
-            if(rowData) {
-                callback(rowData);
-            } else {
-                $.messager.show({
-                    title:'系统提示',
-                    msg:'请先选择要删除的行。'
-                });
-            }
         }
 
         clazz.dataClass = clazz;
@@ -308,8 +270,10 @@
             openDeleteWin: null,  // 打开删除窗口
             onSubmitForAddWin: null, // 添加窗口 提交按钮事件
             onCancelForAddWin: null,  // 添加窗口 取消按钮事件
+            addCallback: null,   // 添加窗口 提交按钮事件回调函数
             url: null,
             queryParams: '',  // 查询参数
+            queryForm: null,  // 查询表单
             lookWin: {
                 left: $(this).offset().left,
                 top: $(this).offset().top,
@@ -359,22 +323,22 @@
                 dataClass: clazz,
                 onSubmit: option.onSubmitForAddWin,
                 onCancel: option.onCancelForAddWin,
-                onCallback: option.addCallback,
+                onCallback: addCallback,
                 type: 'add'
             });
         }
         if(option.showModifyForm) {
-            tableBar.push({text : '修改', iconCls : 'icon-cut', handler: openAddWin});
+            tableBar.push({text : '修改', iconCls : 'icon-cut', handler: openModifyWin});
             modifyForm = $(this).dataForm({
                 dataClass: clazz,
                 onSubmit: option.onSubmitForModifyWin,
                 onCancel: option.onCancelForModifyWin,
-                onCallback: option.modifyCallback,
+                onCallback: modifyCallback,
                 type: 'update'
             });
         }
         if(option.showDeleteForm) {
-            tableBar.push({text : '删除', iconCls : 'icon-remove', handler: option.openDeleteWin});
+            tableBar.push({text : '删除', iconCls : 'icon-remove', handler: deleteRow});
         }
 
         // 插入自定义DataGrid Toolbar信息
@@ -404,7 +368,7 @@
         var $_grid = $('#' + clazz.dataTable.id).datagrid({
             title : clazz.cname + '列表',
             url : getUrl(),
-            queryParams: option.queryParams,
+            queryParams: getQueryParams(),
             pagination : true,
             rownumbers : true,
             singleSelect : true,
@@ -417,6 +381,14 @@
                 }
             }
         });
+        // 获得查询参数
+        function getQueryParams() {
+            if(option.queryForm) {
+                return option.queryForm.getQueryParams();
+            } else {
+                return option.queryParams;
+            }
+        }
         // 打开添加窗口
         function openAddWin() {
             if(option.openAddWin) {
@@ -427,7 +399,59 @@
         }
         // 添加窗口 提交按钮事件 回调函数
         function addCallback(data) {
-            formCallback(data, addForm, "添加成功。");
+            if(option.addCallback) {
+                option.addCallback(data);
+            } else {
+                formCallback(data, addForm, "添加成功。");
+            }
+        }
+        // 打开修改窗口
+        function openModifyWin() {
+            openWin(function(rowData) {
+                modifyForm.open(rowData);
+            }, '请先选择要修改的行。');
+        }
+        // 修改窗口 提交按钮事件 回调函数
+        function modifyCallback(data) {
+            if(option.modifyCallback) {
+                option.modifyCallback(data);
+            } else {
+                formCallback(data, modifyForm, "修改成功。");
+            }
+        }
+        // 删除一行记录
+        function deleteRow() {
+            if(option.deleteRow) {
+                option.deleteRow($_grid.datagrid('getSelected'));
+            } else {
+                openWin(function(rowData) {
+                    $.messager.confirm('系统提示', '确定要删除这条记录吗？', function(r) {
+                        if (r) {
+                            $.post(clazz.name + '.class', {method:'delete',rowData:$.toJsonStr(rowData)}, deleteCallback, 'json');
+                        }
+                    });
+                }, '请先选择要删除的行。');
+            }
+        }
+        // 删除一行记录 回调函数
+        function deleteCallback(data) {
+            if(option.deleteCallback) {
+                option.deleteCallback(data);
+            } else {
+                formCallback(data, null, "删除成功。");
+            }
+        }
+        // 打开窗口
+        function openWin(callback, errorMsg) {
+            var rowData = $_grid.datagrid('getSelected');
+            if(rowData) {
+                callback(rowData);
+            } else {
+                $.messager.show({
+                    title:'系统提示',
+                    msg:'请先选择要删除的行。'
+                });
+            }
         }
         // 获取url
         function getUrl() {
@@ -440,6 +464,21 @@
                 $_lookFormWin.window('open');
                 $.clearForm('#' + lookFormWinId + ' form');
                 $.fillForm('#' + lookFormWinId + ' form', rowData, clazz.editForm);
+            }
+        }
+        // 表单提交， 回调函数
+        function formCallback(data, form, successMsg) {
+            if (!data.success) {
+                $.messager.alert('系统提示', data.msg, 'warning');
+            } else {
+                if(form) {
+                    form.close();
+                }
+                $_grid.datagrid('reload', getQueryParams());
+                $.messager.show({
+                    title:'提示信息',
+                    msg: successMsg
+                });
             }
         }
 
@@ -510,20 +549,4 @@ function extend(src, dest) {
         }
     }
     return src;
-}
-
-// 表单提交， 回调函数
-function formCallback(data, form, successMsg) {
-    if (!data.success) {
-        $.messager.alert('系统提示', data.msg, 'warning');
-    } else {
-        if(form) {
-            form.close();
-        }
-        $_grid.datagrid('reload', getQueryParams());
-        $.messager.show({
-            title:'提示信息',
-            msg: successMsg
-        });
-    }
 }
