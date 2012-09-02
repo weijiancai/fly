@@ -160,7 +160,7 @@ function getFormInput(field, type) {
     if(field.readonly) {
         attr += ' readonly="readonly"';
     }
-    if(field.required) {
+    if(field.required && 'hidden' != type) {
         attr += ' missingMessage="必填" invalidMessage="请输入"';
         styleClass += ' required';
     }
