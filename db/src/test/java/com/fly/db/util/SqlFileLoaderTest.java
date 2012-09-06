@@ -16,6 +16,6 @@ public class SqlFileLoaderTest {
 
         //loader.execute();
         //DBManager manager = new DBManager();
-        new DBCompare("crm20120303", "crm");
+//        new DBCompare("crm20120303", "crm");
     }
 }

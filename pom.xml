@@ -77,7 +77,7 @@
     </dependencies>
 
     <build>
-        <finalName>crm</finalName>
+        <finalName>fly-framework</finalName>
 
         <plugins>
             <plugin>

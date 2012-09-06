@@ -8,7 +8,7 @@ import org.junit.Test;
 public class CharsetConvertTest {
     @Test
     public void testConvertFile() throws Exception {
-        CharsetConvert convert = new CharsetConvert("GBK", "UTF-8");
-        convert.convert("D:\\workspace\\fly\\common\\src\\main\\java\\com\\fly\\common\\util\\NoJSON.java1");
+        /*CharsetConvert convert = new CharsetConvert("GBK", "UTF-8");
+        convert.convert("D:\\workspace\\fly\\common\\src\\main\\java\\com\\fly\\common\\util\\NoJSON.java1");*/
     }
 }
