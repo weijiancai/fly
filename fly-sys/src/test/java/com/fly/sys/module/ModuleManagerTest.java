@@ -8,7 +8,7 @@ import org.junit.Test;
 public class ModuleManagerTest {
     @Test
     public void testGetModuleByName() throws Exception {
-        ModuleDefine module = ModuleManager.getModuleByName("sys_manager");
-        System.out.println(module);
+//        ModuleDefine module = ModuleManager.getModuleByName("sys_manager");
+//        System.out.println(module);
     }
 }

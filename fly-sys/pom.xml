@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>fly-sys</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <version>1.0</version>
 
     <name>fly-sys</name>
@@ -35,6 +35,7 @@
     </dependencies>
 
     <build>
+        <finalName>fly-sys</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
