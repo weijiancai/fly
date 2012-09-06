@@ -77,6 +77,7 @@ DataForm.prototype = {
         var idxCol = 0;
         var fieldList = this.fieldList;
         var field;
+        this.hiddenList = []; // 初始化
         for(var i = 0; i < fieldList.length; i++) {
             field = fieldList[i];
             if(!field.isDisplay) { // 不显示
@@ -146,7 +147,7 @@ DataForm.prototype = {
 
         // 添加隐藏域
         for(var i = 0; i < this.hiddenList.length; i++) {
-            formStr += '<input type="hidden" name="' + this.hiddenList[i].name + '"/>';
+            formStr += getFormInput(this.hiddenList[i], 'hidden');
         }
 
         return formStr + '</form>';
