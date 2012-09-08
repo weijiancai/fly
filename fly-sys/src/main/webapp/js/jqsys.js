@@ -73,7 +73,7 @@ function fieldHandler(masterClazz) {
     }
 }
 function queryFormHandler(masterClazz) {
-    var rowData = masterClazz.datagrid.datagrid('getSelected');
+    var rowData = masterClazz.dataTalbe.datagrid('getSelected');
     if(rowData) {
         $('#MasterDiv').html(ClassForm.editForm.toString());
         $('#ItemDiv').html(ClassFormField.editForm.toString());
@@ -130,7 +130,7 @@ function queryFormHandler(masterClazz) {
     }
 }
 function editFormHandler(masterClazz) {
-    var rowData = masterClazz.datagrid.datagrid('getSelected');
+    var rowData = masterClazz.dataTalbe.datagrid('getSelected');
         if(rowData) {
             $('#MasterDiv').html(ClassForm.editForm.toString());
             $('#ItemDiv').html(ClassFormField.editForm.toString());
@@ -193,12 +193,15 @@ function editFormHandler(masterClazz) {
         }
 }
 
-function dataGridHandler() {
+function dataGridHandler(masterClazz) {
+    var rowData = masterClazz.dataTalbe.datagrid('getSelected');
+    if(rowData) {
 
+    }
 }
 
 function previewClassDef(masterClazz) {
-    var rowData = masterClazz.datagrid.datagrid('getSelected');
+    var rowData = masterClazz.dataTalbe.datagrid('getSelected');
     if(rowData) {
         $('#ClassFieldDiv').html(ClassField.editForm.toString());
         $('#MasterDiv').html(ClassForm.editForm.toString());
