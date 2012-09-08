@@ -42,7 +42,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <excludes>
-                    <exclude>datasource.xml</exclude>
+                    <!--<exclude>datasource.xml</exclude>-->
                 </excludes>
             </resource>
         </resources>
