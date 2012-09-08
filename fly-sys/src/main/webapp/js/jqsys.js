@@ -37,6 +37,7 @@ $(function() {
 });
 
 function fieldHandler(masterClazz) {
+    $('#FieldWin').html('');  // 清空数据
     var rowData = masterClazz.dataTalbe.datagrid('getSelected');
     if(rowData) {
         var queryCondition = new QueryCondition();
@@ -73,6 +74,7 @@ function fieldHandler(masterClazz) {
     }
 }
 function queryFormHandler(masterClazz) {
+    $('#QueryFormWin').html('');
     var rowData = masterClazz.dataTalbe.datagrid('getSelected');
     if(rowData) {
         $('#MasterDiv').html(ClassForm.editForm.toString());
@@ -97,7 +99,7 @@ function queryFormHandler(masterClazz) {
 
             var $_fieldWin = $('#QueryFormWin').window({
                 closed:true,
-                title: rowData.cname + '查询表单信息',
+                title: rowData.cname + '【查询表单】',
                 resizable: true,
                 collapsible:false,
                 minimizable:false,

@@ -43,7 +43,7 @@ body {
     margin-left: 20px;
 }
 
-.addFormWin, .modifyFormWin, .lookFormWin, .north, .center, .easyui-layout, .window-body, .easyui-accordion, #MasterDiv, .window .window-body {
+.addFormWin, .modifyFormWin, .lookFormWin, .north, .center, .easyui-layout, .window-body, .easyui-accordion, #MasterDiv, .window .window-body, .datagrid {
     background-color:#DFE8F7;
 }
 
