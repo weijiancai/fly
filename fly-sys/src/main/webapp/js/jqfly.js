@@ -104,6 +104,57 @@
         return result;
     };
 
+    /**
+     * 填充form数据
+     */
+    $.fn.fillForm = function(data, editForm) {
+        if(!data) {
+            return;
+        }
+        var objForm = $(this)[0];
+        if(objForm == null || objForm == undefined) return false;
+        var elements = objForm.elements;
+        for(var i=0; i<elements.length; i++)
+        {
+            var name = elements[i].name;
+            var type = elements[i].type;
+            var tag = elements[i].tagName.toLowerCase();
+            var value = editForm.getValue(name, data[name]);
+
+            if(value == null|| value == 'null'){
+                value = '';
+            }
+
+            if(type == "text" || type == "password" || tag == 'textarea' || type == "hidden")
+            {
+                elements[i].value = value;
+                // 针对easyui日期控件input值的设置
+                if($(elements[i]).parent().hasClass('datebox')) {
+                    $(elements[i]).parent().find('input').val(value);
+                }
+            }
+            //当对象为下拉列表时，清除时置为第一个值
+            else if(tag=="select"){
+                for(var m = 0; m< elements[i].options.length; m++){
+                    if(elements[i].options[m].value == value){
+                        elements[i].options[m].selected=true;
+                    }
+                }
+            }
+            else if(type == "radio" && elements[i].value == value){
+                elements[i].checked = true;
+            }
+            else if(type == "checkbox"){
+                var a = value.split(',');
+                for(var j=0; j< a.length; j++){
+                    if(a[j] == elements[i].value){
+                        elements[i].checked = true;
+                    }
+                }
+            }
+        }
+    };
+
     $.fn.formatDateYMD = function() {
         this.datebox( {
             currentText : '今天',
@@ -198,58 +249,6 @@
             }
         }
 
-        return false;
-    };
-
-    /**
-     * 填充form数据
-     */
-    $.fillForm = function(formId, data, editForm) {
-        if(!data) {
-            return;
-        }
-        var objForm = $(formId)[0];
-        if(objForm == null || objForm == undefined) return false;
-        var elements = objForm.elements;
-        for(var i=0; i<elements.length; i++)
-        {
-            var name = elements[i].name;
-            var type = elements[i].type;
-            var tag = elements[i].tagName.toLowerCase();
-            var value = editForm.getValue(name, data[name]);
-
-            if(value == null|| value == 'null'){
-                value = '';
-            }
-
-            if(type == "text" || type == "password" || tag == 'textarea' || type == "hidden")
-            {
-                elements[i].value = value;
-                // 针对easyui日期控件input值的设置
-                if($(elements[i]).parent().hasClass('datebox')) {
-                    $(elements[i]).parent().find('input').val(value);
-                }
-            }
-            //当对象为下拉列表时，清除时置为第一个值
-            else if(tag=="select"){
-                for(var m = 0; m< elements[i].options.length; m++){
-                    if(elements[i].options[m].value == value){
-                        elements[i].options[m].selected=true;
-                    }
-                }
-            }
-            else if(type == "radio" && elements[i].value == value){
-                elements[i].checked = true;
-            }
-            else if(type == "checkbox"){
-                var a = value.split(',');
-                for(var j=0; j< a.length; j++){
-                    if(a[j] == elements[i].value){
-                        elements[i].checked = true;
-                    }
-                }
-            }
-        }
         return false;
     };
 

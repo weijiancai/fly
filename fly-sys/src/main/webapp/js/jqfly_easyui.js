@@ -277,7 +277,7 @@
                 $_formWin.window('resize', {top: ($('body').height() - $_formWin.height()) / 2 + option.topOffset});
                 $_formWin.window('open');
                 $.clearForm('#' + formWinId + ' form');
-                $.fillForm('#' + formWinId + ' form', data, clazz.editForm);
+                $_formWin.find('form').fillForm(data, clazz.editForm);
                 // 第一个input获得焦点
                 $('#' + formWinId + ' form input:first').focus();
             },
@@ -494,15 +494,17 @@
         }
         // 打开查看窗口
         function openLookWin(rowData) {
-            $('#' + lookFormWinId).css('display', 'block');
+            $_lookFormWin.css('display', 'block');
             if(rowData) {
                 $_lookFormWin.window('resize', {
                     width: option.baseWin.width(),
-                    height: option.baseWin.height()
+                    height: option.baseWin.height(),
+                    top: option.baseWin.offset().top,
+                    left: option.baseWin.offset().left
                 });
                 $_lookFormWin.window('open');
                 $.clearForm('#' + lookFormWinId + ' form');
-                $.fillForm('#' + lookFormWinId + ' form', rowData, clazz.editForm);
+                $_lookFormWin.find('form').fillForm(rowData, clazz.editForm);
             }
         }
         // 表单提交， 回调函数
