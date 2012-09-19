@@ -14,7 +14,7 @@ public interface DAO {
      *
      * @param obj 要持久化的对象
      */
-    void save(Object obj);
+    void save(Object obj) throws Exception;
 
     /**
      * 更新对象
