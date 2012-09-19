@@ -85,6 +85,16 @@ public class UString {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    /**
+     * 首字母小写
+     *
+     * @param str 字符串
+     * @return 返回首字母小写的字符串
+     */
+    public static String firstCharToLower(String str) {
+        return str.substring(0, 1).toLowerCase() + str.substring(1);
+    }
+
     public static String toString(Object obj) {
         return obj == null ? "" : obj.toString();
     }
