@@ -4,8 +4,6 @@ import com.fly.sys.persist.DAO;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +12,7 @@ import java.util.List;
  * @author weijiancai
  * @version 1.0.0
  */
-public class JAXBDao implements DAO {
+public class JAXBDao<T> implements DAO<T> {
     private String filePath;
     private List<Object> list = new ArrayList<Object>();
 
@@ -26,14 +24,14 @@ public class JAXBDao implements DAO {
     @Override
     public void save(Object obj) throws Exception {
 //        list.add(obj);
-        JAXBContext context = JAXBContext.newInstance(XmlList.class, obj.getClass());
+        JAXBContext context = JAXBContext.newInstance(obj.getClass());
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        XmlList list = new XmlList();
+        XmlDataStore list = new XmlDataStore();
         list.add(obj);
-        list.setFilePath(filePath);
-        marshaller.marshal(list, new File(filePath));
+//        list.setFilePath(filePath);
+        marshaller.marshal(obj, new File(filePath));
     }
 
     public void save(Object obj, Class<?>... classes) throws Exception {
@@ -53,7 +51,7 @@ public class JAXBDao implements DAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> getAll(Class<T> clazz) {
+    public <T> List<T> getAll() {
         return (List<T>) list;
     }
 }

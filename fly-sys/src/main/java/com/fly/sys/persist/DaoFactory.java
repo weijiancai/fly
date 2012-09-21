@@ -7,7 +7,7 @@ import com.fly.sys.persist.xml.JAXBDao;
  * @version 1.0.0
  */
 public class DaoFactory {
-    public static JAXBDao getJAXBDao(String filePath) {
-        return new JAXBDao(filePath);
+    public static <T> JAXBDao getJAXBDao(String filePath, Class<T> clazz) {
+        return new JAXBDao<T>(filePath);
     }
 }

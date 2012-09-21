@@ -1,8 +1,6 @@
 package com.fly.test.fix;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -10,16 +8,15 @@ import java.util.Date;
  * @author weijiancai
  * @version 1.0.0
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Person")
 public class Person {
     private String name;
     private int age;
     private double height;
     private Date birthDay;
     private boolean isStudent;
-    @XmlAnyElement
-    private Address address;
+    @XmlElement
+    Address address;
 
     public String getName() {
         return name;
@@ -59,13 +56,5 @@ public class Person {
 
     public void setStudent(boolean student) {
         isStudent = student;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 }

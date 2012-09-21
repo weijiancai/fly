@@ -12,7 +12,7 @@ import java.util.List;
  * @author weijiancai
  * @since 1.0.0
  */
-public class XmlDao implements DAO {
+public class XmlDao<T> implements DAO<T> {
     private Document doc;
 
     public XmlDao(String filePath) throws Exception {
@@ -32,7 +32,7 @@ public class XmlDao implements DAO {
     }
 
     @Override
-    public <T> List<T> getAll(Class<T> clazz) {
+    public <T> List<T> getAll() {
         return null;
     }
 }

@@ -1,14 +1,18 @@
 package com.fly.test.fix;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author weijiancai
  * @version 1.0.0
  */
-@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Address {
+    @XmlElement
     private String city;
+    @XmlElement
     private String code;
 
     public String getCity() {

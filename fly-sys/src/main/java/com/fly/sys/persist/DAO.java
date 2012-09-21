@@ -8,7 +8,7 @@ import java.util.List;
  * @author weijiancai
  * @since 1.0.0
  */
-public interface DAO {
+public interface DAO<T> {
     /**
      * 持久化对象
      *
@@ -26,8 +26,7 @@ public interface DAO {
     /**
      * 查询所有的持久化对象
      *
-     * @param clazz 对象类型
      * @return 返回所有的持久化对象
      */
-    <T> List<T> getAll(Class<T> clazz);
+    <T> List<T> getAll();
 }
