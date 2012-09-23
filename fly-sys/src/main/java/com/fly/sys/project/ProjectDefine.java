@@ -3,6 +3,7 @@ package com.fly.sys.project;
 import com.alibaba.fastjson.JSON;
 import com.fly.sys.dict.DictCategory;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

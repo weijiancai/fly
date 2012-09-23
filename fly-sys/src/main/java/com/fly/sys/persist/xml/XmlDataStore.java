@@ -1,23 +1,29 @@
 package com.fly.sys.persist.xml;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
+import javax.xml.bind.annotation.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author weijiancai
  * @since 1.0.0
  */
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class XmlDataStore<T> {
     private String name;
-    private List<T> list = new ArrayList<T>();
+    /*@XmlElements(
+            @XmlElement(name = "ProjectDefine", type = ProjectDefine.class)
+    )*/
+    @XmlElementWrapper
+    @XmlAnyElement
+    private Set<T> list = new HashSet<T>();
 
-    public List<T> getList() {
+    public Set<T> getList() {
         return list;
     }
 
-    public void setList(List<T> list) {
+    public void setList(Set<T> list) {
         this.list = list;
     }
 

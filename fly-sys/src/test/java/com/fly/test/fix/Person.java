@@ -15,8 +15,7 @@ public class Person {
     private double height;
     private Date birthDay;
     private boolean isStudent;
-    @XmlElement
-    Address address;
+    private Address address;
 
     public String getName() {
         return name;
@@ -56,5 +55,13 @@ public class Person {
 
     public void setStudent(boolean student) {
         isStudent = student;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

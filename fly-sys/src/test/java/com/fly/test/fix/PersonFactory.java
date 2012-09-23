@@ -17,7 +17,7 @@ public class PersonFactory {
         Address address = new Address();
         address.setCity("北京");
         address.setCode("010");
-//        person.setAddress(address);
+        person.setAddress(address);
 
         return person;
     }

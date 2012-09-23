@@ -1,57 +1,70 @@
 package com.fly.sys.persist.xml;
 
 import com.fly.sys.persist.DAO;
+import com.fly.sys.util.JAXBUtil;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author weijiancai
  * @version 1.0.0
  */
 public class JAXBDao<T> implements DAO<T> {
+    private XmlDataStore<T> xmlDataStore;
     private String filePath;
-    private List<Object> list = new ArrayList<Object>();
+    private Class<T> clazz;
 
-
-    public JAXBDao(String filePath) {
+    public JAXBDao(String filePath, Class<T> clazz) throws JAXBException {
         this.filePath = filePath;
+        this.clazz = clazz;
+
+        load();
     }
 
-    @Override
-    public void save(Object obj) throws Exception {
-//        list.add(obj);
-        JAXBContext context = JAXBContext.newInstance(obj.getClass());
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        XmlDataStore list = new XmlDataStore();
-        list.add(obj);
-//        list.setFilePath(filePath);
-        marshaller.marshal(obj, new File(filePath));
-    }
-
-    public void save(Object obj, Class<?>... classes) throws Exception {
-        JAXBContext context = JAXBContext.newInstance(classes);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        XmlList list = new XmlList();
-        list.add(obj);
-        list.setFilePath(filePath);
-        marshaller.marshal(list, new File(filePath));
-    }
-
-    @Override
-    public void update(Object obj) {
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> getAll() {
-        return (List<T>) list;
+    private void load() throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(XmlDataStore.class, clazz);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        File file = new File(filePath);
+        if (file.exists()) {
+            xmlDataStore = (XmlDataStore<T>) unmarshaller.unmarshal(file);
+        } else {
+            xmlDataStore = new XmlDataStore<T>();
+        }
+    }
+
+    @Override
+    public void save(T obj) throws Exception {
+        xmlDataStore.add(obj);
+        JAXBUtil.marshal(xmlDataStore, new File(filePath), XmlDataStore.class, obj.getClass());
+    }
+
+    @Override
+    public void delete(T obj) throws Exception {
+        if (getAll().contains(obj)) {
+            getAll().remove(obj);
+        }
+        JAXBUtil.marshal(xmlDataStore, new File(filePath), XmlDataStore.class, obj.getClass());
+    }
+
+    @Override
+    public void update(T obj) throws Exception {
+        if (getAll().contains(obj)) {
+            getAll().remove(obj);
+            getAll().add(obj);
+        }
+        JAXBUtil.marshal(xmlDataStore, new File(filePath), XmlDataStore.class, obj.getClass());
+    }
+
+    @Override
+    public Set<T> getAll() {
+        return xmlDataStore.getList();
     }
 }
