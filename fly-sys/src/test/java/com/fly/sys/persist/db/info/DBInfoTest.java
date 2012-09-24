@@ -1,6 +1,7 @@
 package com.fly.sys.persist.db.info;
 
 import com.fly.sys.db.info.impl.DBInfoImpl;
+import com.fly.sys.db.object.impl.DBSchemaImpl;
 import com.fly.sys.util.JAXBUtil;
 import org.junit.Test;
 
@@ -20,6 +21,6 @@ public class DBInfoTest {
         DBInfoImpl dbInfo = new DBInfoImpl(driverName, url, userName, password);
 //        DAO<DBConnectionInfo> dao = DaoFactory.getJAXBDao("ConnectionInfo.xml", DBConnectionInfo.class);
 //        dao.save(connectionInfo);
-        JAXBUtil.marshal(dbInfo, new File("ConnectionInfo.xml"), DBInfoImpl.class);
+        JAXBUtil.marshal(dbInfo, new File("DBInfo.xml"), DBInfoImpl.class, DBSchemaImpl.class);
     }
 }

@@ -1,8 +1,8 @@
 package com.fly.test.fix;
 
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author weijiancai
@@ -16,6 +16,8 @@ public class Person {
     private Date birthDay;
     private boolean isStudent;
     private Address address;
+
+    private Map<String, String> map;
 
     public String getName() {
         return name;
@@ -63,5 +65,13 @@ public class Person {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Map<String, String> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, String> map) {
+        this.map = map;
     }
 }

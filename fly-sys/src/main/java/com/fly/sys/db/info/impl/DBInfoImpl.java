@@ -1,18 +1,16 @@
 package com.fly.sys.db.info.impl;
 
-import com.fly.sys.db.info.*;
+import com.fly.sys.db.info.DBInfo;
+import com.fly.sys.db.info.DBOtherInfo;
 import com.fly.sys.db.metadata.DBConnectionParam;
 import com.fly.sys.db.metadata.DBMetadataLoader;
 import com.fly.sys.db.metadata.DBMetadataLoaderFactory;
 import com.fly.sys.db.object.DBSchema;
 import com.fly.sys.db.util.ConnectionUtil;
-import com.fly.sys.db.util.ExceptionWrapper;
 import com.fly.sys.persist.db.meta.DbCatalog;
 import com.fly.sys.persist.db.meta.MetaDataUtil;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -144,7 +142,8 @@ public class DBInfoImpl implements DBInfo {
         return catalogs;
     }
 
-    @XmlElement(name = "Schema")
+    @XmlElementWrapper(name = "Schemas")
+    @XmlAnyElement
     public List<DBSchema> getSchemas() {
         return schemas;
     }

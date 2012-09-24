@@ -2,12 +2,15 @@ package com.fly.sys.db.object.impl;
 
 import com.fly.sys.db.object.*;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
  * @author weijiancai
  * @version 1.0.0
  */
+@XmlRootElement(name = "Schema")
 public class DBSchemaImpl implements DBSchema {
     private String name;
     private String comment;
@@ -52,7 +55,7 @@ public class DBSchemaImpl implements DBSchema {
         return null;
     }
 
-    @Override
+    @Override @XmlAttribute
     public String getName() {
         return name;
     }
