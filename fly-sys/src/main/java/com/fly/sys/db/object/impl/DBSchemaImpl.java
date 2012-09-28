@@ -2,7 +2,9 @@ package com.fly.sys.db.object.impl;
 
 import com.fly.sys.db.object.*;
 
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
@@ -15,9 +17,17 @@ public class DBSchemaImpl implements DBSchema {
     private String name;
     private String comment;
 
+    private List<DBTable> tables;
+
     @Override
+    @XmlElementWrapper(name = "Tables")
+    @XmlAnyElement
     public List<DBTable> getTables() {
-        return null;
+        return tables;
+    }
+
+    public void setTables(List<DBTable> tables) {
+        this.tables = tables;
     }
 
     @Override

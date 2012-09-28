@@ -1,6 +1,7 @@
 package com.fly.sys.db.metadata;
 
 import com.fly.sys.db.object.DBSchema;
+import com.fly.sys.db.object.DBTable;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ import java.util.List;
  */
 public interface DBMetadataLoader {
     List<DBSchema> loadSchemas();
+
+    List<DBTable> loadTables(String ownerName);
 }

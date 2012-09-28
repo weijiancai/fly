@@ -2,8 +2,8 @@ package com.fly.sys.db.metadata.impl;
 
 import com.fly.sys.db.metadata.DBMetadataLoader;
 import com.fly.sys.db.object.DBSchema;
+import com.fly.sys.db.object.DBTable;
 
-import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -13,6 +13,11 @@ import java.util.List;
 public class OracleMetadataLoader implements DBMetadataLoader {
     @Override
     public List<DBSchema> loadSchemas() {
+        return null;
+    }
+
+    @Override
+    public List<DBTable> loadTables(String ownerName) {
         return null;
     }
 }

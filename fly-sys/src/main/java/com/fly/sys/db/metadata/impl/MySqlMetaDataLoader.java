@@ -5,6 +5,7 @@ import com.fly.sys.db.metadata.DBConnectionParam;
 import com.fly.sys.db.metadata.DBMetadataLoader;
 import com.fly.sys.db.object.DBObjectRowMapperFactory;
 import com.fly.sys.db.object.DBSchema;
+import com.fly.sys.db.object.DBTable;
 import com.fly.sys.db.util.ConnectionUtil;
 
 import java.sql.Connection;
@@ -35,6 +36,25 @@ public class MySqlMetadataLoader implements DBMetadataLoader {
             JdbcTemplate template = new JdbcTemplate(conn);
 
             schemas = template.query(MySqlMetadataStatement.SCHEMAS, DBObjectRowMapperFactory.getDBSchema());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionUtil.closeConnection(conn);
+        }
+
+        return schemas;
+    }
+
+    @Override
+    public List<DBTable> loadTables(String ownerName) {
+        List<DBTable> schemas = new ArrayList<DBTable>();
+
+        Connection conn = null;
+        try {
+            conn = getConn();
+            JdbcTemplate template = new JdbcTemplate(conn);
+
+            schemas = template.query(MySqlMetadataStatement.TABLES, DBObjectRowMapperFactory.getDBTable(), ownerName);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

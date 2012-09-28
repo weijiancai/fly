@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface DBSchema extends DBObject {
     List<DBTable> getTables();
+    void setTables(List<DBTable> tables);
     List<DBView> getViews();
     List<DBProcedure> getProcedures();
     List<DBFunction> getFunctions();

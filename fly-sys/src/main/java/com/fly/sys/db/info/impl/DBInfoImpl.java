@@ -99,6 +99,9 @@ public class DBInfoImpl implements DBInfo {
 
         DBMetadataLoader loader = DBMetadataLoaderFactory.getLoader(new DBConnectionParam(ConnectionUtil.getDatabaseType(conn), driverName, url, userName, password));
         schemas = loader.loadSchemas();
+        for (DBSchema schema : schemas) {
+            schema.setTables(loader.loadTables(schema.getName()));
+        }
 
         conn.close();
 
