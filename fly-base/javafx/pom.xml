@@ -8,11 +8,11 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>fly-base</artifactId>
+    <artifactId>fly-fxbase</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
 
-    <name>fly-base</name>
+    <name>fly-fxbase</name>
 
     <dependencies>
         <dependency>
