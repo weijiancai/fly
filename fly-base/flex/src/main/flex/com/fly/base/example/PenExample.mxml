@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+    <mx:Script><![CDATA[
+        import com.fly.base.drawing.Pen;
+        import com.fly.base.drawing.bpmn.ProcessPng;
+
+        import mx.controls.Alert;
+        import mx.controls.Image;
+
+        private var loader:Loader;
+
+        public function init():void {
+            loader = new Loader();
+            loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoad);
+
+            var pen:Pen = new Pen(canvas.graphics);
+            // 绘制直线
+            pen.drawLine(0, 0, 100, 0);
+
+            // 绘制虚线
+            pen.dottedLine(new Point(0, 10), new Point(100, 10));
+
+            // 绘制曲线
+            pen.curveTo(0, 30, 100, 100);
+
+            // 绘制圆
+            pen.drawCircle(50, 150, 20);
+            // 绘制同心圆
+            pen.drawCircle(150, 150, 20);
+            pen.drawCircle(150, 150, 10);
+            // 填充圆
+            pen.beginFill(0xff0000);
+            pen.drawCircle(250, 150, 20);
+            pen.endFill();
+
+            // 绘制扇形
+            pen.drawArc(10, 200, 50, 80, 20, true);
+
+            // 绘制矩形
+            pen.drawRect(10, 270, 100, 50);
+            // 绘制圆角矩形
+            pen.drawRoundRect(130, 270, 100, 50, 20);
+            pen.drawRoundRectComplex(250, 270, 100, 50, 0, 20, 5, 25);
+
+            // 绘制椭圆
+            pen.drawEllipse(10, 330, 60, 70);
+
+            // 绘制三角形
+            pen.drawTriangle(10, 420, 80, 100, 40);
+
+            // 绘制多边形
+            pen.drawRegularPolygon(100, 500, 5, 50);
+
+            // 绘制星形
+            pen.drawStar(100, 580, 5, 50, 100); // 五角星
+
+            // 使用位图填充图形
+            useBitmapFill();
+
+            // 绘制image
+            drawImage();
+        }
+
+        private function onImageLoad(event:Event):void {
+            var bitmap:BitmapData = new BitmapData(loader.width, loader.height);
+            bitmap.draw(loader, new Matrix());
+            var matrix:Matrix = new Matrix();
+            matrix.scale(.1, .1);
+            var sprite:Canvas = new Canvas();
+            sprite.graphics.lineStyle();
+            sprite.graphics.beginBitmapFill(bitmap, matrix);
+            sprite.graphics.drawCircle(100, 100, 100);
+            sprite.graphics.endFill();
+            sprite.x = 300;
+            sprite.y = 20;
+            canvas.addChild(sprite);
+        }
+
+        public function useBitmapFill():void {
+            loader.load(new URLRequest("http://www.baidu.com/img/baidu_sylogo1.gif"));
+        }
+
+        public function drawImage():void {
+            var backImage:Canvas = new Canvas();
+            var pen:Pen = new Pen(backImage.graphics);
+            pen.drawRect(0, 0, 100, 100);
+            backImage.x = 600;
+            backImage.y = 30;
+//            canvas.addChild(backImage);
+
+            var image:Image = new Image();
+            image.source = ProcessPng.USER_TASK;
+//            canvas.addChild(image);
+            backImage.addChild(image);
+            canvas.addChild(backImage);
+        }
+        ]]></mx:Script>
+
+    <mx:Canvas id="canvas" width="100%" height="100%"/>
+</mx:Application>

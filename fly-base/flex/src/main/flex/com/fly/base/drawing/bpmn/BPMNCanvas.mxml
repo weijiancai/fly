@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+    <mx:Script><![CDATA[
+        private var xmlFile:FileReference;
+
+        public function init():void {
+
+        }
+
+        private function openFile():void {
+            var file:BPMNFile = new BPMNFile(function (xml:XML):void {
+                trace(xml.toXMLString());
+            });
+            file.open();
+        }
+        ]]></mx:Script>
+
+    <mx:ApplicationControlBar width="100%">
+        <mx:Button label="打开BPMN 2.0文件" click="openFile()"/>
+    </mx:ApplicationControlBar>
+    <mx:HBox width="100%" height="100%">
+        <mx:TileList width="30" height="100%" direction="vertical" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+            <mx:Object label="" icon="{ProcessPng.ANNOTATION}" />
+            <mx:Object label="" icon="{ProcessPng.ASSOCIATION}" />
+            <mx:Object label="" icon="{ProcessPng.BUSINESS_RULE}" />
+            <mx:Object label="" icon="{ProcessPng.CALL_ACTIVITY}" />
+
+            <mx:Object label="" icon="{ProcessPng.END_EVENT_NONE}" />
+            <mx:Object label="" icon="{ProcessPng.ERROR}" />
+            <mx:Object label="" icon="{ProcessPng.ERROR_CATCH}" />
+            <mx:Object label="" icon="{ProcessPng.ERROR_THROW}" />
+            <mx:Object label="" icon="{ProcessPng.EVENT_SUB_PROCESS}" />
+
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_EVENT}" />
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_EXCLUSIVE}" />
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_INCLUSIVE}" />
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_PARALLEL}" />
+
+            <mx:Object label="" icon="{ProcessPng.LANE}" />
+            <mx:Object label="" icon="{ProcessPng.LETTER}" />
+            <mx:Object label="" icon="{ProcessPng.LOOP_MARKER}" />
+
+            <mx:Object label="" icon="{ProcessPng.MAIL}" />
+            <mx:Object label="" icon="{ProcessPng.MANUAL_TASK}" />
+            <mx:Object label="" icon="{ProcessPng.POOL}" />
+            <mx:Object label="" icon="{ProcessPng.RECEIVE_TASK}" />
+
+            <mx:Object label="" icon="{ProcessPng.SCRIPT_TASK}" />
+            <mx:Object label="" icon="{ProcessPng.SEND_TASK}" />
+            <mx:Object label="" icon="{ProcessPng.SEQUENCE_FLOW}" />
+            <mx:Object label="" icon="{ProcessPng.SERVICE_TASK}" />
+            <mx:Object label="" icon="{ProcessPng.SIGNAL}" />
+            <mx:Object label="" icon="{ProcessPng.SIGNAL_CATCH}" />
+            <mx:Object label="" icon="{ProcessPng.SIGNAL_THROW}" />
+            <mx:Object label="" icon="{ProcessPng.START_EVENT_MESSAGE}" />
+            <mx:Object label="" icon="{ProcessPng.START_EVENT_NONE}" />
+            <mx:Object label="" icon="{ProcessPng.SUB_PROCESS_COLLAPSED}" />
+            <mx:Object label="" icon="{ProcessPng.SUB_PROCESS_EXPANDED}" />
+
+            <mx:Object label="" icon="{ProcessPng.TEXT_ANNOTATION}" />
+            <mx:Object label="" icon="{ProcessPng.THROW_NONE}" />
+            <mx:Object label="" icon="{ProcessPng.THROW_SIGNAL}" />
+            <mx:Object label="" icon="{ProcessPng.TIMER_TASK}" />
+            <mx:Object label="" icon="{ProcessPng.USER_TASK}" />
+        </mx:TileList>
+        <mx:Canvas/>
+    </mx:HBox>
+</mx:VBox>
