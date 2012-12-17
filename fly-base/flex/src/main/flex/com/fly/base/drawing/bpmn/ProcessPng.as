@@ -146,7 +146,11 @@ package com.fly.base.drawing.bpmn {
         public static var TIMER_TASK:Class;  // 定时器任务
 
         [Bindable]
-        [Embed(source="./images/user.png")]
+        [Embed(source="images/user_icon.png")]
+        public static var USER_ICON:Class;  // 用户任务图标
+
+        [Bindable]
+        [Embed(source="images/user.png")]
         public static var USER_TASK:Class;  // 用户任务
     }
 }

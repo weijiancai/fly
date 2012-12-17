@@ -468,5 +468,24 @@ package com.fly.base.drawing {
                 nAngle += nAngleDelta;
             }
         }
+
+        /**
+         * 绘制一个菱形（四边形）
+         *
+         * @param x 菱形的x坐标
+         * @param y 菱形的x坐标
+         * @param width 菱形的宽
+         * @param height 菱形的高
+         */
+        public function drawRhombus(x:Number, y:Number, width:Number, height:Number):void {
+            if(!_lineStyleSet) {
+                lineStyle();
+            }
+            moveTo(x, y + height / 2);
+            lineTo(x + width / 2, y);
+            lineTo(x + width, y + height / 2);
+            lineTo(x + width / 2, y + height);
+            lineTo(x, y + height / 2);
+        }
     }
 }

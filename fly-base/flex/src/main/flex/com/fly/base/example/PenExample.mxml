@@ -50,6 +50,7 @@
 
             // 绘制多边形
             pen.drawRegularPolygon(100, 500, 5, 50);
+            pen.drawRegularPolygon(300, 500, 4, 30); // 菱形
 
             // 绘制星形
             pen.drawStar(100, 580, 5, 50, 100); // 五角星
@@ -92,7 +93,10 @@
             image.source = ProcessPng.USER_TASK;
 //            canvas.addChild(image);
             backImage.addChild(image);
-            canvas.addChild(backImage);
+
+            var image2:Image = new Image();
+            image2.addChild(backImage);
+            canvas.addChild(image2);
         }
         ]]></mx:Script>
 
