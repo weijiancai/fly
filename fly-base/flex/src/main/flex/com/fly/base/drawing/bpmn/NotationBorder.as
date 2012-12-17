@@ -20,7 +20,7 @@ package com.fly.base.drawing.bpmn {
 
         private var pen:Pen; // 画笔
 
-        public function NotationBorder(x:Number = 0, y:Number = 0, width:Number = 0, height:Number = 0, thickness:Number = 1, color:uint = 0, fillColor:uint = 0) {
+        public function NotationBorder(x:Number = 0, y:Number = 0, width:Number = 0, height:Number = 0, thickness:Number = 1, color:uint = 0, fillColor:int = -1) {
             super();
             this._x = x;
             this._y = y;
@@ -29,6 +29,9 @@ package com.fly.base.drawing.bpmn {
             this._thickness = thickness;
             this._color = color;
             this._fillColor = fillColor;
+            if(fillColor != -1) {
+                isFill = true;
+            }
 
             pen = new Pen(this.graphics);
         }

@@ -5,6 +5,9 @@
  */
 package com.fly.base.drawing.bpmn {
     import com.fly.base.drawing.bpmn.event.NotationEvent;
+    import com.fly.base.drawing.bpmn.util.NotationUtil;
+
+    import flash.display.Graphics;
 
     import flash.events.MouseEvent;
 
@@ -57,9 +60,12 @@ package com.fly.base.drawing.bpmn {
         // text x,y坐标偏移位置
         public var text_offset_x:int = 4;
         public var text_offset_y:int = 15;
+        //箭头的大小
+        public var radius:int = 5;
 
         private var glow:Glow = new Glow();
         private var _di:XML;
+        private var text:NotationText;
 
         private var selectedRectBorder:NotationBorder;
         private var highlightRectBorder:NotationBorder;
@@ -77,10 +83,6 @@ package com.fly.base.drawing.bpmn {
                     _y = di.children()[0].@y;
                     _width = di.children()[0].@width;
                     _height = di.children()[0].@height;
-//                    this.x = _x;
-//                    this.y = _y;
-//                    this.width = _width;
-//                    this._height = _height;
                 }
             }
 
@@ -94,28 +96,32 @@ package com.fly.base.drawing.bpmn {
 
             if ("startEvent" == node.localName()) {
                 _type = TYPE_START_EVENT;
-                drawStartEvent();
+//                drawStartEvent();
             } else if ("endEvent" == node.localName()) {
                 _type = TYPE_END_EVENT;
-                drawEndEvent();
+//                drawEndEvent();
             } else if ("userTask" == node.localName()) {
                 _type = TYPE_USER_TASK;
-                drawUserTask();
+//                drawUserTask();
+                this.source = ProcessPng.USER_TASK;
             } else if ("exclusiveGateway" == node.localName()) {
                 _type = TYPE_EXCLUSIVE_GATEWAY;
-                drawExclusiveGateway();
+//                drawExclusiveGateway();
             } else if ("parallelGateway" == node.localName()) {
                 _type = TYPE_PARALLEL_GATEWAY;
-                drawParallelGateway();
+//                drawParallelGateway();
             } else if ("serviceTask" == node.localName()) {
                 _type = TYPE_SERVICE_TASK;
-                drawServiceTask();
+//                drawServiceTask();
+                this.source = ProcessPng.SERVICE_TASK;
             } else if ("sequenceFlow" == node.localName()) {
                 _type = TYPE_SEQUENCE_FLOW;
-                drawSequenceFlow();
+//                drawSequenceFlow();
             }
 
-//            this.draw();
+            text = new NotationText(_label, _width*2, _x - 3, _y + 30 + 3);
+
+            this.draw();
             this.bindEvents();
         }
 
@@ -224,6 +230,57 @@ package com.fly.base.drawing.bpmn {
             this.addChild(text);
         }
 
+        // 画图标
+        private function draw():void {
+            if(this._icon == null) {
+                if(TYPE_USER_TASK == _type) {
+                    this.x = _x + 5;
+                    this.y = _y + 1;
+                    this.source = ProcessPng.USER_TASK;
+                } else if(TYPE_SERVICE_TASK == _type) {
+                    this.x = _x + 5;
+                    this.y = _y + 1;
+                    this.source = ProcessPng.SERVICE_TASK;
+                }
+
+                // 画文本
+                if(TYPE_START_EVENT == this._type || TYPE_END_EVENT == _type || TYPE_EXCLUSIVE_GATEWAY == _type || TYPE_PARALLEL_GATEWAY == _type) {
+                    text.x = _x - 3;
+                    text.y = _y + 30 + 3;
+                    this.addChild(text);
+                } else {
+                    text.x = -2;
+                    text.y = 11;
+                    this.addChild(text);
+                }
+
+                // 画圆角矩形
+                if(TYPE_USER_TASK == _type || TYPE_SERVICE_TASK == _type) {
+                    NotationUtil.drawRect(graphics, -5.5, -1.5, _width, _height);// + 0.5抗锯齿
+                } else if(TYPE_EXCLUSIVE_GATEWAY == _type || TYPE_PARALLEL_GATEWAY == _type) { // 画菱形
+                    NotationUtil.drawRhombus(graphics, _x, _y, _width, _height);
+                } else if(TYPE_SEQUENCE_FLOW == _type) { // 画线
+                    NotationUtil.drawLine(graphics, _di);
+                }
+
+
+                if(TYPE_START_EVENT == this._type) { // 画开始节点
+                    NotationUtil.drawCircle(graphics, _x + _width / 2, _y + _height / 2);
+                } else if(TYPE_END_EVENT == _type) { // 画结束节点
+                    NotationUtil.drawCircle(graphics, _x + _width / 2, _y + _height / 2, 4);
+                } else if(TYPE_PARALLEL_GATEWAY == _type) { // 菱形中画十字
+                    this.graphics.lineStyle(4, 0x000000);
+                    this.graphics.moveTo(_x + 9, _y + _height/2);
+                    this.graphics.lineTo(_x + _width - 9, _y + _height/2); // 画横线
+                    this.graphics.moveTo(_x + _width/2, _y + 9);
+                    this.graphics.lineTo(_x + _width/2, _y + _height - 9); // 画竖线
+                }
+            } else {
+                this.source = _icon;
+            }
+            text.htmlText = "<font size='12'>" + this._label + "</font>"
+        }
+
         // 绑定事件
         private function bindEvents():void {
             this.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
@@ -279,20 +336,20 @@ package com.fly.base.drawing.bpmn {
         // 选中
         public function selected():void {
             clearSelected();
-            /*selectedRectBorder = new NotaionEvent();
+            selectedRectBorder = new NotationBorder();
             if(TYPE_START_EVENT == this._type) { // 画开始节点
-                selectedRectBorder.drawCircle(1, 0x0000ff, _x + _width / 2, _y + _height / 2);
+                NotationUtil.drawCircle(selectedRectBorder.graphics, _x + _width / 2, _y + _height / 2, 1, 0x0000ff, 0);
             } else if(TYPE_END_EVENT == _type) { // 画结束节点
-                selectedRectBorder.drawCircle(4, 0x0000ff, _x + _width / 2, _y + _height / 2);
+                NotationUtil.drawCircle(selectedRectBorder.graphics, _x + _width / 2, _y + _height / 2, 4, 0x0000ff, 0);
             } else if(TYPE_USER_TASK == _type || TYPE_SERVICE_TASK == _type) {
-                selectedRectBorder.drawRect(1, 0x0000ff, _width, _height, 0, 20, 20, -5.5, -1.5);
+                NotationUtil.drawRect(graphics, -5.5, -1.5, _width, _height, 1, 0x0000ff, 0);// + 0.5抗锯齿
             } else if(TYPE_EXCLUSIVE_GATEWAY == _type || TYPE_PARALLEL_GATEWAY == _type) { // 画菱形
-                selectedRectBorder.drawRhombus(1, 0x0000ff, _width, _height, 0, _x,  _y);
+                NotationUtil.drawRhombus(graphics, _x, _y, _width, _height, 1, 0x0000ff, 0);
             } else if(TYPE_SEQUENCE_FLOW == _type) { // 画线
-                selectedRectBorder.drawLine(_di, 1, 0x0000ff);
+                NotationUtil.drawLine(graphics, _di, 5, 1, 0x0000ff);
             }
             this.addChild(selectedRectBorder);
-            this.isSelected = true;*/
+            this.isSelected = true;
         }
 
         // 清除选中
