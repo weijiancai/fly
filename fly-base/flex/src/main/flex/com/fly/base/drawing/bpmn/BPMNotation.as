@@ -10,6 +10,7 @@ package com.fly.base.drawing.bpmn {
     import flash.display.Graphics;
 
     import flash.events.MouseEvent;
+    import flash.geom.Point;
 
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
@@ -120,6 +121,7 @@ package com.fly.base.drawing.bpmn {
             text.wordWrap = true;
             text.condenseWhite = true;
             text.multiline = true;
+            text.htmlText = "<font size='12'>" + this._label + "</font>";
 
             this.draw();
             this.bindEvents();
@@ -177,10 +179,15 @@ package com.fly.base.drawing.bpmn {
                 } else if(TYPE_LANE == _type) { // 画泳道
                     graphics.lineStyle(1);
                     graphics.drawRect(_x, _y, _width, _height);
-                    graphics.moveTo(_x + 15, _y);
-                    graphics.lineTo(_x + 15, _y + _height);
-                    text.x = 0;
-                    text.y = 0;
+                    /*graphics.moveTo(_x + 15, _y);
+                    graphics.lineTo(_x + 15, _y + _height);*/
+                    text.x = _x;
+                    trace("text length = " + text.textWidth);
+                    text.y = _y + (_height - text.textWidth)/2;
+                    text.width = 15;
+                    graphics.beginFill(0xffffff);
+                    graphics.drawRect(_x, _y, 15, _height);
+                    graphics.endFill();
                 }
 
 
@@ -194,11 +201,25 @@ package com.fly.base.drawing.bpmn {
                     this.graphics.lineTo(_x + _width - 9, _y + _height/2); // 画横线
                     this.graphics.moveTo(_x + _width/2, _y + 9);
                     this.graphics.lineTo(_x + _width/2, _y + _height - 9); // 画竖线
+                } else if(TYPE_EXCLUSIVE_GATEWAY == _type) { // 菱形种画×
+                    this.graphics.lineStyle(4, 0x000000);
+                    var tmpStartPoint:Point = Point.interpolate(new Point(_x, _y + _height / 2), new Point(_x + _width / 2, _y), 0.5);
+                    var tmpEndPoint:Point = Point.interpolate(new Point(_x + _width, _y + _height / 2), new Point(_x + _width / 2, _y + _height), 0.5);
+                    var startPoint:Point = Point.interpolate(tmpStartPoint, tmpEndPoint, 0.2);
+                    var endPoint:Point = Point.interpolate(tmpStartPoint, tmpEndPoint, 0.8);
+                    this.graphics.moveTo(startPoint.x, startPoint.y);
+                    this.graphics.lineTo(endPoint.x, endPoint.y);
+
+                    tmpStartPoint = Point.interpolate(new Point(_x + _width / 2, _y), new Point(_x + _width, _y + _height / 2), 0.5);
+                    tmpEndPoint = Point.interpolate(new Point(_x + _width / 2, _y + _height), new Point(_x, _y + _height / 2), 0.5);
+                    startPoint = Point.interpolate(tmpStartPoint, tmpEndPoint, 0.2);
+                    endPoint = Point.interpolate(tmpStartPoint, tmpEndPoint, 0.8);
+                    this.graphics.moveTo(startPoint.x, startPoint.y);
+                    this.graphics.lineTo(endPoint.x, endPoint.y);
                 }
             } else {
                 this.source = _icon;
             }
-            text.htmlText = "<font size='12'>" + this._label + "</font>"
         }
 
         // 绑定事件

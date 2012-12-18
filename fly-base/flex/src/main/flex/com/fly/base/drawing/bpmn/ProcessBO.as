@@ -13,8 +13,6 @@ package com.fly.base.drawing.bpmn {
         private var processDefinitionXml:XML;
         private var processNotationList:Array = [];
         private var currentSelected:BPMNotation = null;
-
-        private var model:Namespace;
         private var bpmndi:Namespace;
         private var processNodeList:XMLList;
 
@@ -22,7 +20,7 @@ package com.fly.base.drawing.bpmn {
             this.canvas = canvas;
             this.processDefinitionXml = processDefinitionXml;
 
-            model = processDefinitionXml.namespace();
+            var model:Namespace = processDefinitionXml.namespace();
             bpmndi = getNameSpace(processDefinitionXml, "http://www.omg.org/spec/BPMN/20100524/DI");
             processNodeList = processDefinitionXml.model::process.*;
         }
