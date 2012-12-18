@@ -6,50 +6,76 @@ package com.fly.base.drawing.bpmn {
     import com.fly.base.drawing.bpmn.event.NotationEvent;
 
     import mx.containers.Canvas;
+    import mx.controls.Alert;
 
     public class ProcessBO {
         private var canvas:Canvas;
         private var processDefinitionXml:XML;
-        private var processIconList:Array = [];
+        private var processNotationList:Array = [];
         private var currentSelected:BPMNotation = null;
+
+        private var model:Namespace;
+        private var bpmndi:Namespace;
+        private var processNodeList:XMLList;
 
         public function ProcessBO(canvas:Canvas, processDefinitionXml:XML) {
             this.canvas = canvas;
             this.processDefinitionXml = processDefinitionXml;
+
+            model = processDefinitionXml.namespace();
+            bpmndi = getNameSpace(processDefinitionXml, "http://www.omg.org/spec/BPMN/20100524/DI");
+            processNodeList = processDefinitionXml.model::process.*;
         }
 
         public function draw():void {
             clearCanvas();
 
-            var model:Namespace = processDefinitionXml.namespace();
-            var bpmndi:Namespace = getNameSpace(processDefinitionXml, "http://www.omg.org/spec/BPMN/20100524/DI");
+            if(bpmndi == null) {
+                Alert.show("获取BPMN DI数据失败！");
+                return;
+            }
 
-            var processNodeList:XMLList = processDefinitionXml.model::process.*;
+            var diNodeArray:Array = [];
             var node:XML;
-            var notaion:BPMNotation;
+            var notation:BPMNotation;
+            var y_min:Number = 1000; // y坐标的最小值，用于计算图形相对于最上边的最小距离
+
 
             for (var i:int = 0; i < processNodeList.length(); i++) {
                 node = processNodeList[i];
 
-                var diNode:XML;
-                if(bpmndi != null) {
-                    trace(node.@id.toString());
+                if("laneSet" == node.localName()) {
+                    for(var j:int = 0; j < node.children().length(); j++) {
+                        processDI(node.children()[j]);
+                    }
+                } else {
+                    processDI(node);
+                }
+            }
 
-                    var list:XMLList = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNShape.(@bpmnElement == node.@id.toString());
+            function processDI(node:XML):void {
+                var diNode:XML;
+                var list:XMLList = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNShape.(@bpmnElement == node.@id.toString());
+                if(list.length() > 0) {
+                    diNode = list[0];
+                    var y:Number = Number(diNode.children()[0].@y);
+                    y_min = y < y_min ? y : y_min;
+                } else {
+                    list = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNEdge.(@bpmnElement == node.@id.toString());
                     if(list.length() > 0) {
                         diNode = list[0];
-                    } else {
-                        list = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNEdge.(@bpmnElement == node.@id.toString());
-                        if(list.length() > 0) {
-                            diNode = list[0];
-                        }
                     }
                 }
+                diNodeArray.push({node : node, di : diNode});
+            }
 
-                notaion = new BPMNotation(node,  diNode);
-                processIconList.push(notaion);
-                canvas.addChild(notaion);
-                notaion.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
+            for(i = 0; i < diNodeArray.length; i++) {
+                node = diNodeArray[i].node;
+                var diNode:XML = diNodeArray[i].di;
+                notation = new BPMNotation(node,  diNode, 15 - y_min); // 距离最上边15
+                processNotationList.push(notation);
+                canvas.addChild(notation);
+                notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
             }
         }
 
@@ -86,8 +112,8 @@ package com.fly.base.drawing.bpmn {
 
         public function highlightNode(key:String):void {
             var processIcon:BPMNotation;
-            for(var i:int = 0; i < processIconList.length; i++) {
-                processIcon = processIconList[i];
+            for(var i:int = 0; i < processNotationList.length; i++) {
+                processIcon = processNotationList[i];
                 if(processIcon.key == key) {
                     processIcon.highlight();
                 }
@@ -96,16 +122,16 @@ package com.fly.base.drawing.bpmn {
 
         // 清除所有选中
         private function clearAllSelected():void {
-            for(var i:int = 0; i < processIconList.length; i++) {
-                var processIcon:BPMNotation = processIconList[i];
+            for(var i:int = 0; i < processNotationList.length; i++) {
+                var processIcon:BPMNotation = processNotationList[i];
                 processIcon.clearSelected();
             }
         }
 
         // 清除所有高亮
         private function clearAllHighlight():void {
-            for(var i:int = 0; i < processIconList.length; i++) {
-                var processIcon:BPMNotation = processIconList[i];
+            for(var i:int = 0; i < processNotationList.length; i++) {
+                var processIcon:BPMNotation = processNotationList[i];
                 processIcon.clearHighlight();
             }
         }

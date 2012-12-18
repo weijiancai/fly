@@ -37,7 +37,7 @@ package com.fly.base.drawing.bpmn {
         }
 
         private static function getTypeFilter():Array {
-            var imagesFilter:FileFilter = new FileFilter("BPMN 2.0 Xml (*.xml)", "*.xml");
+            var imagesFilter:FileFilter = new FileFilter("BPMN 2.0 (*.xml,*.bpmn)", "*.xml;*.bpmn");
             return [imagesFilter];
         }
     }

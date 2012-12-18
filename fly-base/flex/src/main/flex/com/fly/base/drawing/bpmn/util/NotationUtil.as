@@ -5,7 +5,6 @@
  */
 package com.fly.base.drawing.bpmn.util {
     import com.fly.base.drawing.Pen;
-    import com.fly.base.drawing.Pen;
 
     import flash.display.Graphics;
 
@@ -68,19 +67,20 @@ package com.fly.base.drawing.bpmn.util {
          * @param thickness
          * @param color
          * @param graphics
+         * @param y_min
          */
-        public static function drawLine(graphics:Graphics, di:XML, radius:Number = 5, thickness:Number = 1, color:uint = 0):void {
+        public static function drawLine(graphics:Graphics, di:XML, y_min:Number = 0, radius:Number = 5, thickness:Number = 1, color:uint = 0):void {
             var pen:Pen = new Pen(graphics);
             pen.lineStyle(thickness, color, 1, true);
             var waypointList:XMLList = di.children();
             var startX:Number = 0, startY:Number = 0, endX:Number = 0, endY:Number = 0;
             for (var j:int = 0; j < waypointList.length(); j++) {
                 if (endX > 0 && endY > 0) {
-                    pen.drawLine(endX, endY, Number(waypointList[j].@x), Number(waypointList[j].@y));
+                    pen.drawLine(endX, endY, Number(waypointList[j].@x), Number(waypointList[j].@y) + y_min);
                 }
 
                 endX = Number(waypointList[j].@x);
-                endY = Number(waypointList[j].@y);
+                endY = Number(waypointList[j].@y) + y_min;
 
                 if (j == waypointList.length() - 2) { // 记录最后一个开始点的位置
                     startX = endX;
