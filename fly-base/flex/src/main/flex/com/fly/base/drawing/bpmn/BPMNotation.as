@@ -14,6 +14,7 @@ package com.fly.base.drawing.bpmn {
 
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
+    import flash.text.TextFormat;
 
     import mx.containers.Canvas;
     import mx.controls.Image;
@@ -26,12 +27,15 @@ package com.fly.base.drawing.bpmn {
     public class BPMNotation extends Image {
         public static const TYPE_START_EVENT:String = "startEvent";
         public static const TYPE_END_EVENT:String = "endEvent";
+        public static const TYPE_BOUNDARY_EVENT:String = "boundaryEvent";
         public static const TYPE_USER_TASK:String = "userTask";
         public static const TYPE_SERVICE_TASK:String = "serviceTask";
         public static const TYPE_EXCLUSIVE_GATEWAY:String = "exclusiveGateway";
         public static const TYPE_PARALLEL_GATEWAY:String = "parallelGateway";
         public static const TYPE_SEQUENCE_FLOW:String = "sequenceFlow";
         public static const TYPE_LANE:String = "lane";
+        public static const TYPE_PARTICIPANT:String = "participant";
+        public static const TYPE_SUB_PROCESS:String = "subProcess";
 
         // 名称
         private var _key:String;
@@ -108,6 +112,13 @@ package com.fly.base.drawing.bpmn {
                 _type = TYPE_SEQUENCE_FLOW;
             } else if("lane" == node.localName()) {
                 _type = TYPE_LANE;
+            } else if("participant" == node.localName()) {
+                _type = TYPE_PARTICIPANT;
+            } else if("subProcess" == node.localName()) {
+                _type = TYPE_SUB_PROCESS;
+            } else if("boundaryEvent" == node.localName()) {
+                _type = TYPE_BOUNDARY_EVENT;
+                this.source = ProcessPng.TIMER_TASK;
             }
 
             text = new TextField();
@@ -163,6 +174,15 @@ package com.fly.base.drawing.bpmn {
                 if(TYPE_START_EVENT == this._type || TYPE_END_EVENT == _type || TYPE_EXCLUSIVE_GATEWAY == _type || TYPE_PARALLEL_GATEWAY == _type) {
                     text.x = _x - 3;
                     text.y = _y + 30 + 3;
+                } else if(TYPE_SEQUENCE_FLOW == _type){
+                    /*var list:XMLList = _di.children();
+                    for(var i:int = 0; i < list.length(); i++) {
+                        if(list[i].localName() == "BPMNLabel" && list[i].children().length() > 0) {
+                            text.x = Number(list[i].children()[0].@x);
+                            text.y = Number(list[i].children()[0].@y);
+                        }
+                    }*/
+                    text.htmlText = ""; // 暂时不显示
                 } else {
                     text.x = -2;
                     text.y = 11;
@@ -176,20 +196,37 @@ package com.fly.base.drawing.bpmn {
                     NotationUtil.drawRhombus(graphics, _x, _y, _width, _height);
                 } else if(TYPE_SEQUENCE_FLOW == _type) { // 画线
                     NotationUtil.drawLine(graphics, _di, y_min);
-                } else if(TYPE_LANE == _type) { // 画泳道
+                } else if(TYPE_LANE == _type) { // 画泳道lane
                     graphics.lineStyle(1);
                     graphics.drawRect(_x, _y, _width, _height);
-                    /*graphics.moveTo(_x + 15, _y);
-                    graphics.lineTo(_x + 15, _y + _height);*/
                     text.x = _x;
-                    trace("text length = " + text.textWidth);
                     text.y = _y + (_height - text.textWidth)/2;
                     text.width = 15;
                     graphics.beginFill(0xffffff);
                     graphics.drawRect(_x, _y, 15, _height);
                     graphics.endFill();
+                } else if(TYPE_PARTICIPANT == _type) { // 画泳池
+                    text.x = _x;
+                    text.y = _y + (_height - text.textWidth)/2;
+                    text.width = 15;
+                    graphics.lineStyle(1);
+                    graphics.drawRect(_x, _y, _width, _height);
+                } else if(TYPE_SUB_PROCESS == _type) { // 画子流程
+                    graphics.lineStyle(1);
+                    graphics.drawRect(_x, _y, _width, _height);
+                    text.x = _x + 15;
+                    text.y = _y;
+                    /*graphics.beginFill(0xffffff);
+                    graphics.drawRect(_x, _y, _width, 15);
+                    graphics.endFill();*/
+                } else if(TYPE_BOUNDARY_EVENT == _type) { // 画定时器
+                    this.x = _x + _width/2 - 4;
+                    this.y = _y + _height/2 - 4;
+                    graphics.lineStyle(1);
+                    graphics.beginFill(0xffffff);
+                    graphics.drawCircle(_width / 2 - 10, _height / 2 - 10, _width/2);
+                    graphics.endFill();
                 }
-
 
                 if(TYPE_START_EVENT == this._type) { // 画开始节点
                     NotationUtil.drawCircle(graphics, _x + _width / 2, _y + _height / 2);

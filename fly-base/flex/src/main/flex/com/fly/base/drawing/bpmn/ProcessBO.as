@@ -13,14 +13,18 @@ package com.fly.base.drawing.bpmn {
         private var processDefinitionXml:XML;
         private var processNotationList:Array = [];
         private var currentSelected:BPMNotation = null;
+        private var model:Namespace;
         private var bpmndi:Namespace;
         private var processNodeList:XMLList;
+
+        private var y_min:Number = 1000; // y坐标的最小值，用于计算图形相对于最上边的最小距离
+        private var diNodeArray:Array = [];
 
         public function ProcessBO(canvas:Canvas, processDefinitionXml:XML) {
             this.canvas = canvas;
             this.processDefinitionXml = processDefinitionXml;
 
-            var model:Namespace = processDefinitionXml.namespace();
+            model = processDefinitionXml.namespace();
             bpmndi = getNameSpace(processDefinitionXml, "http://www.omg.org/spec/BPMN/20100524/DI");
             processNodeList = processDefinitionXml.model::process.*;
         }
@@ -33,38 +37,16 @@ package com.fly.base.drawing.bpmn {
                 return;
             }
 
-            var diNodeArray:Array = [];
             var node:XML;
             var notation:BPMNotation;
-            var y_min:Number = 1000; // y坐标的最小值，用于计算图形相对于最上边的最小距离
 
+            processProcessNode(processNodeList);
 
-            for (var i:int = 0; i < processNodeList.length(); i++) {
-                node = processNodeList[i];
-
-                if("laneSet" == node.localName()) {
-                    for(var j:int = 0; j < node.children().length(); j++) {
-                        processDI(node.children()[j]);
-                    }
-                } else {
-                    processDI(node);
-                }
-            }
-
-            function processDI(node:XML):void {
-                var diNode:XML;
-                var list:XMLList = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNShape.(@bpmnElement == node.@id.toString());
-                if(list.length() > 0) {
-                    diNode = list[0];
-                    var y:Number = Number(diNode.children()[0].@y);
-                    y_min = y < y_min ? y : y_min;
-                } else {
-                    list = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNEdge.(@bpmnElement == node.@id.toString());
-                    if(list.length() > 0) {
-                        diNode = list[0];
-                    }
-                }
-                diNodeArray.push({node : node, di : diNode});
+            // 读取collaboration participant
+            var participantList:XMLList = processDefinitionXml.model::collaboration.*;
+            var i:int;
+            for(i = 0; i < participantList.length(); i++) {
+                processDI(participantList[i]);
             }
 
             for(i = 0; i < diNodeArray.length; i++) {
@@ -75,6 +57,39 @@ package com.fly.base.drawing.bpmn {
                 canvas.addChild(notation);
                 notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
             }
+        }
+
+        internal function processProcessNode(list:XMLList):void {
+            for (var i:int = 0; i < list.length(); i++) {
+                var node:XML = list[i];
+
+                if("subProcess" == node.localName()) { // 读取子流程
+                    processDI(node);
+                    processProcessNode(node.children());
+                } else if("laneSet" == node.localName()) { // 读取泳道
+                    for(var j:int = 0; j < node.children().length(); j++) {
+                        processDI(node.children()[j]);
+                    }
+                } else {
+                    processDI(node);
+                }
+            }
+        }
+
+        internal function processDI(node:XML):void {
+            var diNode:XML;
+            var list:XMLList = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNShape.(@bpmnElement == node.@id.toString());
+            if(list.length() > 0) {
+                diNode = list[0];
+                var y:Number = Number(diNode.children()[0].@y);
+                y_min = y < y_min ? y : y_min;
+            } else {
+                list = processDefinitionXml.bpmndi::BPMNDiagram..bpmndi::BPMNEdge.(@bpmnElement == node.@id.toString());
+                if(list.length() > 0) {
+                    diNode = list[0];
+                }
+            }
+            diNodeArray.push({node : node, di : diNode});
         }
 
         // 清空画布
