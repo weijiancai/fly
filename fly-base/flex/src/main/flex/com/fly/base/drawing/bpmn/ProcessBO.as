@@ -16,6 +16,7 @@ package com.fly.base.drawing.bpmn {
         private var model:Namespace;
         private var bpmndi:Namespace;
         private var processNodeList:XMLList;
+        public var editable:Boolean = true;
 
         private var y_min:Number = 1000; // y坐标的最小值，用于计算图形相对于最上边的最小距离
         private var diNodeArray:Array = [];
@@ -56,6 +57,8 @@ package com.fly.base.drawing.bpmn {
                 processNotationList.push(notation);
                 canvas.addChild(notation);
                 notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
+                notation.addEventListener(NotationEvent.ICON_MOUSE_UP, onIconMouseUpHandler);
+                notation.addEventListener(NotationEvent.ICON_MOVE, onIconMoveHandler);
             }
         }
 
@@ -97,11 +100,26 @@ package com.fly.base.drawing.bpmn {
             canvas.removeAllChildren();
         }
 
+        // 处理鼠标按下事件
         internal function onIconMouseDownHandler(event:NotationEvent):void {
             clearAllSelected();
-            trace(event.type);
             currentSelected = event.icon;
             currentSelected.selected();
+            if(editable) { // 开始拖动
+                currentSelected.startDrag();
+            }
+        }
+
+        // 处理鼠标弹起事件
+        internal function onIconMouseUpHandler(event:NotationEvent):void {
+            if(editable) { // 停止拖动
+                currentSelected.stopDrag();
+            }
+        }
+
+        // 处理鼠标移动事件
+        internal function onIconMoveHandler(event:NotationEvent):void {
+            // TODO 拖动图标时重画与该图标相关的线条
         }
 
         /**

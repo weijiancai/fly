@@ -62,7 +62,8 @@ package com.fly.base.drawing.bpmn {
         private var _height:Number;
         private var y_min:Number;
 
-        private var glow:Glow = new Glow();
+        private var glow_down:Glow = new Glow(); // 鼠标按下发光效果
+        private var glow_up:Glow = new Glow(); // 鼠标弹起发光效果
         private var _di:XML;
         private var text:TextField;
 
@@ -88,11 +89,19 @@ package com.fly.base.drawing.bpmn {
 
             this.graphics.clear();
 
-            glow.blurXFrom = 0;
-            glow.blurXTo = 15;
-            glow.color = 0xFF0000;
-            glow.blurYFrom = 0;
-            glow.blurYTo = 15;
+            glow_down.blurXFrom = 0;
+            glow_down.blurXTo = 15;
+            glow_down.color = 0xFF0000;
+            glow_down.blurYFrom = 0;
+            glow_down.blurYTo = 15;
+
+            glow_up.alphaFrom = 50;
+            glow_up.alphaTo = 0;
+            glow_up.blurXFrom = 15;
+            glow_up.blurXTo = 0;
+            glow_up.color = 0x00FF00;
+            glow_up.blurYFrom = 15;
+            glow_up.blurYTo = 0;
 
             if ("startEvent" == node.localName()) {
                 _type = TYPE_START_EVENT;
@@ -270,9 +279,9 @@ package com.fly.base.drawing.bpmn {
         private function mouseDownHandler(event:MouseEvent):void {
             var e:NotationEvent = new NotationEvent(NotationEvent.ICON_MOUSE_DOWN);
             e.icon = this;
-            glow.target = this;
-            glow.end();
-            glow.play();
+            glow_down.target = this;
+            glow_down.end();
+            glow_down.play();
 
             this.dispatchEvent(e);
         }
@@ -281,6 +290,10 @@ package com.fly.base.drawing.bpmn {
         private function mouseUpHandler(event:MouseEvent):void {
             var e:NotationEvent = new NotationEvent(NotationEvent.ICON_MOUSE_UP);
             e.icon = this;
+            glow_up.target = this;
+            glow_up.end();
+            glow_up.play();
+
             this.dispatchEvent(e);
         }
 
