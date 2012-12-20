@@ -16,7 +16,7 @@ package com.fly.base.drawing.bpmn {
         private var model:Namespace;
         private var bpmndi:Namespace;
         private var processNodeList:XMLList;
-        public var editable:Boolean = true;
+        public var editable:Boolean = false; // 默认不可编辑
 
         private var y_min:Number = 1000; // y坐标的最小值，用于计算图形相对于最上边的最小距离
         private var diNodeArray:Array = [];

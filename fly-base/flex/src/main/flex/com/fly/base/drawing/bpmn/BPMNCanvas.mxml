@@ -31,7 +31,7 @@
 
     <mx:ApplicationControlBar width="100%">
         <mx:Button label="打开BPMN 2.0文件" click="openFile()"/>
-        <mx:CheckBox label="可编辑" id="cb_editable" selected="true" click="setEditable()"/>
+        <mx:CheckBox label="可编辑" id="cb_editable" selected="false" click="setEditable()"/>
     </mx:ApplicationControlBar>
     <mx:HBox width="100%" height="100%">
         <mx:TileList width="30" height="100%" direction="vertical" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
