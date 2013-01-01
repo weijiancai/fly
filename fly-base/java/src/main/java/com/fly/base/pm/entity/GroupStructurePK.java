@@ -2,10 +2,10 @@ package com.fly.base.pm.entity;
 
 import org.hibernate.type.ManyToOneType;
 
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 组结构联合主键
@@ -17,7 +17,10 @@ import java.io.Serializable;
 public class GroupStructurePK implements Serializable {
     private GroupStructureType groupStructType;
     private Group group;
+    /** 父组 */
     private Group parentGroup;
+    /** 子组 */
+//    private Set<Group> children = new HashSet<Group>();
 
     public GroupStructurePK() {}
 
@@ -28,6 +31,12 @@ public class GroupStructurePK implements Serializable {
         group.setId(groupId);
         this.parentGroup = new Group();
         parentGroup.setId(parentGroupId);
+    }
+
+    public GroupStructurePK(GroupStructureType groupStructType, Group group, Group parentGroup) {
+        this.groupStructType = groupStructType;
+        this.group = group;
+        this.parentGroup = parentGroup;
     }
 
     @ManyToOne
@@ -59,6 +68,16 @@ public class GroupStructurePK implements Serializable {
     public void setParentGroup(Group parentGroup) {
         this.parentGroup = parentGroup;
     }
+
+    /*@OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    public Set<Group> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Group> children) {
+        this.children = children;
+    }*/
 
     @Override
     public boolean equals(Object o) {
