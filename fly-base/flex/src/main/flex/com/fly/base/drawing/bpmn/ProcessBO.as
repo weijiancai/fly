@@ -105,14 +105,14 @@ package com.fly.base.drawing.bpmn {
             clearAllSelected();
             currentSelected = event.icon;
             currentSelected.selected();
-            if(editable) { // 开始拖动
+            if(editable && currentSelected.dragable()) { // 开始拖动
                 currentSelected.startDrag();
             }
         }
 
         // 处理鼠标弹起事件
         internal function onIconMouseUpHandler(event:NotationEvent):void {
-            if(editable) { // 停止拖动
+            if(editable && currentSelected.dragable()) { // 停止拖动
                 currentSelected.stopDrag();
             }
         }

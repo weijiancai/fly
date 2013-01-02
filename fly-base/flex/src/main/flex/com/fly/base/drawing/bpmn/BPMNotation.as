@@ -358,5 +358,10 @@ package com.fly.base.drawing.bpmn {
                 selectedRectBorder = null;
             }
         }
+
+        // 是否可拖动
+        public function dragable():Boolean {
+            return _type !== TYPE_SEQUENCE_FLOW;
+        }
     }
 }

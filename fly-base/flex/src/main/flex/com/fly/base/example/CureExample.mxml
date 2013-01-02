@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+    <mx:Script><![CDATA[
+        import mx.controls.Label;
+
+        var x1:uint = 80;
+        var y1:uint = 200;
+
+        var x2:uint = 450;
+        var y2:uint = 200;
+
+        var lbl1:Label = new Label();
+        var lbl2:Label = new Label();
+        var lbl3:Label = new Label();
+
+        public function init():void {
+            /*lbl1.text = "x1, y1";
+            lbl2.text = "x2, y2";
+            lbl3.text = "x3, y3";
+
+            canvas.addChild(lbl1);
+            canvas.addChild(lbl2);
+            canvas.addChild(lbl3);
+
+            lbl1.move(x1 - 30, y1 + 5);
+            lbl2.move(x2, y2 + 5);
+
+            canvas.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+
+            // 刚显示时，先用初始地画线
+            drawCurve(260, 50);*/
+
+            var canvas:ShowCurve = new ShowCurve();
+            addChild(canvas);
+        }
+
+        /*private function mouseMoveHandler(event:MouseEvent):void {
+            drawCurve(mouseX, mouseY);
+        }
+
+        internal function drawCurve(uX:uint, uY:uint):void {
+            canvas.graphics.clear();  // 清除此次画的内容
+
+            canvas.graphics.lineStyle(1, 0xff0000, 1);  // 设置线条为红色
+
+            canvas.graphics.drawCircle(x1, y1, 5);  // 在x1, y1（左端点）处画一个圈做标识
+            canvas.graphics.drawCircle(x2, y2, 5);  // 在x2, y2（右端点）处画一个圈做标识
+
+            var x3:uint = uX;
+            var y3:uint = uY;
+            lbl3.move(x3 + 15, y3);
+            canvas.graphics.drawCircle(x3, y3, 5); // 在目标点画一个圈
+
+            canvas.graphics.lineStyle(1, 0, 0.1);  // 设置线条为黑色， 且透明度为0.1
+
+            canvas.graphics.moveTo(x1, y1);
+            canvas.graphics.lineTo(x3, y3);  // 画一根从左端点到目标点的线
+
+            canvas.graphics.moveTo(x2, y2);
+            canvas.graphics.lineTo(x3, y3);  // 画一根从右端点到目标点的线
+
+            canvas.graphics.lineStyle(1, 0xff0000, 1);  // 设置线条为红色
+            canvas.graphics.moveTo(x1, y1);
+//            canvas.graphics.curveTo(x3, y3, x2, y2);  // 画一根从左端点出发，经过目标点，终点为右端点的被赛尔曲线
+            canvas.graphics.curveTo(2 * x3 - (x1 + x2) / 2, 2 * y3 - (y1 + y2) / 2, x2, y2);
+        }*/
+        ]]></mx:Script>
+
+        <!--<mx:Canvas id="canvas" width="100%" height="100%"/>-->
+</mx:Application>
