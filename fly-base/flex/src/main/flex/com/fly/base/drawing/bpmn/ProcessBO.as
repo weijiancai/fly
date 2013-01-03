@@ -53,7 +53,9 @@ package com.fly.base.drawing.bpmn {
             for(i = 0; i < diNodeArray.length; i++) {
                 node = diNodeArray[i].node;
                 var diNode:XML = diNodeArray[i].di;
-                notation = new BPMNotation(node,  diNode, 15 - y_min); // 距离最上边15
+                var startSequenceFlows:XMLList = diNodeArray[i].startSequenceFlows;
+                var endSequenceFlows:XMLList = diNodeArray[i].endSequenceFlows;
+                notation = new BPMNotation(node,  diNode, 15 - y_min, startSequenceFlows, endSequenceFlows); // 距离最上边15
                 processNotationList.push(notation);
                 canvas.addChild(notation);
                 notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
@@ -92,7 +94,37 @@ package com.fly.base.drawing.bpmn {
                     diNode = list[0];
                 }
             }
-            diNodeArray.push({node : node, di : diNode});
+            var obj:Object = {};
+            // 非sequenceFlow节点，获取此节点相关的sequenceFlow节点
+            if(node.localName() != "sequenceFlow") {
+                // 获取从此节点发出的sequenceFlow节点
+                obj.startSequenceFlows = getNodeSequenceFlow(node, true);
+                // 获取到此节点结束的sequenceFlow节点
+                obj.endSequenceFlows = getNodeSequenceFlow(node, false);
+            }
+            obj.node = node;
+            obj.di = diNode;
+            diNodeArray.push(obj);
+        }
+
+        /**
+         * 获取节点相关的sequenceFlow节点
+         *
+         * @param node 流程节点
+         * @param isSource
+         * @return
+         */
+        internal function getNodeSequenceFlow(node:XML, isSource:Boolean):XMLList {
+            var xmlList:XMLList;
+            if(isSource) {
+                xmlList = processDefinitionXml.model::process..model::sequenceFlow.(@sourceRef == node.@id.toString());
+                trace(node.@id.toString() + " start:   " + xmlList.length());
+            } else {
+                xmlList = processDefinitionXml.model::process..model::sequenceFlow.(@targetRef == node.@id.toString());
+                trace(node.@id.toString() + " end:   " + xmlList.length());
+            }
+
+            return xmlList;
         }
 
         // 清空画布
@@ -120,6 +152,9 @@ package com.fly.base.drawing.bpmn {
         // 处理鼠标移动事件
         internal function onIconMoveHandler(event:NotationEvent):void {
             // TODO 拖动图标时重画与该图标相关的线条
+            trace("mouseX = " + event.icon.x + ", mouseY = " + event.icon.y);
+            var icon:BPMNotation = event.icon;
+            icon.resetSequenceFlow();
         }
 
         /**

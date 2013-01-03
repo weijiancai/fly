@@ -61,6 +61,8 @@ package com.fly.base.drawing.bpmn {
         // 高度
         private var _height:Number;
         private var y_min:Number;
+        private var startSequenceFlows:XMLList;
+        private var endSequenceFlows:XMLList;
 
         private var glow_down:Glow = new Glow(); // 鼠标按下发光效果
         private var glow_up:Glow = new Glow(); // 鼠标弹起发光效果
@@ -71,9 +73,11 @@ package com.fly.base.drawing.bpmn {
         private var highlightRectBorder:NotationBorder;
 
 
-        public function BPMNotation(node:XML, di:XML, y_min:Number) {
+        public function BPMNotation(node:XML, di:XML, y_min:Number, startSequenceFlows:XMLList, endSequenceFlows:XMLList) {
             this._di = di;
             this.y_min = y_min;
+            this.startSequenceFlows = startSequenceFlows;
+            this.endSequenceFlows = endSequenceFlows;
 
             _key = node.@id.toString();
             _label = node.@name.toString();
@@ -362,6 +366,17 @@ package com.fly.base.drawing.bpmn {
         // 是否可拖动
         public function dragable():Boolean {
             return _type !== TYPE_SEQUENCE_FLOW;
+        }
+
+        // 重新设置此节点的sequenceFlow
+        public function resetSequenceFlow():void {
+            if(_type != TYPE_SEQUENCE_FLOW) {
+                if(startSequenceFlows != null && startSequenceFlows.length() > 0) {
+                    for(var i:int = 0; i < startSequenceFlows.length(); i++) {
+
+                    }
+                }
+            }
         }
     }
 }
