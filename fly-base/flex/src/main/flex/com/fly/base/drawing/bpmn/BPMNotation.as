@@ -371,11 +371,24 @@ package com.fly.base.drawing.bpmn {
         // 重新设置此节点的sequenceFlow
         public function resetSequenceFlow():void {
             if(_type != TYPE_SEQUENCE_FLOW) {
+                var offsetX:Number = this.x - this._x;
+                var offsetY:Number = this.y - this._y;
+
                 if(startSequenceFlows != null && startSequenceFlows.length() > 0) {
                     for(var i:int = 0; i < startSequenceFlows.length(); i++) {
+                        var waypointList:XMLList = startSequenceFlows[i].children();
+                        waypointList[waypointList.length() - 1].@x = offsetX;
+                        waypointList[waypointList.length() - 1].@y = offsetY;
+                        NotationUtil.drawLine(graphics, startSequenceFlows[i], y_min);
 
                     }
                 }
+
+                /*if(endSequenceFlows != null && endSequenceFlows.length() > 0) {
+                    for(i = 0; i < endSequenceFlows.length(); i++) {
+                        NotationUtil.drawLine(graphics, endSequenceFlows[i], y_min, 5, 1, 0, offsetX, offsetY);
+                    }
+                }*/
             }
         }
     }
