@@ -3,7 +3,7 @@
  * @author weijiancai
  */
 package com.fly.base.drawing.bpmn.notation {
-    public interface INotation {
+    public interface INotation extends IBounds {
         /**
          * 设置Notation Id值
          *

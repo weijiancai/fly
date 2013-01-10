@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
     <mx:Script><![CDATA[
+        import com.fly.base.drawing.bpmn.notation.BaseNotation;
+        import com.fly.base.drawing.bpmn.notation.EndEventNotation;
+        import com.fly.base.drawing.bpmn.notation.INotation;
+        import com.fly.base.drawing.bpmn.notation.StartEventNotation;
+
         private var xmlFile:FileReference;
         private var processBO:ProcessBO;
 
@@ -38,6 +43,23 @@
             }*/
 //            canvas.graphics.clear();
         }
+
+        // 处理流程画布鼠标按下事件
+        private function onCanvasMouseDown(event:MouseEvent):void {
+            if(icons.selectedItem != null) {
+                var notation:BaseNotation;
+                if(icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
+                    notation = new StartEventNotation(mouseX, mouseY);
+                } else if(icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
+                    notation = new EndEventNotation(mouseX, mouseY);
+                }
+                if(notation != null) {
+                    notation.x = mouseX;
+                    notation.y = mouseY;
+                    canvas.addChild(notation);
+                }
+            }
+        }
         ]]></mx:Script>
 
     <mx:ApplicationControlBar width="100%">
@@ -46,7 +68,7 @@
         <mx:Button label="清空" click="clearCanvas()"/>
     </mx:ApplicationControlBar>
     <mx:HBox width="100%" height="100%">
-        <mx:TileList width="30" height="100%" direction="vertical" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+        <mx:TileList id="icons" width="30" height="100%" direction="vertical" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
             <mx:Object label="" icon="{ProcessPng.USER_ICON}" />
 
             <mx:Object label="" icon="{ProcessPng.ANNOTATION}" />
@@ -92,7 +114,7 @@
             <mx:Object label="" icon="{ProcessPng.TIMER_TASK}" />
         </mx:TileList>
         <mx:HBox width="100%" height="100%">
-            <mx:Canvas id="canvas" width="100%" height="100%" verticalScrollPolicy="auto"/>
+            <mx:Canvas id="canvas" width="100%" height="100%" verticalScrollPolicy="auto" mouseDown="onCanvasMouseDown(event)"/>
         </mx:HBox>
     </mx:HBox>
 </mx:VBox>
