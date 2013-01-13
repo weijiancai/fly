@@ -46,16 +46,20 @@
 
         // 处理流程画布鼠标按下事件
         private function onCanvasMouseDown(event:MouseEvent):void {
+            //定位图标，设置按钮在画布上的坐标
+            var p:Point = new Point();
+            p = this.globalToLocal(new Point(mouseX, mouseY));//转换坐标
+            trace("mouseX = " + p.x + ", mouseY = " + p.y);
             if(icons.selectedItem != null) {
                 var notation:BaseNotation;
                 if(icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
-                    notation = new StartEventNotation(mouseX, mouseY);
+                    notation = new StartEventNotation(p.x, p.y);
                 } else if(icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
-                    notation = new EndEventNotation(mouseX, mouseY);
+                    notation = new EndEventNotation(p.x, p.y);
                 }
                 if(notation != null) {
-                    notation.x = mouseX;
-                    notation.y = mouseY;
+                    /*notation.x = mouseX;
+                    notation.y = mouseY;*/
                     canvas.addChild(notation);
                 }
             }
