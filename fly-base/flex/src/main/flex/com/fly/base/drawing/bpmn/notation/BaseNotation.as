@@ -6,6 +6,7 @@ package com.fly.base.drawing.bpmn.notation {
     import com.fly.base.drawing.bpmn.event.NotationEvent;
 
     import flash.events.MouseEvent;
+    import flash.text.TextField;
 
     import mx.controls.Image;
     import mx.effects.Glow;
@@ -22,12 +23,21 @@ package com.fly.base.drawing.bpmn.notation {
         protected var _thickness:Number = 1;
         protected var _color:uint = 0;
         protected var _fillColor:uint = 0xffffff;
-        protected var _radius:Number = 15;
+        protected var _eclipseWidth:Number = 20;
+        protected var _eclipseHeight:Number = 20;
+
+        protected var textField:TextField;
 
         private var glow_down:Glow = new Glow(); // 鼠标按下发光效果
         private var glow_up:Glow = new Glow(); // 鼠标弹起发光效果
 
-        public function BaseNotation() {
+        public function BaseNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
+            _nName = name;
+            _nX = x;
+            _nY = y;
+            _nWidth = width;
+            _nHeight = height;
+
             glow_down.blurXFrom = 0;
             glow_down.blurXTo = 15;
             glow_down.color = 0xFF0000;
@@ -42,7 +52,17 @@ package com.fly.base.drawing.bpmn.notation {
             glow_up.blurYFrom = 15;
             glow_up.blurYTo = 0;
 
+            textField = new TextField();
+            // 自动换行
+            textField.wordWrap = true;
+            textField.condenseWhite = true;
+            textField.multiline = true;
+            textField.htmlText = "<font size='12'>" + name + "</font>";
+            textField.width = width;
+            textField.height = height;
+
             bindEvents();
+            draw();
         }
 
         // 绑定事件

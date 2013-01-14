@@ -4,7 +4,9 @@
         import com.fly.base.drawing.bpmn.notation.BaseNotation;
         import com.fly.base.drawing.bpmn.notation.EndEventNotation;
         import com.fly.base.drawing.bpmn.notation.INotation;
+        import com.fly.base.drawing.bpmn.notation.ServiceTaskNotation;
         import com.fly.base.drawing.bpmn.notation.StartEventNotation;
+        import com.fly.base.drawing.bpmn.notation.UserTaskNotation;
 
         private var xmlFile:FileReference;
         private var processBO:ProcessBO;
@@ -53,9 +55,13 @@
             if(icons.selectedItem != null) {
                 var notation:BaseNotation;
                 if(icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
-                    notation = new StartEventNotation(p.x, p.y);
+                    notation = new StartEventNotation("开始", p.x, p.y);
                 } else if(icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
-                    notation = new EndEventNotation(p.x, p.y);
+                    notation = new EndEventNotation("结束", p.x, p.y);
+                } else if(icons.selectedItem.icon == ProcessPng.USER_ICON) {
+                    notation = new UserTaskNotation("用户任务", p.x, p.y, 80, 50);
+                } else if(icons.selectedItem.icon == ProcessPng.SERVICE_TASK) {
+                    notation = new ServiceTaskNotation("服务任务", p.x, p.y, 80, 50);
                 }
                 if(notation != null) {
                     /*notation.x = mouseX;
@@ -73,7 +79,7 @@
     </mx:ApplicationControlBar>
     <mx:HBox width="100%" height="100%">
         <mx:TileList id="icons" width="30" height="100%" direction="vertical" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
-            <mx:Object label="" icon="{ProcessPng.USER_ICON}" />
+            <mx:Object label="" icon="{ProcessPng.USER_ICON}" toolTip="User Task"/>
 
             <mx:Object label="" icon="{ProcessPng.ANNOTATION}" />
             <mx:Object label="" icon="{ProcessPng.ASSOCIATION}" />
