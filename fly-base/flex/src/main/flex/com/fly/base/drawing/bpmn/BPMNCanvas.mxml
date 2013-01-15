@@ -3,6 +3,7 @@
     <mx:Script><![CDATA[
         import com.fly.base.drawing.bpmn.notation.BaseNotation;
         import com.fly.base.drawing.bpmn.notation.EndEventNotation;
+        import com.fly.base.drawing.bpmn.notation.ExclusiveNotation;
         import com.fly.base.drawing.bpmn.notation.INotation;
         import com.fly.base.drawing.bpmn.notation.ServiceTaskNotation;
         import com.fly.base.drawing.bpmn.notation.StartEventNotation;
@@ -62,6 +63,8 @@
                     notation = new UserTaskNotation("用户任务", p.x, p.y, 80, 50);
                 } else if(icons.selectedItem.icon == ProcessPng.SERVICE_TASK) {
                     notation = new ServiceTaskNotation("服务任务", p.x, p.y, 80, 50);
+                } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_EXCLUSIVE) {
+                    notation = new ExclusiveNotation("GATEWAY_EXCLUSIVE", p.x, p.y, 40, 30);
                 }
                 if(notation != null) {
                     /*notation.x = mouseX;
