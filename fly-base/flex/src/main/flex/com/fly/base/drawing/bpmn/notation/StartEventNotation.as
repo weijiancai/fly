@@ -10,9 +10,6 @@ package com.fly.base.drawing.bpmn.notation {
         }
 
         override public function draw():void {
-            // 设置坐标点
-            this.x = _nX - _nWidth/2 - 5;
-            this.y = _nY - _nHeight/2 - 5;
             // 画圆
             graphics.lineStyle(1, _color, 1, true);
             graphics.beginFill(_fillColor, 0.4);

@@ -33,8 +33,8 @@ package com.fly.base.drawing.bpmn.notation {
 
         public function BaseNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
             _nName = name;
-            _nX = x;
-            _nY = y;
+            this.x = _nX = x;
+            this.y = _nY = y;
             _nWidth = width;
             _nHeight = height;
 
@@ -59,7 +59,7 @@ package com.fly.base.drawing.bpmn.notation {
             textField.multiline = true;
             textField.htmlText = "<font size='12'>" + name + "</font>";
             textField.width = width;
-            textField.height = height;
+//            textField.height = height;
 
             bindEvents();
             draw();

@@ -15,9 +15,6 @@ package com.fly.base.drawing.bpmn.notation {
         override public function draw():void {
             // 设置图片
             this.source = ProcessPng.USER_TASK;
-            // 设置坐标点
-            this.x = _nX - _nWidth/2 - 5;
-            this.y = _nY - _nHeight/2 - 5;
             // 画圆角矩形
             graphics.lineStyle(_thickness, _color, 1, true);
             graphics.beginFill(_fillColor, 0.4);

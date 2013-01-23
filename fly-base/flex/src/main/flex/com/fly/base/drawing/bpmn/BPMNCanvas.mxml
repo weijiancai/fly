@@ -5,8 +5,11 @@
         import com.fly.base.drawing.bpmn.notation.EndEventNotation;
         import com.fly.base.drawing.bpmn.notation.ExclusiveNotation;
         import com.fly.base.drawing.bpmn.notation.INotation;
+        import com.fly.base.drawing.bpmn.notation.ParallelNotation;
+        import com.fly.base.drawing.bpmn.notation.PoolNotation;
         import com.fly.base.drawing.bpmn.notation.ServiceTaskNotation;
         import com.fly.base.drawing.bpmn.notation.StartEventNotation;
+        import com.fly.base.drawing.bpmn.notation.SubProcessNotation;
         import com.fly.base.drawing.bpmn.notation.UserTaskNotation;
 
         private var xmlFile:FileReference;
@@ -50,21 +53,35 @@
         // 处理流程画布鼠标按下事件
         private function onCanvasMouseDown(event:MouseEvent):void {
             //定位图标，设置按钮在画布上的坐标
-            var p:Point = new Point();
-            p = this.globalToLocal(new Point(mouseX, mouseY));//转换坐标
+            var p:Point = this.globalToLocal(new Point(mouseX - 15, mouseY - 15));//转换坐标
+            canvas.graphics.lineStyle(1);
+            canvas.graphics.drawCircle(p.x, p.y, 1);
             trace("mouseX = " + p.x + ", mouseY = " + p.y);
-            if(icons.selectedItem != null) {
+            var width:Number, height:Number;
+            if(icons.selectedItem != null && cb_editable.selected) {
                 var notation:BaseNotation;
                 if(icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
                     notation = new StartEventNotation("开始", p.x, p.y);
                 } else if(icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
                     notation = new EndEventNotation("结束", p.x, p.y);
                 } else if(icons.selectedItem.icon == ProcessPng.USER_ICON) {
-                    notation = new UserTaskNotation("用户任务", p.x, p.y, 80, 50);
+                    width = 80; height = 50;
+                    notation = new UserTaskNotation("用户任务", p.x - width/2, p.y - height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.SERVICE_TASK) {
-                    notation = new ServiceTaskNotation("服务任务", p.x, p.y, 80, 50);
+                    width = 80; height = 50;
+                    notation = new ServiceTaskNotation("服务任务", p.x - width/2, p.y - height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_EXCLUSIVE) {
-                    notation = new ExclusiveNotation("GATEWAY_EXCLUSIVE", p.x, p.y, 40, 30);
+                    width = 40; height = 30;
+                    notation = new ExclusiveNotation("GATEWAY_EXCLUSIVE", p.x - width/2, p.y + height/2, width, height);
+                } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_PARALLEL) {
+                    width = 40; height = 30;
+                    notation = new ParallelNotation("GATEWAY_PARALLEL", p.x - width/2, p.y + height/2, width, height);
+                } else if(icons.selectedItem.icon == ProcessPng.EVENT_SUB_PROCESS) {
+                    width = 440; height = 200;
+                    notation = new SubProcessNotation("EVENT_SUB_PROCESS", p.x - width/2, p.y - height/2, width, height);
+                } else if(icons.selectedItem.icon == ProcessPng.POOL) {
+                    width = 440; height = 100;
+                    notation = new PoolNotation("Pool", p.x - width/2, p.y - height/2, width, height)
                 }
                 if(notation != null) {
                     /*notation.x = mouseX;
@@ -82,42 +99,45 @@
     </mx:ApplicationControlBar>
     <mx:HBox width="100%" height="100%">
         <mx:TileList id="icons" width="30" height="100%" direction="vertical" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+            <mx:Object label="" icon="{ProcessPng.START_EVENT_NONE}" />
+            <mx:Object label="" icon="{ProcessPng.END_EVENT_NONE}" />
             <mx:Object label="" icon="{ProcessPng.USER_ICON}" toolTip="User Task"/>
+            <mx:Object label="" icon="{ProcessPng.SERVICE_TASK}" />
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_EXCLUSIVE}" />
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_PARALLEL}" />
+            <mx:Object label="" icon="{ProcessPng.EVENT_SUB_PROCESS}" />
+            <mx:Object label="" icon="{ProcessPng.POOL}" />
 
             <mx:Object label="" icon="{ProcessPng.ANNOTATION}" />
             <mx:Object label="" icon="{ProcessPng.ASSOCIATION}" />
             <mx:Object label="" icon="{ProcessPng.BUSINESS_RULE}" />
             <mx:Object label="" icon="{ProcessPng.CALL_ACTIVITY}" />
 
-            <mx:Object label="" icon="{ProcessPng.END_EVENT_NONE}" />
+
             <mx:Object label="" icon="{ProcessPng.ERROR}" />
             <mx:Object label="" icon="{ProcessPng.ERROR_CATCH}" />
             <mx:Object label="" icon="{ProcessPng.ERROR_THROW}" />
-            <mx:Object label="" icon="{ProcessPng.EVENT_SUB_PROCESS}" />
+
 
             <mx:Object label="" icon="{ProcessPng.GATEWAY_EVENT}" />
-            <mx:Object label="" icon="{ProcessPng.GATEWAY_EXCLUSIVE}" />
-            <mx:Object label="" icon="{ProcessPng.GATEWAY_INCLUSIVE}" />
-            <mx:Object label="" icon="{ProcessPng.GATEWAY_PARALLEL}" />
 
+            <mx:Object label="" icon="{ProcessPng.GATEWAY_INCLUSIVE}" />
             <mx:Object label="" icon="{ProcessPng.LANE}" />
             <mx:Object label="" icon="{ProcessPng.LETTER}" />
             <mx:Object label="" icon="{ProcessPng.LOOP_MARKER}" />
 
             <mx:Object label="" icon="{ProcessPng.MAIL}" />
             <mx:Object label="" icon="{ProcessPng.MANUAL_TASK}" />
-            <mx:Object label="" icon="{ProcessPng.POOL}" />
+
             <mx:Object label="" icon="{ProcessPng.RECEIVE_TASK}" />
 
             <mx:Object label="" icon="{ProcessPng.SCRIPT_TASK}" />
             <mx:Object label="" icon="{ProcessPng.SEND_TASK}" />
             <mx:Object label="" icon="{ProcessPng.SEQUENCE_FLOW}" />
-            <mx:Object label="" icon="{ProcessPng.SERVICE_TASK}" />
             <mx:Object label="" icon="{ProcessPng.SIGNAL}" />
             <mx:Object label="" icon="{ProcessPng.SIGNAL_CATCH}" />
             <mx:Object label="" icon="{ProcessPng.SIGNAL_THROW}" />
             <mx:Object label="" icon="{ProcessPng.START_EVENT_MESSAGE}" />
-            <mx:Object label="" icon="{ProcessPng.START_EVENT_NONE}" />
             <mx:Object label="" icon="{ProcessPng.SUB_PROCESS_COLLAPSED}" />
             <mx:Object label="" icon="{ProcessPng.SUB_PROCESS_EXPANDED}" />
 

@@ -16,8 +16,6 @@ package com.fly.base.drawing.bpmn.notation {
 
         override public function draw():void {
             // 设置坐标点
-            this.x = _nX - _nWidth/2 - 10;
-            this.y = _nY;
             var _x:Number =  0;
             var _y:Number = - _nHeight;
             var _width:Number = _nWidth;
