@@ -5,8 +5,8 @@
  */
 package com.fly.base.drawing.bpmn.notation {
 
-    public class PoolNotation extends BaseNotation {
-        public function PoolNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
+    public class LaneNotation extends BaseNotation {
+        public function LaneNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
             super(name, x, y, width, height);
         }
 
@@ -16,13 +16,6 @@ package com.fly.base.drawing.bpmn.notation {
             graphics.lineStyle(_thickness, _color, 1, true);
             graphics.beginFill(_fillColor, 0.4);
             graphics.drawRect(-2.5, -1.5, _nWidth, _nHeight);
-            graphics.moveTo(15, -1.5);
-            graphics.lineTo(15, -1.5 + _nHeight);
-            // 画文本
-            textField.x =  0;
-            textField.y = 5;
-            textField.width = 15;
-            this.addChild(textField);
         }
     }
 }
