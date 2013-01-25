@@ -4,6 +4,16 @@
  */
 package com.fly.base.drawing.bpmn {
     import com.fly.base.drawing.bpmn.event.NotationEvent;
+    import com.fly.base.drawing.bpmn.notation.BaseNotation;
+    import com.fly.base.drawing.bpmn.notation.EndEventNotation;
+    import com.fly.base.drawing.bpmn.notation.ExclusiveNotation;
+    import com.fly.base.drawing.bpmn.notation.LaneNotation;
+    import com.fly.base.drawing.bpmn.notation.ParallelNotation;
+    import com.fly.base.drawing.bpmn.notation.PoolNotation;
+    import com.fly.base.drawing.bpmn.notation.ServiceTaskNotation;
+    import com.fly.base.drawing.bpmn.notation.StartEventNotation;
+    import com.fly.base.drawing.bpmn.notation.SubProcessNotation;
+    import com.fly.base.drawing.bpmn.notation.UserTaskNotation;
 
     import mx.containers.Canvas;
     import mx.controls.Alert;
@@ -39,7 +49,7 @@ package com.fly.base.drawing.bpmn {
             }
 
             var node:XML;
-            var notation:BPMNotation;
+//            var notation:BPMNotation;
 
             processProcessNode(processNodeList);
 
@@ -50,7 +60,7 @@ package com.fly.base.drawing.bpmn {
                 processDI(participantList[i]);
             }
 
-            for(i = 0; i < diNodeArray.length; i++) {
+            /*for(i = 0; i < diNodeArray.length; i++) {
                 node = diNodeArray[i].node;
                 var diNode:XML = diNodeArray[i].di;
                 var startSequenceFlows:XMLList = diNodeArray[i].startSequenceFlows;
@@ -61,6 +71,36 @@ package com.fly.base.drawing.bpmn {
                 notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
                 notation.addEventListener(NotationEvent.ICON_MOUSE_UP, onIconMouseUpHandler);
                 notation.addEventListener(NotationEvent.ICON_MOVE, onIconMoveHandler);
+            }*/
+
+
+            for(i = 0; i < diNodeArray.length; i++) {
+                var notation:BaseNotation;
+                node = diNodeArray[i].node;
+                var diNode:XML = diNodeArray[i].di;
+                var startSequenceFlows:XMLList = diNodeArray[i].startSequenceFlows;
+                var endSequenceFlows:XMLList = diNodeArray[i].endSequenceFlows;
+                var id:String = node.@id.toString();
+                var name:String = node.@name.toString();
+                var _x:Number, _y:Number, _width:Number, _height:Number;
+                if (diNode != null) {
+                    if ("BPMNShape" == diNode.localName()) {
+                        _x = diNode.children()[0].@x;
+                        _y = Number(diNode.children()[0].@y) + (15 -y_min); // 距离最上面15
+                        _width = diNode.children()[0].@width;
+                        _height = diNode.children()[0].@height;
+                    }
+                }
+
+                notation = getNotation(node.localName(), id, name, _x, _y, _width, _height);
+//                notation = new BPMNotation(node,  diNode, 15 - y_min, startSequenceFlows, endSequenceFlows); // 距离最上边15
+                if(notation != null) {
+                    processNotationList.push(notation);
+                    canvas.addChild(notation);
+                    notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
+                    notation.addEventListener(NotationEvent.ICON_MOUSE_UP, onIconMouseUpHandler);
+                    notation.addEventListener(NotationEvent.ICON_MOVE, onIconMoveHandler);
+                }
             }
         }
 
@@ -127,6 +167,46 @@ package com.fly.base.drawing.bpmn {
             return xmlList;
         }
 
+        /**
+         * 获取流程图符号
+         *
+         * @param type 流程图符号类型
+         * @param id
+         * @param _x
+         * @param _height
+         * @param name
+         * @param _y
+         * @param _width
+         * @return 返回具体的流程图符号
+         */
+        public static function getNotation(type:String, id:String, name:String, _x:Number, _y:Number, _width:Number, _height:Number):BaseNotation {
+            if ("startEvent" == type) {
+                return new StartEventNotation(id, name, _x, _y, _width, _height);
+            } else if ("endEvent" == type) {
+                return new EndEventNotation(id, name,  _x, _y, _width, _height);
+            } else if ("userTask" == type) {
+                return new UserTaskNotation(id, name,  _x, _y, _width, _height);
+            } else if ("exclusiveGateway" == type) {
+                return new ExclusiveNotation(id, name,  _x, _y, _width, _height);
+            } else if ("parallelGateway" == type) {
+                return new ParallelNotation(id, name,  _x, _y, _width, _height);
+            } else if ("serviceTask" == type) {
+                return new ServiceTaskNotation(id, name,  _x, _y, _width, _height);
+            } else if ("sequenceFlow" == type) {
+
+            } else if("lane" == type) {
+                return new LaneNotation(id, name, _x, _y, _width, _height);
+            } else if("participant" == type) {
+                return new PoolNotation(id, name,  _x, _y, _width, _height);
+            } else if("subProcess" == type) {
+                return new SubProcessNotation(id, name,  _x, _y, _width, _height);
+            } else if("boundaryEvent" == type) {
+
+            }
+
+            return null;
+        }
+
         // 清空画布
         public function clearCanvas():void {
             canvas.removeAllChildren();
@@ -152,9 +232,9 @@ package com.fly.base.drawing.bpmn {
         // 处理鼠标移动事件
         internal function onIconMoveHandler(event:NotationEvent):void {
             // TODO 拖动图标时重画与该图标相关的线条
-            trace("mouseX = " + event.icon.x + ", mouseY = " + event.icon.y);
+            /*trace("mouseX = " + event.icon.x + ", mouseY = " + event.icon.y);
             var icon:BPMNotation = event.icon;
-            icon.resetSequenceFlow();
+            icon.resetSequenceFlow();*/
         }
 
         /**

@@ -9,8 +9,8 @@ package com.fly.base.drawing.bpmn.notation {
     import flash.geom.Point;
 
     public class ParallelNotation extends BaseNotation {
-        public function ParallelNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
-            super(name, x, y, width, height);
+        public function ParallelNotation(id:String, name:String, x:Number, y:Number, width:Number, height:Number) {
+            super(id, name, x, y, width, height);
         }
 
 

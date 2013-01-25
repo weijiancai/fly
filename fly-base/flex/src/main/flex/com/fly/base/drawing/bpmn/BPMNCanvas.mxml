@@ -66,30 +66,30 @@
             if(icons.selectedItem != null && cb_editable.selected) {
                 var notation:BaseNotation;
                 if(icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
-                    notation = new StartEventNotation("开始", p.x, p.y);
+                    notation = new StartEventNotation("Start", "开始", p.x, p.y);
                 } else if(icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
-                    notation = new EndEventNotation("结束", p.x, p.y);
+                    notation = new EndEventNotation("End", "结束", p.x, p.y);
                 } else if(icons.selectedItem.icon == ProcessPng.USER_ICON) {
                     width = 80; height = 50;
-                    notation = new UserTaskNotation("用户任务", p.x - width/2, p.y - height/2, width, height);
+                    notation = new UserTaskNotation("UserTask", "用户任务", p.x - width/2, p.y - height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.SERVICE_TASK) {
                     width = 80; height = 50;
-                    notation = new ServiceTaskNotation("服务任务", p.x - width/2, p.y - height/2, width, height);
+                    notation = new ServiceTaskNotation("ServiceTask", "服务任务", p.x - width/2, p.y - height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_EXCLUSIVE) {
                     width = 40; height = 30;
-                    notation = new ExclusiveNotation("GATEWAY_EXCLUSIVE", p.x - width/2, p.y + height/2, width, height);
+                    notation = new ExclusiveNotation("exclusiveGateway", "GATEWAY_EXCLUSIVE", p.x - width/2, p.y + height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_PARALLEL) {
                     width = 40; height = 30;
-                    notation = new ParallelNotation("GATEWAY_PARALLEL", p.x - width/2, p.y + height/2, width, height);
+                    notation = new ParallelNotation("parallelGateway", "GATEWAY_PARALLEL", p.x - width/2, p.y + height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.EVENT_SUB_PROCESS) {
                     width = 440; height = 200;
-                    notation = new SubProcessNotation("EVENT_SUB_PROCESS", p.x - width/2, p.y - height/2, width, height);
+                    notation = new SubProcessNotation("subProcess", "EVENT_SUB_PROCESS", p.x - width/2, p.y - height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.POOL) {
                     width = 440; height = 100;
-                    notation = new PoolNotation("Pool", p.x - width/2, p.y - height/2, width, height)
+                    notation = new PoolNotation("pool", "Pool", p.x - width/2, p.y - height/2, width, height);
                 } else if(icons.selectedItem.icon == ProcessPng.LANE) {
                     width = 400; height = 100;
-                    notation = new LaneNotation("LANE", p.x - width/2, p.y - height/2, width, height)
+                    notation = new LaneNotation("lane", "LANE", p.x - width/2, p.y - height/2, width, height);
                 }
                 if(notation != null) {
                     /*notation.x = mouseX;

@@ -6,8 +6,8 @@
 package com.fly.base.drawing.bpmn.notation {
 
     public class SubProcessNotation extends BaseNotation {
-        public function SubProcessNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
-            super(name, x, y, width, height);
+        public function SubProcessNotation(id:String, name:String, x:Number, y:Number, width:Number, height:Number) {
+            super(id, name, x, y, width, height);
         }
 
 

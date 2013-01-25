@@ -27,11 +27,16 @@ package com.fly.base.drawing.bpmn.notation {
         protected var _eclipseHeight:Number = 20;
 
         protected var textField:TextField;
+        protected var textFieldInnerYPos:Number = 0;
+        protected var textFieldOuterYPos:Number = 0;
+        protected var textFieldInnerXPos:Number = 5;
+        protected var textFieldOuterXPos:Number = 0;
 
         private var glow_down:Glow = new Glow(); // 鼠标按下发光效果
         private var glow_up:Glow = new Glow(); // 鼠标弹起发光效果
 
-        public function BaseNotation(name:String, x:Number, y:Number, width:Number, height:Number) {
+        public function BaseNotation(id:String, name:String, x:Number, y:Number, width:Number, height:Number) {
+            _nId = id;
             _nName = name;
             this.x = _nX = x;
             this.y = _nY = y;
@@ -58,11 +63,34 @@ package com.fly.base.drawing.bpmn.notation {
             textField.condenseWhite = true;
             textField.multiline = true;
             textField.htmlText = "<font size='12'>" + name + "</font>";
-            textField.width = width;
+
+            textFieldInnerYPos = (_nHeight - textField.textHeight)/2;
+            textFieldOuterXPos = (textField.textWidth - _nWidth)/2;
+            textFieldOuterYPos = _nHeight + 5;
+            textField.width = getTextFieldWidth();
+            textField.x = getTextFieldXPos();
+            textField.y = getTextFiledYPos();
+
+            this.addChild(textField);
 //            textField.height = height;
 
             bindEvents();
             draw();
+        }
+
+        // 获取文本的Y位置, 默认取内部Y位置
+        protected function getTextFiledYPos():Number {
+            return textFieldInnerYPos;
+        }
+
+        // 获取文本的X位置, 默认取内部X位置
+        protected function getTextFieldXPos():Number {
+            return textFieldInnerXPos;
+        }
+
+        // 获取文本的宽度，默认返回_nWidth
+        protected function getTextFieldWidth():Number {
+            return _nWidth;
         }
 
         // 绑定事件
