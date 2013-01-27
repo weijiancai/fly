@@ -29,7 +29,7 @@ package com.fly.base.drawing.bpmn.notation {
         protected var textField:TextField;
         protected var textFieldInnerYPos:Number = 0;
         protected var textFieldOuterYPos:Number = 0;
-        protected var textFieldInnerXPos:Number = 5;
+        protected var textFieldInnerXPos:Number = 0;
         protected var textFieldOuterXPos:Number = 0;
 
         private var glow_down:Glow = new Glow(); // 鼠标按下发光效果
@@ -64,8 +64,12 @@ package com.fly.base.drawing.bpmn.notation {
             textField.multiline = true;
             textField.htmlText = "<font size='12'>" + name + "</font>";
 
-            textFieldInnerYPos = (_nHeight - textField.textHeight)/2;
-            textFieldOuterXPos = (textField.textWidth - _nWidth)/2;
+            if(textField.textWidth <= _nWidth) {
+                textFieldInnerXPos = (_nWidth - textField.textWidth)/2 - 1;
+            }
+            textFieldInnerYPos = (_nHeight - textField.textHeight)/2 - 3;
+//            textFieldOuterXPos = (textField.textWidth - _nWidth)/2;
+            textFieldOuterXPos = (_nWidth - textField.textWidth)/2 - 1;
             textFieldOuterYPos = _nHeight + 5;
             textField.width = getTextFieldWidth();
             textField.x = getTextFieldXPos();

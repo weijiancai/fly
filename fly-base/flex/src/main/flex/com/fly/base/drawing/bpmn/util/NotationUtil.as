@@ -97,7 +97,7 @@ package com.fly.base.drawing.bpmn.util {
             drawArrow(pen, startX, startY, endX, endY, radius);
         }
 
-        public static function drawArrow(pen:Pen, startX:Number, startY:Number, endX:Number, endY:Number, radius:Number):void {
+        public static function drawArrow(pen:Pen, startX:Number, startY:Number, endX:Number, endY:Number, radius:Number = 5):void {
             var angle:int = getAngle(startX, startY, endX, endY);
             var centerX:int = endX - radius * Math.cos(angle *(Math.PI/180));
             var centerY:int= endY + radius * Math.sin(angle *(Math.PI/180));

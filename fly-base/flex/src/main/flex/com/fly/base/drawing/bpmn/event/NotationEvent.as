@@ -5,7 +5,7 @@
  */
 package com.fly.base.drawing.bpmn.event {
     import com.fly.base.drawing.bpmn.BPMNotation;
-    import com.fly.base.drawing.bpmn.notation.INotation;
+    import com.fly.base.drawing.bpmn.notation.BaseNotation;
 
     import flash.events.Event;
 
@@ -15,7 +15,7 @@ package com.fly.base.drawing.bpmn.event {
         public static var ICON_MOVE:String = "icon_move";
 
         public var icon:BPMNotation;
-        public var _icon:INotation;
+        public var _icon:BaseNotation;
 
         public function NotationEvent(type:String) {
             super(type);

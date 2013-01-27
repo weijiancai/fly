@@ -15,19 +15,14 @@ package com.fly.base.drawing.bpmn.notation {
             graphics.beginFill(_fillColor, 0.4);
             graphics.drawCircle(0, 0, 30/2);
             graphics.endFill();
-            /*// 画文件
-            textField.x =  - _nWidth/2 - 8;
-            textField.y = _nHeight/2 + 8;
-            textField.width = _nWidth * 2;
-            this.addChild(textField);*/
         }
 
         override protected function getTextFieldXPos():Number {
-            return textFieldOuterXPos;
+            return textFieldOuterXPos - 15;
         }
 
         override protected function getTextFiledYPos():Number {
-            return textFieldOuterYPos;
+            return textFieldOuterYPos - 10;
         }
 
         override protected function getTextFieldWidth():Number {

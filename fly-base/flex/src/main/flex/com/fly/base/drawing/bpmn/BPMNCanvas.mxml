@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
     <mx:Script><![CDATA[
+        import com.fly.base.drawing.bpmn.event.NotationEvent;
         import com.fly.base.drawing.bpmn.notation.BaseNotation;
         import com.fly.base.drawing.bpmn.notation.EndEventNotation;
         import com.fly.base.drawing.bpmn.notation.ExclusiveNotation;
-        import com.fly.base.drawing.bpmn.notation.INotation;
         import com.fly.base.drawing.bpmn.notation.LaneNotation;
         import com.fly.base.drawing.bpmn.notation.ParallelNotation;
         import com.fly.base.drawing.bpmn.notation.PoolNotation;
+        import com.fly.base.drawing.bpmn.notation.SequenceFlowNotation;
         import com.fly.base.drawing.bpmn.notation.ServiceTaskNotation;
         import com.fly.base.drawing.bpmn.notation.StartEventNotation;
         import com.fly.base.drawing.bpmn.notation.SubProcessNotation;
@@ -22,7 +23,7 @@
             canvas.graphics.drawRect(0, 0, canvas.width, canvas.height);
             canvas.graphics.endFill();
 
-            icons.dataTipFunction = function(item:Object):String {
+            icons.dataTipFunction = function (item:Object):String {
                 return item.toolTip;
             };
         }
@@ -39,17 +40,17 @@
 
         // 设置流程是否可编辑
         private function setEditable():void {
-            if(processBO != null) {
+            if (processBO != null) {
                 processBO.editable = cb_editable.selected;
             }
         }
 
         // 清空画布
         private function clearCanvas():void {
-            if(processBO != null) {
+            if (processBO != null) {
                 processBO.clearCanvas();
             }
-            for(var i:int = 0; i < canvas.numChildren; i++) {
+            for (var i:int = 0; i < canvas.numChildren; i++) {
                 canvas.removeChildAt(i);
             }
 //            canvas.graphics.clear();
@@ -63,38 +64,57 @@
             canvas.graphics.drawCircle(p.x, p.y, 1);
             trace("mouseX = " + p.x + ", mouseY = " + p.y);
             var width:Number, height:Number;
-            if(icons.selectedItem != null && cb_editable.selected) {
+            if (icons.selectedItem != null && cb_editable.selected) {
                 var notation:BaseNotation;
-                if(icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
+                if (icons.selectedItem.icon == ProcessPng.START_EVENT_NONE) {
                     notation = new StartEventNotation("Start", "开始", p.x, p.y);
-                } else if(icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
+                } else if (icons.selectedItem.icon == ProcessPng.END_EVENT_NONE) {
                     notation = new EndEventNotation("End", "结束", p.x, p.y);
-                } else if(icons.selectedItem.icon == ProcessPng.USER_ICON) {
-                    width = 80; height = 50;
-                    notation = new UserTaskNotation("UserTask", "用户任务", p.x - width/2, p.y - height/2, width, height);
-                } else if(icons.selectedItem.icon == ProcessPng.SERVICE_TASK) {
-                    width = 80; height = 50;
-                    notation = new ServiceTaskNotation("ServiceTask", "服务任务", p.x - width/2, p.y - height/2, width, height);
-                } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_EXCLUSIVE) {
-                    width = 40; height = 30;
-                    notation = new ExclusiveNotation("exclusiveGateway", "GATEWAY_EXCLUSIVE", p.x - width/2, p.y + height/2, width, height);
-                } else if(icons.selectedItem.icon == ProcessPng.GATEWAY_PARALLEL) {
-                    width = 40; height = 30;
-                    notation = new ParallelNotation("parallelGateway", "GATEWAY_PARALLEL", p.x - width/2, p.y + height/2, width, height);
-                } else if(icons.selectedItem.icon == ProcessPng.EVENT_SUB_PROCESS) {
-                    width = 440; height = 200;
-                    notation = new SubProcessNotation("subProcess", "EVENT_SUB_PROCESS", p.x - width/2, p.y - height/2, width, height);
-                } else if(icons.selectedItem.icon == ProcessPng.POOL) {
-                    width = 440; height = 100;
-                    notation = new PoolNotation("pool", "Pool", p.x - width/2, p.y - height/2, width, height);
-                } else if(icons.selectedItem.icon == ProcessPng.LANE) {
-                    width = 400; height = 100;
-                    notation = new LaneNotation("lane", "LANE", p.x - width/2, p.y - height/2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.USER_ICON) {
+                    width = 80;
+                    height = 50;
+                    notation = new UserTaskNotation("UserTask", "用户任务", p.x - width / 2, p.y - height / 2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.SERVICE_TASK) {
+                    width = 80;
+                    height = 50;
+                    notation = new ServiceTaskNotation("ServiceTask", "服务任务", p.x - width / 2, p.y - height / 2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.GATEWAY_EXCLUSIVE) {
+                    width = 40;
+                    height = 30;
+                    notation = new ExclusiveNotation("exclusiveGateway", "GATEWAY_EXCLUSIVE", p.x - width / 2, p.y + height / 2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.GATEWAY_PARALLEL) {
+                    width = 40;
+                    height = 30;
+                    notation = new ParallelNotation("parallelGateway", "GATEWAY_PARALLEL", p.x - width / 2, p.y + height / 2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.EVENT_SUB_PROCESS) {
+                    width = 440;
+                    height = 200;
+                    notation = new SubProcessNotation("subProcess", "EVENT_SUB_PROCESS", p.x - width / 2, p.y - height / 2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.POOL) {
+                    width = 440;
+                    height = 100;
+                    notation = new PoolNotation("pool", "Pool", p.x - width / 2, p.y - height / 2, width, height);
+                } else if (icons.selectedItem.icon == ProcessPng.LANE) {
+                    width = 400;
+                    height = 100;
+                    notation = new LaneNotation("lane", "LANE", p.x - width / 2, p.y - height / 2, width, height);
                 }
-                if(notation != null) {
-                    /*notation.x = mouseX;
-                    notation.y = mouseY;*/
+                if (notation != null) {
+                    notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onNotationMouseDown);
                     canvas.addChild(notation);
+                }
+            }
+        }
+
+        private var startSequenceFlowIcon:BaseNotation;
+
+        private function onNotationMouseDown(event:NotationEvent):void {
+            if(icons.selectedItem.icon == ProcessPng.SEQUENCE_FLOW) { // 建立连线
+                if(startSequenceFlowIcon != null && startSequenceFlowIcon != event._icon) {
+                    canvas.addChild(new SequenceFlowNotation(startSequenceFlowIcon, event._icon));
+                    startSequenceFlowIcon = null;
+                } else {
+                    startSequenceFlowIcon = event._icon;
                 }
             }
         }
@@ -116,6 +136,7 @@
             <mx:Object label="" icon="{ProcessPng.EVENT_SUB_PROCESS}" toolTip="Sub Process"/>
             <mx:Object label="" icon="{ProcessPng.POOL}" toolTip="Pool"/>
             <mx:Object label="" icon="{ProcessPng.LANE}" toolTip="Lane"/>
+            <mx:Object label="" icon="{ProcessPng.SEQUENCE_FLOW}" toolTip="Sequence Flow"/>
 
             <mx:Object label="" icon="{ProcessPng.ANNOTATION}" />
             <mx:Object label="" icon="{ProcessPng.ASSOCIATION}" />
@@ -141,7 +162,6 @@
 
             <mx:Object label="" icon="{ProcessPng.SCRIPT_TASK}" />
             <mx:Object label="" icon="{ProcessPng.SEND_TASK}" />
-            <mx:Object label="" icon="{ProcessPng.SEQUENCE_FLOW}" />
             <mx:Object label="" icon="{ProcessPng.SIGNAL}" />
             <mx:Object label="" icon="{ProcessPng.SIGNAL_CATCH}" />
             <mx:Object label="" icon="{ProcessPng.SIGNAL_THROW}" />

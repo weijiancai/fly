@@ -18,12 +18,8 @@ package com.fly.base.drawing.bpmn.notation {
             // 画圆角矩形
             graphics.lineStyle(_thickness, _color, 1, true);
             graphics.beginFill(_fillColor, 0.4);
-            graphics.drawRoundRect(-3.5, -2.5, _nWidth, _nHeight, _eclipseWidth, _eclipseHeight);
+            graphics.drawRoundRect(-0.5, -0.5, _nWidth, _nHeight, _eclipseWidth, _eclipseHeight);
             graphics.endFill();
-            // 画文件
-            textField.x =  13;
-            textField.y = 9;
-            this.addChild(textField);
         }
     }
 }

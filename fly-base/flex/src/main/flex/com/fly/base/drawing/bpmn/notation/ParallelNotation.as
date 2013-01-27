@@ -28,11 +28,18 @@ package com.fly.base.drawing.bpmn.notation {
             this.graphics.lineTo(_x + _width - 9, _y + _height/2); // 画横线
             this.graphics.moveTo(_x + _width/2, _y + 9);
             this.graphics.lineTo(_x + _width/2, _y + _height - 9); // 画竖线
-            // 画文件
-            textField.x =  - _nWidth/2 - 8;
-            textField.y = _nHeight/2;
-            textField.width = _nWidth * 2.5;
-            this.addChild(textField);
+        }
+
+        override protected function getTextFieldXPos():Number {
+            return textFieldOuterXPos;
+        }
+
+        override protected function getTextFiledYPos():Number {
+            return 5;
+        }
+
+        override protected function getTextFieldWidth():Number {
+            return 100;
         }
     }
 }

@@ -37,11 +37,18 @@ package com.fly.base.drawing.bpmn.notation {
             endPoint = Point.interpolate(tmpStartPoint, tmpEndPoint, 0.8);
             this.graphics.moveTo(startPoint.x, startPoint.y);
             this.graphics.lineTo(endPoint.x, endPoint.y);
-            // 画文件
-            textField.x =  - _nWidth/2 - 8;
-            textField.y = _nHeight/2;
-            textField.width = _nWidth * 2.5;
-            this.addChild(textField);
+        }
+
+        override protected function getTextFieldXPos():Number {
+            return textFieldOuterXPos;
+        }
+
+        override protected function getTextFiledYPos():Number {
+            return 5;
+        }
+
+        override protected function getTextFieldWidth():Number {
+            return 100;
         }
     }
 }
