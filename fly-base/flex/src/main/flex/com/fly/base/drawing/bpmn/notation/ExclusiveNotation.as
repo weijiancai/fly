@@ -13,7 +13,6 @@ package com.fly.base.drawing.bpmn.notation {
             super(id, name, x, y, width, height);
         }
 
-
         override public function draw():void {
             // 设置坐标点
             var _x:Number =  0;

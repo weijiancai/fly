@@ -10,10 +10,12 @@ package com.fly.base.drawing.bpmn {
     import com.fly.base.drawing.bpmn.notation.LaneNotation;
     import com.fly.base.drawing.bpmn.notation.ParallelNotation;
     import com.fly.base.drawing.bpmn.notation.PoolNotation;
+    import com.fly.base.drawing.bpmn.notation.SequenceFlowNotation;
     import com.fly.base.drawing.bpmn.notation.ServiceTaskNotation;
     import com.fly.base.drawing.bpmn.notation.StartEventNotation;
     import com.fly.base.drawing.bpmn.notation.SubProcessNotation;
     import com.fly.base.drawing.bpmn.notation.UserTaskNotation;
+    import com.fly.base.drawing.bpmn.util.NotationUtil;
 
     import mx.containers.Canvas;
     import mx.controls.Alert;
@@ -92,9 +94,14 @@ package com.fly.base.drawing.bpmn {
                     }
                 }
 
-                notation = getNotation(node.localName(), id, name, _x, _y, _width, _height);
-//                notation = new BPMNotation(node,  diNode, 15 - y_min, startSequenceFlows, endSequenceFlows); // 距离最上边15
+                if ("sequenceFlow" == node.localName()) {
+                    notation = new SequenceFlowNotation();
+                    NotationUtil.drawLine(notation.graphics, diNode, (15 - y_min));
+                } else {
+                    notation = getNotation(node.localName(), id, name, _x, _y, _width, _height);
+                }
                 if(notation != null) {
+                    notation.highlight();
                     processNotationList.push(notation);
                     canvas.addChild(notation);
                     notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);
@@ -181,19 +188,17 @@ package com.fly.base.drawing.bpmn {
          */
         public static function getNotation(type:String, id:String, name:String, _x:Number, _y:Number, _width:Number, _height:Number):BaseNotation {
             if ("startEvent" == type) {
-                return new StartEventNotation(id, name, _x, _y, _width, _height);
+                return new StartEventNotation(id, name, _x + 10, _y + 10, _width, _height);
             } else if ("endEvent" == type) {
-                return new EndEventNotation(id, name,  _x, _y, _width, _height);
+                return new EndEventNotation(id, name,  _x + 10, _y + 10, _width, _height);
             } else if ("userTask" == type) {
                 return new UserTaskNotation(id, name,  _x, _y, _width, _height);
             } else if ("exclusiveGateway" == type) {
-                return new ExclusiveNotation(id, name,  _x, _y, _width, _height);
+                return new ExclusiveNotation(id, name,  _x, _y + _height, _width, _height);
             } else if ("parallelGateway" == type) {
-                return new ParallelNotation(id, name,  _x, _y, _width, _height);
+                return new ParallelNotation(id, name,  _x, _y + _height, _width, _height);
             } else if ("serviceTask" == type) {
                 return new ServiceTaskNotation(id, name,  _x, _y, _width, _height);
-            } else if ("sequenceFlow" == type) {
-
             } else if("lane" == type) {
                 return new LaneNotation(id, name, _x, _y, _width, _height);
             } else if("participant" == type) {
@@ -269,7 +274,7 @@ package com.fly.base.drawing.bpmn {
         // 清除所有选中
         private function clearAllSelected():void {
             for(var i:int = 0; i < processNotationList.length; i++) {
-                var processIcon:BPMNotation = processNotationList[i];
+                var processIcon:BaseNotation = processNotationList[i];
                 processIcon.clearSelected();
             }
         }

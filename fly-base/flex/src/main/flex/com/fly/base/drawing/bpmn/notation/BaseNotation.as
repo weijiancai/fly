@@ -3,6 +3,7 @@
  * @author wei_jc
  */
 package com.fly.base.drawing.bpmn.notation {
+    import com.fly.base.drawing.bpmn.NotationBorder;
     import com.fly.base.drawing.bpmn.event.NotationEvent;
 
     import flash.events.MouseEvent;
@@ -34,6 +35,13 @@ package com.fly.base.drawing.bpmn.notation {
 
         private var glow_down:Glow = new Glow(); // 鼠标按下发光效果
         private var glow_up:Glow = new Glow(); // 鼠标弹起发光效果
+
+        // 图标是否被选中
+        public var isSelected:Boolean = false;
+        // 图标是否高亮
+        public var isHighlight:Boolean = false;
+        private var selectedRectBorder:NotationBorder;
+        private var highlightRectBorder:NotationBorder;
 
         public function BaseNotation(id:String, name:String, x:Number, y:Number, width:Number, height:Number) {
             _nId = id;
@@ -131,6 +139,44 @@ package com.fly.base.drawing.bpmn.notation {
             var e:NotationEvent = new NotationEvent(NotationEvent.ICON_MOVE);
             e._icon = this;
             this.dispatchEvent(e);
+        }
+
+        // 高亮此节点
+        public function highlight():void {
+            clearHighlight();
+//            highlightRectBorder = new NotationBorder(-0.5, -0.5, _nWidth, _nHeight, 1, 0xff0000);
+//            highlightRectBorder.drawRect();
+            highlightRectBorder = getHighlightBorder();
+            this.addChild(highlightRectBorder);
+            this.isHighlight = true;
+        }
+
+        // 获取高亮边框
+        protected function getHighlightBorder():NotationBorder {
+            return null;
+        }
+
+        // 清除高亮
+        public function clearHighlight():void {
+            if(highlightRectBorder != null && this.contains(highlightRectBorder)) {
+                this.removeChild(highlightRectBorder);
+                this.isHighlight = false;
+                highlightRectBorder = null;
+            }
+        }
+
+        // 获取选中边框
+        private function getSelectedBorder():NotationBorder {
+            return null;
+        }
+
+        // 清除选中
+        public function clearSelected():void {
+            if(selectedRectBorder != null && this.contains(selectedRectBorder)) {
+                this.removeChild(selectedRectBorder);
+                this.isSelected = false;
+                selectedRectBorder = null;
+            }
         }
 
         public function get nX():Number {

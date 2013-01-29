@@ -10,18 +10,12 @@ package com.fly.base.drawing.bpmn.notation {
     import flash.geom.Point;
 
     public class SequenceFlowNotation extends BaseNotation {
-        private var fromNotation:BaseNotation;
-        private var toNotation:BaseNotation;
 
-        public function SequenceFlowNotation(fromNotation:BaseNotation, toNotation:BaseNotation) {
-            this.fromNotation = fromNotation;
-            this.toNotation = toNotation;
-
+        public function SequenceFlowNotation() {
             super("", "", 0, 0, 0, 0);
         }
 
-
-        override public function draw():void {
+        public function drawSequenceFlow(fromNotation:BaseNotation, toNotation:BaseNotation):void {
             // 计算开始节点图标的中心位置
             var fromCenterPoint:Point;
             if(fromNotation instanceof StartEventNotation || fromNotation instanceof EndEventNotation) {

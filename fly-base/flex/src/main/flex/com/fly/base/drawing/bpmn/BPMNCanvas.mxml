@@ -111,7 +111,9 @@
         private function onNotationMouseDown(event:NotationEvent):void {
             if(icons.selectedItem.icon == ProcessPng.SEQUENCE_FLOW) { // 建立连线
                 if(startSequenceFlowIcon != null && startSequenceFlowIcon != event._icon) {
-                    canvas.addChild(new SequenceFlowNotation(startSequenceFlowIcon, event._icon));
+                    var sequenceFlow:SequenceFlowNotation = new SequenceFlowNotation();
+                    sequenceFlow.drawSequenceFlow(startSequenceFlowIcon, event._icon);
+                    canvas.addChild(sequenceFlow);
                     startSequenceFlowIcon = null;
                 } else {
                     startSequenceFlowIcon = event._icon;
