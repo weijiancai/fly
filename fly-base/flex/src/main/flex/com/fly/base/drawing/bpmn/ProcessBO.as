@@ -95,13 +95,14 @@ package com.fly.base.drawing.bpmn {
                 }
 
                 if ("sequenceFlow" == node.localName()) {
-                    notation = new SequenceFlowNotation();
-                    NotationUtil.drawLine(notation.graphics, diNode, (15 - y_min));
+                    var sequenceFlowNotation:SequenceFlowNotation = new SequenceFlowNotation();
+                    sequenceFlowNotation.drawArrowLine(diNode, (15 - y_min));
+                    notation = sequenceFlowNotation;
                 } else {
                     notation = getNotation(node.localName(), id, name, _x, _y, _width, _height);
                 }
                 if(notation != null) {
-                    notation.highlight();
+                    notation.selected();
                     processNotationList.push(notation);
                     canvas.addChild(notation);
                     notation.addEventListener(NotationEvent.ICON_MOUSE_DOWN, onIconMouseDownHandler);

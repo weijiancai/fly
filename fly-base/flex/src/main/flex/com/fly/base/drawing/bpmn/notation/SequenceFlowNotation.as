@@ -5,14 +5,35 @@
  */
 package com.fly.base.drawing.bpmn.notation {
     import com.fly.base.drawing.Pen;
+    import com.fly.base.drawing.bpmn.NotationBorder;
     import com.fly.base.drawing.bpmn.util.NotationUtil;
 
     import flash.geom.Point;
 
     public class SequenceFlowNotation extends BaseNotation {
+        private var diNode:XML;
+        private var y_min:Number;
 
         public function SequenceFlowNotation() {
             super("", "", 0, 0, 0, 0);
+        }
+
+        // 画箭头线
+        public function drawArrowLine(diNode:XML, y_min:Number):void {
+            this.diNode = diNode;
+            this.y_min = y_min;
+            NotationUtil.drawLine(graphics, diNode, y_min);
+        }
+
+        override protected function getHighlightBorder():NotationBorder {
+            var highlightRectBorder:NotationBorder = new NotationBorder();
+            highlightRectBorder._color = 0xff0000;
+            highlightRectBorder.drawLine(diNode, y_min);
+            return highlightRectBorder;
+        }
+
+        override protected function getSelectedBorder():NotationBorder {
+            return super.getSelectedBorder();
         }
 
         public function drawSequenceFlow(fromNotation:BaseNotation, toNotation:BaseNotation):void {

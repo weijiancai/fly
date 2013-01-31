@@ -144,11 +144,11 @@ package com.fly.base.drawing.bpmn.notation {
         // 高亮此节点
         public function highlight():void {
             clearHighlight();
-//            highlightRectBorder = new NotationBorder(-0.5, -0.5, _nWidth, _nHeight, 1, 0xff0000);
-//            highlightRectBorder.drawRect();
             highlightRectBorder = getHighlightBorder();
-            this.addChild(highlightRectBorder);
-            this.isHighlight = true;
+            if(highlightRectBorder != null) {
+                this.addChild(highlightRectBorder);
+                this.isHighlight = true;
+            }
         }
 
         // 获取高亮边框
@@ -165,8 +165,18 @@ package com.fly.base.drawing.bpmn.notation {
             }
         }
 
+        // 选中
+        public function selected():void {
+            clearSelected();
+            selectedRectBorder = getSelectedBorder();
+            if(selectedRectBorder != null) {
+                this.addChild(selectedRectBorder);
+                this.isSelected = true;
+            }
+        }
+
         // 获取选中边框
-        private function getSelectedBorder():NotationBorder {
+        protected function getSelectedBorder():NotationBorder {
             return null;
         }
 

@@ -94,10 +94,10 @@ package com.fly.base.drawing.bpmn.util {
             }
 
             // 画箭头
-            drawArrow(pen, startX, startY, endX, endY, radius);
+            drawArrow(pen, startX, startY, endX, endY, radius, color);
         }
 
-        public static function drawArrow(pen:Pen, startX:Number, startY:Number, endX:Number, endY:Number, radius:Number = 5):void {
+        public static function drawArrow(pen:Pen, startX:Number, startY:Number, endX:Number, endY:Number, radius:Number = 5, fillColor:uint = 0x000000):void {
             var angle:int = getAngle(startX, startY, endX, endY);
             var centerX:int = endX - radius * Math.cos(angle *(Math.PI/180));
             var centerY:int= endY + radius * Math.sin(angle *(Math.PI/180));
@@ -107,9 +107,9 @@ package com.fly.base.drawing.bpmn.util {
             var rightX:int=centerX + radius * Math.cos((angle +240) *(Math.PI/180));
             var rightY:int=centerY - radius * Math.sin((angle +240) *(Math.PI/180));
 
-            pen.beginFill(0x000000, 1);
+            pen.beginFill(fillColor, 1);
 
-            pen.lineStyle(1, 0x000000, 1);
+            pen.lineStyle(1, fillColor, 1);
 
             pen.moveTo(endX, endY);
             pen.lineTo(leftX,leftY);

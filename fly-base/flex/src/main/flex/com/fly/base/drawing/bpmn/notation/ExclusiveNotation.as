@@ -4,6 +4,7 @@
  * @author weijiancai
  */
 package com.fly.base.drawing.bpmn.notation {
+    import com.fly.base.drawing.bpmn.NotationBorder;
     import com.fly.base.drawing.bpmn.util.NotationUtil;
 
     import flash.geom.Point;
@@ -20,7 +21,7 @@ package com.fly.base.drawing.bpmn.notation {
             var _width:Number = _nWidth;
             var _height:Number = _nHeight;
             // 画菱形
-            NotationUtil.drawRhombus(graphics, 0, 0, _nWidth, -nHeight);
+            NotationUtil.drawRhombus(graphics, 0, -_nHeight, _nWidth, _nHeight);
             // 菱形种画×
             this.graphics.lineStyle(4, 0x000000);
             var tmpStartPoint:Point = Point.interpolate(new Point(_x, _y + _height / 2), new Point(_x + _width / 2, _y), 0.5);
@@ -48,6 +49,16 @@ package com.fly.base.drawing.bpmn.notation {
 
         override protected function getTextFieldWidth():Number {
             return 100;
+        }
+
+        override protected function getHighlightBorder():NotationBorder {
+            var highlightRectBorder:NotationBorder = new NotationBorder(0, -_nHeight, _nWidth, _nHeight, 2, 0xff0000);
+            highlightRectBorder.drawRhombus();
+            return highlightRectBorder;
+        }
+
+        override protected function getSelectedBorder():NotationBorder {
+            return super.getSelectedBorder();
         }
     }
 }

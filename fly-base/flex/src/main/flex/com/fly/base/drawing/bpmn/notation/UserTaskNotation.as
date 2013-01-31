@@ -4,6 +4,7 @@
  * @author weijiancai
  */
 package com.fly.base.drawing.bpmn.notation {
+    import com.fly.base.drawing.bpmn.NotationBorder;
     import com.fly.base.drawing.bpmn.ProcessPng;
 
     public class UserTaskNotation extends BaseNotation {
@@ -20,6 +21,16 @@ package com.fly.base.drawing.bpmn.notation {
             graphics.beginFill(_fillColor, 0.4);
             graphics.drawRoundRect(-0.5, -0.5, _nWidth, _nHeight, _eclipseWidth, _eclipseHeight);
             graphics.endFill();
+        }
+
+        override protected function getHighlightBorder():NotationBorder {
+            var highlightRectBorder:NotationBorder = new NotationBorder(-0.5, -0.5, _nWidth, _nHeight, 2, 0xff0000);
+            highlightRectBorder.drawRect(_eclipseWidth, _eclipseHeight);
+            return highlightRectBorder;
+        }
+
+        override protected function getSelectedBorder():NotationBorder {
+            return super.getSelectedBorder();
         }
     }
 }
