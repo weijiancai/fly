@@ -15,7 +15,6 @@ package com.fly.base.drawing.bpmn {
     import com.fly.base.drawing.bpmn.notation.StartEventNotation;
     import com.fly.base.drawing.bpmn.notation.SubProcessNotation;
     import com.fly.base.drawing.bpmn.notation.UserTaskNotation;
-    import com.fly.base.drawing.bpmn.util.NotationUtil;
 
     import mx.containers.Canvas;
     import mx.controls.Alert;
@@ -24,7 +23,7 @@ package com.fly.base.drawing.bpmn {
         private var canvas:Canvas;
         private var processDefinitionXml:XML;
         private var processNotationList:Array = [];
-        private var currentSelected:BPMNotation = null;
+        private var currentSelected:BaseNotation = null;
         private var model:Namespace;
         private var bpmndi:Namespace;
         private var processNodeList:XMLList;
@@ -289,7 +288,7 @@ package com.fly.base.drawing.bpmn {
         }
 
         // 获取当前选中的节点
-        public function getCurrentSelected():BPMNotation {
+        public function getCurrentSelected():BaseNotation {
             return currentSelected;
         }
     }

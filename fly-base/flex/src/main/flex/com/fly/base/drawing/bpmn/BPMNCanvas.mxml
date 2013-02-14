@@ -110,13 +110,13 @@
 
         private function onNotationMouseDown(event:NotationEvent):void {
             if(icons.selectedItem.icon == ProcessPng.SEQUENCE_FLOW) { // 建立连线
-                if(startSequenceFlowIcon != null && startSequenceFlowIcon != event._icon) {
+                if(startSequenceFlowIcon != null && startSequenceFlowIcon != event.icon) {
                     var sequenceFlow:SequenceFlowNotation = new SequenceFlowNotation();
-                    sequenceFlow.drawSequenceFlow(startSequenceFlowIcon, event._icon);
+                    sequenceFlow.drawSequenceFlow(startSequenceFlowIcon, event.icon);
                     canvas.addChild(sequenceFlow);
                     startSequenceFlowIcon = null;
                 } else {
-                    startSequenceFlowIcon = event._icon;
+                    startSequenceFlowIcon = event.icon;
                 }
             }
         }

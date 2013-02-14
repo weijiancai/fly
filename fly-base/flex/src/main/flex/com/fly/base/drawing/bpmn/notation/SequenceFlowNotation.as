@@ -39,14 +39,14 @@ package com.fly.base.drawing.bpmn.notation {
         public function drawSequenceFlow(fromNotation:BaseNotation, toNotation:BaseNotation):void {
             // 计算开始节点图标的中心位置
             var fromCenterPoint:Point;
-            if(fromNotation instanceof StartEventNotation || fromNotation instanceof EndEventNotation) {
+            if(fromNotation is StartEventNotation || fromNotation is EndEventNotation) {
                 fromCenterPoint = new Point(fromNotation.nX, fromNotation.nY);
             } else {
                 fromCenterPoint = new Point(fromNotation.nX + fromNotation.nWidth/2, fromNotation.nY + fromNotation.nHeight/2);
             }
             // 计算结束节点图标的中心位置
             var toCenterPoint:Point;
-            if(toNotation instanceof StartEventNotation || toNotation instanceof EndEventNotation) {
+            if(toNotation is StartEventNotation || toNotation is EndEventNotation) {
                 toCenterPoint = new Point(toNotation.nX, toNotation.nY);
             } else {
                 toCenterPoint = new Point(toNotation.nX + toNotation.nWidth/2, toNotation.nY + toNotation.nHeight/2);

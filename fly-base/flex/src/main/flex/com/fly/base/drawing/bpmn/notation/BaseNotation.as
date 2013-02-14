@@ -115,7 +115,7 @@ package com.fly.base.drawing.bpmn.notation {
         // 触发鼠标按下事件
         private function mouseDownHandler(event:MouseEvent):void {
             var e:NotationEvent = new NotationEvent(NotationEvent.ICON_MOUSE_DOWN);
-            e._icon = this;
+            e.icon = this;
             glow_down.target = this;
             glow_down.end();
             glow_down.play();
@@ -126,7 +126,7 @@ package com.fly.base.drawing.bpmn.notation {
         // 触发鼠标弹起事件
         private function mouseUpHandler(event:MouseEvent):void {
             var e:NotationEvent = new NotationEvent(NotationEvent.ICON_MOUSE_UP);
-            e._icon = this;
+            e.icon = this;
             glow_up.target = this;
             glow_up.end();
             glow_up.play();
@@ -137,7 +137,7 @@ package com.fly.base.drawing.bpmn.notation {
         // 触发鼠标移动事件
         private function mouseMoveHandler(event:MouseEvent):void {
             var e:NotationEvent = new NotationEvent(NotationEvent.ICON_MOVE);
-            e._icon = this;
+            e.icon = this;
             this.dispatchEvent(e);
         }
 
@@ -187,6 +187,11 @@ package com.fly.base.drawing.bpmn.notation {
                 this.isSelected = false;
                 selectedRectBorder = null;
             }
+        }
+
+        // 是否可拖动
+        public function dragable():Boolean {
+            return true;
         }
 
         public function get nX():Number {
