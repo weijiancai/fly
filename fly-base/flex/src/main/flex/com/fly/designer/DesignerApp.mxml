@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" layout="absolute" historyManagementEnabled="false"
+        xmlns:designer="com.fly.designer.view.*">
+    <designer:Designer/>
+</mx:Application>
