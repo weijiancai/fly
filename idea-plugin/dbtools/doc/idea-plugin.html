@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="syntaxhighlighter/js/shCore.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/js/shBrushJava.js"></script>
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.css"/>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+    <title></title>
+</head>
+<body>
+    <h3>创建一个ApplicationComponent</h3>
+    <pre class="brush: java;">
+        import com.intellij.openapi.components.ApplicationComponent;
+        import org.jetbrains.annotations.NotNull;
+        
+        /**
+         * @author wei_jc
+         * @version 0.0.1
+         */
+        public class DBTools implements ApplicationComponent {
+            public DBTools() {
+            }
+
+            public void initComponent() {
+                // TODO: insert component initialization logic here
+            }
+
+            public void disposeComponent() {
+                // TODO: insert component disposal logic here
+            }
+
+            @NotNull
+            public String getComponentName() {
+                return "DBTools";
+            }
+        }
+    </pre>
+    <h3>创建一个ToolWindow</h3>
+    <pre class="brush: xml;">
+
+    </pre>
+</body>
+</html>

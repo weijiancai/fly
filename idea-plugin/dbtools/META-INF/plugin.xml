@@ -1,0 +1,56 @@
+<idea-plugin version="2">
+    <id>DBTools</id>
+    <name>DB Tools</name>
+    <version>1.0</version>
+    <vendor email="weijiancai@126.com">weijiancai</vendor>
+
+    <description>
+        <![CDATA[
+          数据库工具<br>
+        ]]>
+    </description>
+
+    <change-notes>
+        <![CDATA[
+            <ul>
+                <li><b>1.0.0</b>
+                 <ul>
+                    - Live Templates Ctrl-J (work in progress)<br>
+                    - "About" page (with "donate" link) <br>
+                    - Multiple column sorting (work in progress - not released)<br>
+                    - Method execution result improvements (tree view)<br>
+                    - Reworked action system to allow multiple editor instances, split and detached editors<br>
+                    - Bug fixes and performance improvements<br>
+                </ul>
+            </ul>
+        ]]>
+    </change-notes>
+
+    <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="107.105"/>
+
+    <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <application-components>
+        <!-- Add your application components here -->
+        <component>
+            <implementation-class>com.meteorite.dbtools.DBTools</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="DB Browser" icon="/img/window/DatabaseBrowser.png" anchor="left" factoryClass="com.meteorite.dbtools.idea.browser.DatabaseBrowserToolWindowFactory"/>
+    </extensions>
+</idea-plugin>
