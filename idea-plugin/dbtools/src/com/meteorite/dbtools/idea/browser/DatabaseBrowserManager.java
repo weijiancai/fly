@@ -1,8 +1,8 @@
 package com.meteorite.dbtools.idea.browser;
 
-import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.meteorite.dbtools.idea.browser.ui.BrowserToolWindowForm;
+import com.meteorite.dbtools.idea.common.AbstractProjectComponent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,5 +41,12 @@ public class DatabaseBrowserManager extends AbstractProjectComponent {
 
     public static DatabaseBrowserManager getInstance(Project project) {
         return project.getComponent(DatabaseBrowserManager.class);
+    }
+
+    public BrowserToolWindowForm getToolWindowForm() {
+        if (toolWindowForm == null) {
+            toolWindowForm = new BrowserToolWindowForm(getProject());
+        }
+        return toolWindowForm;
     }
 }
