@@ -7,6 +7,7 @@ import com.meteorite.dbtools.idea.browser.options.BrowserDisplayMode;
 import com.meteorite.dbtools.idea.common.util.ActionUtil;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author wei_jc
@@ -19,6 +20,7 @@ public class BrowserToolWindowForm {
 
     private Project project;
     private BrowserDisplayMode displayMode;
+    private DatabaseBrowserForm browserForm;
 
     public BrowserToolWindowForm(Project project) {
         this.project = project;
@@ -34,7 +36,12 @@ public class BrowserToolWindowForm {
     }
 
     private void initBrowserForm() {
+        browserForm =
+                displayMode == BrowserDisplayMode.TABBED ? new TabbedBrowserForm(project) :
+                displayMode == BrowserDisplayMode.SIMPLE ? new SimpleBrowserForm(project) : null;
 
+        browserPanel.removeAll();
+        browserPanel.add(browserForm.getComponent(), BorderLayout.CENTER);
     }
 
     public JComponent getComponent() {
