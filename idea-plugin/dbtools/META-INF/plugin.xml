@@ -47,7 +47,9 @@
     </project-components>
 
     <actions>
-        <!-- Add your actions here -->
+        <group id="DBTools.ActionGroup.Browser.Controls" text="Browser object properties">
+            <action id="DBTools.Actions.Browser.NavigateBack" class="" text="Browser - back"/>
+        </group>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">

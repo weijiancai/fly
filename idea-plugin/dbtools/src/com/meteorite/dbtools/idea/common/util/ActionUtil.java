@@ -1,8 +1,7 @@
 package com.meteorite.dbtools.idea.common.util;
 
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.project.Project;
 
 /**
  * @author wei_jc
@@ -13,5 +12,9 @@ public class ActionUtil {
         ActionManager actionManager = ActionManager.getInstance();
         ActionGroup actionGroup = (ActionGroup) actionManager.getAction(actionGroupName);
         return actionManager.createActionToolbar(place, actionGroup, horizontal);
+    }
+
+    public static Project getProject(AnActionEvent e) {
+        return e.getData(PlatformDataKeys.PROJECT);
     }
 }
