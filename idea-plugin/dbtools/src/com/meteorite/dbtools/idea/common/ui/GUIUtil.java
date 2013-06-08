@@ -1,4 +1,4 @@
-package com.meteorite.dbtools.idea.browser.ui;
+package com.meteorite.dbtools.idea.common.ui;
 
 import com.intellij.openapi.ui.Splitter;
 
@@ -10,6 +10,8 @@ import java.awt.*;
  * @version 0.0.1
  */
 public class GUIUtil {
+    private static final String DARK_LAF_NAME = "Darcula";
+
     public static void updateSplitterProportion(final JComponent root, final float proportion) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -27,5 +29,9 @@ public class GUIUtil {
                 }
             }
         });
+    }
+
+    public static boolean isDarkLookAndFeel() {
+        return UIManager.getLookAndFeel().getName().contains(DARK_LAF_NAME);
     }
 }

@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.project.Project;
 import com.meteorite.dbtools.idea.browser.DatabaseBrowserManager;
 import com.meteorite.dbtools.idea.browser.options.BrowserDisplayMode;
+import com.meteorite.dbtools.idea.common.ui.GUIUtil;
 import com.meteorite.dbtools.idea.common.util.ActionUtil;
 
 import javax.swing.*;

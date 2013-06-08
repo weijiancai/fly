@@ -48,7 +48,9 @@
 
     <actions>
         <group id="DBTools.ActionGroup.Browser.Controls" text="Browser object properties">
-            <action id="DBTools.Actions.Browser.NavigateBack" class="" text="Browser - back"/>
+            <action id="DBTools.Actions.Browser.NavigateBack" class="com.meteorite.dbtools.idea.browser.action.NaviagteBackAction" text="Browser - back"/>
+
+            <action id="DBTools.Actions.Browser.OpenSettings" class="com.meteorite.dbtools.idea.browser.action.OpenSettingsAction" text="Browser - Settings"/>
         </group>
     </actions>
 
