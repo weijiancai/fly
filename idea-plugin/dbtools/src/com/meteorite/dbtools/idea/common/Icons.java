@@ -13,6 +13,8 @@ public class Icons {
 
     public static final Icon BROWSER_BACK = load("/img/action/BrowserBack.png");
 
+    public static final Icon ACTION_SETTINGS = load("/img/action/Properties.png");
+
     private static Icon load(String path) {
         return IconLoader.getIcon(path);
     }
