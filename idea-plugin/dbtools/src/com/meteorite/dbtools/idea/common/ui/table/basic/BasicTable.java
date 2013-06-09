@@ -21,6 +21,10 @@ public class BasicTable extends DBNTable implements EditorColorsListener, Dispos
         super(project, tableModel, true);
     }
 
+    public DataGridTextAttributes getConfigTextAttributes() {
+        return configTextAttributes;
+    }
+
     @Override
     public void globalSchemeChange(EditorColorsScheme scheme) {
     }
