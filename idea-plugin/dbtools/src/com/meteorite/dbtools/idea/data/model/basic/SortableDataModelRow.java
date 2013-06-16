@@ -7,4 +7,8 @@ import com.meteorite.dbtools.idea.data.model.sortable.SortableDataModelCell;
  * @version 0.0.1
  */
 public class SortableDataModelRow<T extends SortableDataModelCell> extends BasicDataModelRow<T> implements Comparable {
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }

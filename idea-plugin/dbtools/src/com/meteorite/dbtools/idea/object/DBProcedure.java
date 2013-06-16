@@ -9,5 +9,5 @@ import java.util.List;
 public interface DBProcedure extends DBMethod {
     List<DBArgument> getArguments();
 
-    DBArgument getArgument(name);
+    DBArgument getArgument(String name);
 }

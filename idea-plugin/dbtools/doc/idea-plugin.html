@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script type="text/javascript" src="syntaxhighlighter/js/shCore.js"></script>
     <script type="text/javascript" src="syntaxhighlighter/js/shBrushJava.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/js/shBrushXml.js"></script>
     <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.css"/>
     <script type="text/javascript">SyntaxHighlighter.all();</script>
     <title></title>
@@ -38,7 +39,14 @@
     </pre>
     <h3>创建一个ToolWindow</h3>
     <pre class="brush: xml;">
-
+        &lt;application-components&gt;
+            &lt;!-- Add your application components here --&gt;
+            &lt;component&gt;
+                &lt;implementation-class&gt;com.meteorite.dbtools.DBTools&lt;/implementation-class&gt;
+            &lt;/component&gt;
+        &lt;/application-components&gt;
     </pre>
+    <h3>选项Options：com.intellij.openapi.options</h3>
+    <h3>项目组件：com.intellij.openapi.components.ProjectComponent</h3>
 </body>
 </html>

@@ -8,4 +8,7 @@ import com.meteorite.dbtools.idea.common.options.ui.CompositeConfigurationEditor
  * @version 0.0.1
  */
 public class DatabaseBrowserSettingsForm extends CompositeConfigurationEditorForm<DatabaseBrowserSettings> {
+    protected DatabaseBrowserSettingsForm(DatabaseBrowserSettings configuration) {
+        super(configuration);
+    }
 }

@@ -1,12 +1,9 @@
-package com.meteorite.dbtools.idea.common.ui.table.sortable;
+package com.meteorite.dbtools.idea.data.ui.table.sortable;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
 import com.meteorite.dbtools.idea.common.LogFactory;
 import com.meteorite.dbtools.idea.common.ui.table.basic.BasicTable;
-import com.meteorite.dbtools.idea.data.model.sortable.SortableTableModel;
-
-import javax.swing.table.TableModel;
+import com.meteorite.dbtools.idea.data.model.sortable.SortableDataModel;
 
 /**
  * @author weijiancai
@@ -15,8 +12,8 @@ import javax.swing.table.TableModel;
 public class SortableTable extends BasicTable {
     protected Logger logger = LogFactory.createLogger();
 
-    public SortableTable(SortableTableModel dataModel, boolean enableSpeedSearch) {
-        super(project, tableModel);
+    public SortableTable(SortableDataModel dataModel, boolean enableSpeedSearch) {
+        super(dataModel.getProject(), dataModel);
         this.logger = logger;
     }
 }

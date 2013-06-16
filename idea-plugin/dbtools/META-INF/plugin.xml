@@ -43,6 +43,7 @@
     </application-components>
 
     <project-components>
+        <component><implementation-class>com.meteorite.dbtools.idea.options.GlobalProjectSettings</implementation-class></component>
         <component><implementation-class>com.meteorite.dbtools.idea.browser.DatabaseBrowserManager</implementation-class></component>
         <component><implementation-class>com.meteorite.dbtools.idea.connection.ConnectionManager</implementation-class></component>
     </project-components>
@@ -56,6 +57,6 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="DB Browser" icon="/img/window/DatabaseBrowser.png" anchor="left" factoryClass="com.meteorite.dbtools.idea.browser.DatabaseBrowserToolWindowFactory"/>
+        <toolWindow id="DB - Browser" icon="/img/window/DatabaseBrowser.png" anchor="left" factoryClass="com.meteorite.dbtools.idea.browser.DatabaseBrowserToolWindowFactory"/>
     </extensions>
 </idea-plugin>

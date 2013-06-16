@@ -15,6 +15,10 @@ public class BrowserTreeModel implements TreeModel, Disposable {
     private Project project;
     private BrowserTreeNode root;
 
+    protected BrowserTreeModel(BrowserTreeNode root) {
+        this.root = root;
+    }
+
     @Override
     public void dispose() {
     }

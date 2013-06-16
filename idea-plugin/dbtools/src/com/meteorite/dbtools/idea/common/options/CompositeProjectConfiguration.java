@@ -2,6 +2,7 @@ package com.meteorite.dbtools.idea.common.options;
 
 import com.intellij.openapi.project.Project;
 import com.meteorite.dbtools.idea.common.options.ui.CompositeConfigurationEditorForm;
+import com.meteorite.dbtools.idea.options.GlobalProjectSettings;
 
 /**
  * @author weijiancai
@@ -16,5 +17,9 @@ public abstract class CompositeProjectConfiguration<T extends CompositeConfigura
 
     public Project getProject() {
         return project;
+    }
+
+    protected static GlobalProjectSettings getGlobalProjectSettings(Project project) {
+        return GlobalProjectSettings.getInstance(project);
     }
 }

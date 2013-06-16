@@ -14,6 +14,8 @@ import javax.swing.*;
  * @version 0.0.1
  */
 public class SimpleBrowserForm extends DatabaseBrowserForm {
+    private JPanel mainPanel;
+
     protected SimpleBrowserForm(Project project) {
         this(new SimpleBrowserTreeModel(project, ConnectionManager.getInstance(project).getConnectionBundles()));
     }
@@ -42,6 +44,6 @@ public class SimpleBrowserForm extends DatabaseBrowserForm {
 
     @Override
     public JComponent getComponent() {
-        return null;
+        return mainPanel;
     }
 }

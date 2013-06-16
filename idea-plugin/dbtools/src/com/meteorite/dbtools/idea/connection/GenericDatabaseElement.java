@@ -1,6 +1,8 @@
 package com.meteorite.dbtools.idea.connection;
 
 import com.intellij.openapi.project.Project;
+import com.meteorite.dbtools.idea.common.content.DynamicContent;
+import com.meteorite.dbtools.idea.common.content.DynamicContentType;
 import sun.jdbc.odbc.ee.ConnectionHandler;
 
 /**

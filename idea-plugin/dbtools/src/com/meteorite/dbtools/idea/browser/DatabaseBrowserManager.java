@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @version 0.0.1
  */
 public class DatabaseBrowserManager extends AbstractProjectComponent {
-    public static final String TOOL_WINDOW_ID = "DB Browser";
+    public static final String TOOL_WINDOW_ID = "DB - Browser";
     private BrowserToolWindowForm toolWindowForm;
 
     private DatabaseBrowserManager(Project project) {
@@ -19,7 +19,7 @@ public class DatabaseBrowserManager extends AbstractProjectComponent {
 
     @Override
     public String toString() {
-        return "DB Browser";
+        return "DB - Browser";
     }
 
     @NotNull

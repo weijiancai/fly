@@ -1,7 +1,7 @@
 package com.meteorite.dbtools.idea.common.ui.table.basic;
 
 import com.intellij.ui.ColoredTableCellRenderer;
-import com.meteorite.dbtools.idea.common.ui.table.sortable.SortableTable;
+import com.meteorite.dbtools.idea.data.ui.table.sortable.SortableTable;
 import com.meteorite.dbtools.idea.data.editor.color.DataGridTextAttributes;
 
 import javax.swing.*;
