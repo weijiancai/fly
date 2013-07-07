@@ -1,0 +1,9 @@
+<mockup version="1.0" skin="sketch" measuredW="392" measuredH="231" mockupW="332" mockupH="211">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::DataGrid" x="60" y="20" w="-1" h="-1" measuredW="332" measuredH="211" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Name%5Cr%28job%20title%29%20%5E%2C%20Age%2C%20Nickname%2C%20Employee%0AGiacomo%20Guilizzoni%5CrFounder%20%26%20CEO%2C%2034%2C%20Peldi%2C%20%5Bx%5D%0AGuido%20Jack%20Guilizzoni%2C%204%2C%20The%20Guids%2C%20%5B%5D%0AMarco%20Botton%5CrTuttofare%2C%2031%2C%20%2C%20%5Bx%5D%0AMariah%20Maclachlan%5CrBetter%20Half%2C%2035%2C%20Patata%2C%20%5Bx%5D%0AValerie%20Liberty%5CrCOO%5C%2C%20WOW%21%20Division%2C%20%3A%29%2C%20Val%2C%20%5Bx%5D%0A%7B75L%2C%200R%2C%2025%2C%200C%7D</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
