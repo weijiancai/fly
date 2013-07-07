@@ -1,7 +1,6 @@
 package com.meteorite.dbtools.idea.object;
 
 import com.meteorite.dbtools.idea.data.type.DBDataType;
-import com.meteorite.dbtools.object.DBObject;
 
 /**
  * @author wei_jc

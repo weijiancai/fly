@@ -54,6 +54,11 @@
 
             <action id="DBTools.Actions.Browser.OpenSettings" class="com.meteorite.dbtools.idea.browser.action.OpenSettingsAction" text="Browser - Settings"/>
         </group>
+        <action id="com.meteorite.cmd.action.CommandAction" class="com.meteorite.cmd.action.CommandAction" text="CommandAction"
+                description="Open OS Command Dialog">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">

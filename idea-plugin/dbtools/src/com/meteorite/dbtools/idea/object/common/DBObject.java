@@ -23,10 +23,10 @@ public interface DBObject extends BrowserTreeNode, PsiNamedElement, DynamicConte
     DBObjectType getObjectType();
     boolean isOfType(DBObjectType objectType);
 
-    DBLanguageDialect getLanguageDialect(DBLanguage language);
+//    DBLanguageDialect getLanguageDialect(DBLanguage language);
 
-    DBObjectAttribute[] getObjectAttributes();
-    DBObjectAttribute getNameAttribute();
+//    DBObjectAttribute[] getObjectAttributes();
+//    DBObjectAttribute getNameAttribute();
 
     @NotNull
     String getName();
@@ -40,8 +40,8 @@ public interface DBObject extends BrowserTreeNode, PsiNamedElement, DynamicConte
     Icon getIcon();
     Icon getOriginalIcon();
 
-    DBUser getOwner();
-    DBSchema getSchema();
+//    DBUser getOwner();
+//    DBSchema getSchema();
     DBObject getParentObject();
     DBObjectBundle getObjectBundle();
 
@@ -51,24 +51,24 @@ public interface DBObject extends BrowserTreeNode, PsiNamedElement, DynamicConte
     DBObject getChildObject(DBObjectType objectType, String name, boolean lookupHidden);
     DBObject getChildObject(String name, boolean lookupHidden);
 
-    List<DBObjectNavigationList> getNavigationLists();
+//    List<DBObjectNavigationList> getNavigationLists();
 
-    @Nullable
-    DBObjectListContainer getChildObjects();
+//    @Nullable
+//    DBObjectListContainer getChildObjects();
 
-    @Nullable
-    DBObjectRelationListContainer getChildObjectRelations();
+//    @Nullable
+//    DBObjectRelationListContainer getChildObjectRelations();
     String extractDDL() throws SQLException;
 
     DBObject getUndisposedElement();
 
-    DBObjectProperties getProperties();
-    DBOperationExecutor getOperationExecutor();
+//    DBObjectProperties getProperties();
+//    DBOperationExecutor getOperationExecutor();
 
-    @NotNull
-    DatabaseObjectFile getVirtualFile();
-    List<PresentableProperty> getPresentableProperties();
-    EnvironmentType getEnvironmentType();
+//    @NotNull
+//    DatabaseObjectFile getVirtualFile();
+//    List<PresentableProperty> getPresentableProperties();
+//    EnvironmentType getEnvironmentType();
 
-    DBObjectIdentifier getIdentifier();
+//    DBObjectIdentifier getIdentifier();
 }

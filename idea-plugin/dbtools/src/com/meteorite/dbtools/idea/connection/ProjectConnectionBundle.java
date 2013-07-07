@@ -2,6 +2,7 @@ package com.meteorite.dbtools.idea.connection;
 
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,4 +36,25 @@ public class ProjectConnectionBundle extends ConnectionBundle implements Project
                 project));
     }
 
+    @Override
+    public void projectOpened() {
+    }
+
+    @Override
+    public void projectClosed() {
+    }
+
+    @Override
+    public void initComponent() {
+    }
+
+    @Override
+    public void disposeComponent() {
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return null;
+    }
 }

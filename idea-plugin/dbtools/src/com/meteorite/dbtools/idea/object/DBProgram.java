@@ -1,7 +1,6 @@
 package com.meteorite.dbtools.idea.object;
 
 import com.meteorite.dbtools.idea.object.common.DBSchemaObject;
-import com.meteorite.dbtools.object.DBFunction;
 
 import java.util.List;
 

@@ -13,6 +13,6 @@ public abstract class DBLanguage<D extends DBLanguageDialect> extends Language i
 
     protected DBLanguage(final @NonNls String id, final @NonNls String... mimeTypes){
         super(id, mimeTypes);
-        sharedTokenTypes = new SharedTokenTypeBundle(this);
+//        sharedTokenTypes = new SharedTokenTypeBundle(this);
     }
 }
