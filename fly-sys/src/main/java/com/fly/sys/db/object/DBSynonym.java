@@ -1,4 +1,4 @@
-package com.meteorite.dbtools.object;
+package com.fly.sys.db.object;
 
 /**
  * @author wei_jc

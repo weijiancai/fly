@@ -2,8 +2,8 @@ package com.fly.sys.db.metadata.impl;
 
 import com.fly.sys.db.JdbcTemplate;
 import com.fly.sys.db.metadata.DBConnectionParam;
-import com.fly.sys.db.metadata.DBMetadataLoader;
-import com.fly.sys.db.object.DBObjectRowMapperFactory;
+import com.fly.sys.db.metadata.DBMetaDataLoader;
+import com.fly.sys.db.object.impl.DBObjectRowMapperFactory;
 import com.fly.sys.db.object.DBSchema;
 import com.fly.sys.db.object.DBTable;
 import com.fly.sys.db.util.ConnectionUtil;
@@ -17,12 +17,12 @@ import java.util.List;
  * @author weijiancai
  * @version 1.0.0
  */
-public class MySqlMetadataLoader implements DBMetadataLoader {
-    private static MySqlMetadataLoader mySqlMetadataLoader;
+public class MySqlMetaDataLoader implements DBMetaDataLoader {
+    private static MySqlMetaDataLoader mySqlMetadataLoader;
     private DBConnectionParam connParam;
     private Connection conn;
 
-    private MySqlMetadataLoader(DBConnectionParam connParam) {
+    private MySqlMetaDataLoader(DBConnectionParam connParam) {
         this.connParam = connParam;
     }
 
@@ -72,9 +72,9 @@ public class MySqlMetadataLoader implements DBMetadataLoader {
         return conn;
     }
 
-    public static MySqlMetadataLoader getInstance(DBConnectionParam connParam) {
+    public static MySqlMetaDataLoader getInstance(DBConnectionParam connParam) {
         if (mySqlMetadataLoader == null) {
-            mySqlMetadataLoader = new MySqlMetadataLoader(connParam);
+            mySqlMetadataLoader = new MySqlMetaDataLoader(connParam);
         }
 
         return mySqlMetadataLoader;

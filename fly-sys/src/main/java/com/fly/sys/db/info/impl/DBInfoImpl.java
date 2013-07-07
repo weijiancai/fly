@@ -3,7 +3,7 @@ package com.fly.sys.db.info.impl;
 import com.fly.sys.db.info.DBInfo;
 import com.fly.sys.db.info.DBOtherInfo;
 import com.fly.sys.db.metadata.DBConnectionParam;
-import com.fly.sys.db.metadata.DBMetadataLoader;
+import com.fly.sys.db.metadata.DBMetaDataLoader;
 import com.fly.sys.db.metadata.DBMetadataLoaderFactory;
 import com.fly.sys.db.object.DBSchema;
 import com.fly.sys.db.util.ConnectionUtil;
@@ -97,7 +97,7 @@ public class DBInfoImpl implements DBInfo {
         catalogs = MetaDataUtil.getCatalogs(meta);
         tableTypes = MetaDataUtil.getTableTypes(meta);
 
-        DBMetadataLoader loader = DBMetadataLoaderFactory.getLoader(new DBConnectionParam(ConnectionUtil.getDatabaseType(conn), driverName, url, userName, password));
+        DBMetaDataLoader loader = DBMetadataLoaderFactory.getLoader(new DBConnectionParam(ConnectionUtil.getDatabaseType(conn), driverName, url, userName, password));
         schemas = loader.loadSchemas();
         for (DBSchema schema : schemas) {
             schema.setTables(loader.loadTables(schema.getName()));

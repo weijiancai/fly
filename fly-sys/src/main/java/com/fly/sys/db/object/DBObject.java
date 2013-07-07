@@ -10,4 +10,11 @@ package com.fly.sys.db.object;
 public interface DBObject {
     String getName();
     String getComment();
+
+    /**
+     * 获得数据库名称，
+     *
+     * @return
+     */
+//    String getDatabase();
 }

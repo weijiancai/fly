@@ -11,7 +11,7 @@ import java.util.List;
  * @author weijiancai
  * @version 1.0.0
  */
-public interface DBMetadataLoader {
+public interface DBMetaDataLoader {
     List<DBSchema> loadSchemas();
 
     List<DBTable> loadTables(String ownerName);

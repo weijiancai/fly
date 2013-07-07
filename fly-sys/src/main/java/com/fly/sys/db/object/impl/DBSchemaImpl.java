@@ -20,6 +20,11 @@ public class DBSchemaImpl implements DBSchema {
     private List<DBTable> tables;
 
     @Override
+    public String getCatalog() {
+        return null;
+    }
+
+    @Override
     @XmlElementWrapper(name = "Tables")
     @XmlAnyElement
     public List<DBTable> getTables() {
@@ -62,6 +67,31 @@ public class DBSchemaImpl implements DBSchema {
 
     @Override
     public DBFunction getFunction(String name) {
+        return null;
+    }
+
+    @Override
+    public List<DBIndex> getIndexes() {
+        return null;
+    }
+
+    @Override
+    public List<DBSynonym> getSynonyms() {
+        return null;
+    }
+
+    @Override
+    public List<DBSequence> getSequences() {
+        return null;
+    }
+
+    @Override
+    public List<DBPackage> getPackages() {
+        return null;
+    }
+
+    @Override
+    public List<DBTrigger> getTriggers() {
         return null;
     }
 

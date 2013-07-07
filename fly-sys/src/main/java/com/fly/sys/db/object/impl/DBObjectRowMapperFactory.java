@@ -1,6 +1,8 @@
-package com.fly.sys.db.object;
+package com.fly.sys.db.object.impl;
 
 import com.fly.sys.db.RowMapper;
+import com.fly.sys.db.object.DBSchema;
+import com.fly.sys.db.object.DBTable;
 import com.fly.sys.db.object.impl.DBSchemaImpl;
 import com.fly.sys.db.object.impl.DBTableImpl;
 
